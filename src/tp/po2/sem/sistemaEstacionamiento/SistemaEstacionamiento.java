@@ -1,13 +1,32 @@
 package tp.po2.sem.sistemaEstacionamiento;
 
-public class SistemaEstacionamiento 
-{
-	private String nombre;
-	public static void main(String[] args)
-	{
-		// TODO Auto-generated method stub
+import java.util.ArrayList;
+import java.util.List;
+
+import tp.po2.sem.estacionamiento.Estacionamiento;
+
+public class SistemaEstacionamiento {
+	private List<Estacionamiento> estacionamientos;
+
+	public SistemaEstacionamiento(List<Estacionamiento> estacionamientos) {
+		super();
+		this.estacionamientos = estacionamientos;
+	}
+
+	public SistemaEstacionamiento() {
+		estacionamientos = new ArrayList<Estacionamiento>();
 
 	}
-	//este es un commit 
-	// este es otro commit 14:15hs
+
+	public void registrarEstacionamiento(Estacionamiento unEstacionamiento) {
+		estacionamientos.add(unEstacionamiento);
+		
+	}
+
+	public Integer getCantidadEstacionamientos() {
+	
+		return estacionamientos.size();
+	}
+	
+	
 }
