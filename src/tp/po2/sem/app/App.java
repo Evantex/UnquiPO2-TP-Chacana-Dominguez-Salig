@@ -7,6 +7,11 @@ public class App implements MovementSensor
 	private boolean deteccionDesplazamiento;
 	private SistemaEstacionamiento SEM;
 	private boolean vaCaminando;
+	private double saldoDisponible;
+	private AsistenciaUsuario asistente;
+	private ModoEstacionamiento modo;
+	
+	
 	
 	
 	
@@ -16,17 +21,21 @@ public class App implements MovementSensor
 		if( usuarioAsociado.estaEnZonaDeEstacionamiento() && this.vaCaminando )
 		{
 			this.vaCaminando = false;
+			
 		}
 			
 	}
 	
-
+	
+	
+	
 	
 	@Override
 	public void walking() {}
 	
 	
 	
+
 	
 	
 	

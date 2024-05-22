@@ -19,5 +19,7 @@ public class Usuario
 	}
 	
 	
+	public void recibirNotificacion( String mensaje ){}
+	
 
 }
