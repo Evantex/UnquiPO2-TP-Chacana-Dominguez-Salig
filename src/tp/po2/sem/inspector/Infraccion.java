@@ -1,10 +1,15 @@
 package tp.po2.sem.inspector;
 
+import java.time.LocalDateTime;
+
+import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
+
 public class Infraccion {
 	private String patente;
-	private String infraccion;
-	private double montoInfraccion;
-
+	private LocalDateTime fechaYHora;
+	private Inspector inspector;		//inspector que realizo la infraccion
+	private ZonaDeEstacionamiento zona; //zona donde se realizo
+	
 	public String getPatente() {
 		return patente;
 	}
@@ -13,20 +18,30 @@ public class Infraccion {
 		this.patente = patente;
 	}
 
-	public String getInfraccion() {
-		return infraccion;
+	public LocalDateTime getFechaYHora() {
+		return fechaYHora;
 	}
 
-	public void setInfraccion(String infraccion) {
-		this.infraccion = infraccion;
+	public void setFechaYHora(LocalDateTime fechaYHora) {
+		this.fechaYHora = fechaYHora;
 	}
 
-	public double getMontoInfraccion() {
-		return montoInfraccion;
+	public ZonaDeEstacionamiento getZona() {
+		return zona;
 	}
 
-	public void setMontoInfraccion(double montoInfraccion) {
-		this.montoInfraccion = montoInfraccion;
+	public void setZona(ZonaDeEstacionamiento zona) {
+		this.zona = zona;
 	}
+
+	public Inspector getInspector() {
+		return inspector;
+	}
+
+	public void setInspector(Inspector inspector) {
+		this.inspector = inspector;
+	}
+
+	
 
 }
