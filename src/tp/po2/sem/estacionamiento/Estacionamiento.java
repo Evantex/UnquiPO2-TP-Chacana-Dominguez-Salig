@@ -3,13 +3,14 @@ package tp.po2.sem.estacionamiento;
 import java.time.LocalDateTime;
 import tp.po2.sem.puntoDeVenta.*;
 
-public class Estacionamiento 
+public abstract class Estacionamiento 
 {
 	
 	protected LocalDateTime inicioEstacionamiento;
 	protected LocalDateTime finEstacionamiento;
 	protected String patenteVehículo;
 	protected boolean estaVigente = true;
+	protected Compra compraAsociada;
 	
 	
 	public boolean estaVigente()

@@ -4,9 +4,7 @@ public class Usuario
 {
 	private int nroCelular;
 	private App aplicacionEstacionamiento;
-	
-	
-	
+	private boolean estacionamientoVigente = false;
 	
 	
 	public boolean estaEnZonaDeEstacionamiento()
@@ -20,6 +18,18 @@ public class Usuario
 	
 	
 	public void recibirNotificacion( String mensaje ){}
+
+
+	public boolean poseeEstacionamientoVigente()
+	{
+		return estacionamientoVigente;
+	}
+
+
+	public void setEstacionamientoVigente(boolean estacionamientoVigente)
+	{
+		this.estacionamientoVigente = estacionamientoVigente;
+	}
 	
 
 }
