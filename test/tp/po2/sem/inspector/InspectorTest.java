@@ -28,18 +28,39 @@ public class InspectorTest {
     }
     
     @Test
-    public void testUnInspectorTieneUnSistemaDeEstacionamiento() {
+    public void testGetSistemaEstacionamiento() {
     	assertEquals(sem, inspector.getSistemadeEstacionamientoMedido());
     }
     
     @Test
-    public void testUnInspectorTieneUnaZonaDeEstacionamientoAsignada() {
+    public void testGetZonaDeEstacionamientoAsignada() {
         assertEquals(zona, inspector.getZonaAsignada());
     }
     
     @Test
-    public void testUnInspectorConoceSuNombre() {
+    public void testGetNombreDelInspector() {
     	assertEquals("Jorge", inspector.getNombreInspector());
+    }
+    
+    @Test
+    public void testSetSistemaEstacionamiento() {
+        SistemaEstacionamiento nuevoSem = mock(SistemaEstacionamiento.class);
+        inspector.setSistemadeEstacionamientoMedido(nuevoSem);
+        assertEquals(nuevoSem, inspector.getSistemadeEstacionamientoMedido());
+    }
+
+    @Test
+    public void testSetZonaDeEstacionamientoAsignada() {
+        ZonaDeEstacionamiento nuevaZona = mock(ZonaDeEstacionamiento.class);
+        inspector.setZonaAsignada(nuevaZona);
+        assertEquals(nuevaZona, inspector.getZonaAsignada());
+    }
+    
+    @Test
+    public void testSetNombreInspector() {
+    	String nuevoNombre = "Carlos";
+    	inspector.setNombreInspector(nuevoNombre);
+    	assertEquals(nuevoNombre, inspector.getNombreInspector());
     }
     
     @Test
@@ -54,6 +75,7 @@ public class InspectorTest {
         assertEquals(true, resultado);
     }
     /*
+     * 
     @Test
     public void testCuandoUnInspectorConsultaElEstadoDeEstacionamientoDeUnVehiculoYResultaInvalidoRealizaUnaInfraccion() {
     	
