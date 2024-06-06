@@ -2,9 +2,9 @@ package tp.po2.sem.app;
 
 public class Usuario 
 {
-	private int nroCelular;
+	private String nroCelular;
 	private App aplicacionEstacionamiento;
-	private boolean estacionamientoVigente = false;
+	private String dominioVehiculo;
 	
 	
 	public boolean estaEnZonaDeEstacionamiento()
@@ -20,15 +20,14 @@ public class Usuario
 	public void recibirNotificacion( String mensaje ){}
 
 
-	public boolean poseeEstacionamientoVigente()
+	public String getNroCelular()
 	{
-		return estacionamientoVigente;
+		return this.nroCelular;
 	}
-
-
-	public void setEstacionamientoVigente(boolean estacionamientoVigente)
+	
+	public String getPatente()
 	{
-		this.estacionamientoVigente = estacionamientoVigente;
+		return this.dominioVehiculo;
 	}
 	
 

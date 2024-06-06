@@ -10,8 +10,10 @@ public abstract class Estacionamiento
 	protected LocalDateTime finEstacionamiento;
 	protected String patenteVehículo;
 	protected boolean estaVigente = true;
-	protected Compra compraAsociada;
+	// protected Compra compraAsociada;
 	
+	
+	public abstract String identificadorEstacionamiento();
 	
 	public boolean estaVigente()
 	{

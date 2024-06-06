@@ -4,21 +4,20 @@ public class InicioEstacionamiento implements AsistenciaUsuario
 {
 
 	@Override
-	public void notificar(App aplicacion) 
+	public void notificar(App aplicacion, String dominio) 
 	{
 		if( aplicacion.getDeteccionDesplazamiento() )
 		{
 			aplicacion.notificarUsuario("Posible inicio de estacionamiento");
-			// aplicacion.
+			aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion, dominio);
 		}
 		
 	}
 
 	@Override
-	public void actualizarEstado() 
+	public void actualizarEstado(App aplicacion) 
 	{
-		// TODO Auto-generated method stub
-
+		aplicacion.setAsistenteUsuario( new FinEstacionamiento() );
 	}
 	
 	

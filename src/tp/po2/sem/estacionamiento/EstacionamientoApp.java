@@ -1,8 +1,23 @@
 package tp.po2.sem.estacionamiento;
 
-public class EstacionamientoApp 
+import java.time.LocalDateTime;
+import tp.po2.sem.app.*;
+
+public class EstacionamientoApp extends Estacionamiento
 {
 	
-	s
+	private App appAsociada;
+	
+	public EstacionamientoApp( LocalDateTime inicioEstacionamiento, String dominioVehiculo, App app)
+	{
+		this.inicioEstacionamiento = inicioEstacionamiento;
+		this.patenteVehículo = dominioVehiculo;
+		this.appAsociada = app;
+	}
 
+	@Override
+	public String identificadorEstacionamiento() 
+	{
+		return this.nroCelular;
+	}
 }

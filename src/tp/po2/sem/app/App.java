@@ -1,8 +1,9 @@
 package tp.po2.sem.app;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-
 import tp.po2.sem.sistemaEstacionamiento.*;
+import tp.po2.sem.estacionamiento.*;
 
 public class App implements MovementSensor
 {
@@ -27,7 +28,7 @@ public class App implements MovementSensor
 		if( usuarioAsociado.estaEnZonaDeEstacionamiento() && this.vaCaminando )
 		{
 			this.vaCaminando = false;
-			this.asistente.notificar(this);
+			this.asistente.notificar(this, this.usuarioAsociado.getPatente());
 		}
 			
 	}
@@ -40,12 +41,11 @@ public class App implements MovementSensor
 	public void walking() 
 	{
 		if( usuarioAsociado.estaEnZonaDeEstacionamiento() && !this.vaCaminando && 
-				this.usuarioAsociado.poseeEstacionamientoVigente() )
+				this.SEM.poseeEstacionamientoVigente(this.usuarioAsociado.getPatente()) )
 		{
 			this.vaCaminando = true;
 			this.asistente.notificar(this);
 		}
-		
 	}
 	
 	
@@ -62,10 +62,19 @@ public class App implements MovementSensor
 	{
 		if( this.saldoDisponible >= 40 && this.seEncuentraEnFranjaHoraria() )
 		{
-			this.SEM.registrarEstacionamiento( new Estacionamiento );
+			this.SEM.registrarEstacionamiento( new EstacionamientoApp( LocalDateTime.now(), 
+					this.usuarioAsociado.getPatente(), this) );
+			this.asistente.actualizarEstado(this);
 		}
+		// Excepción 1° si no tiene saldo
+		// Excepción 2° si está fuera de franja horaria
 	}
 	
+	
+	public void finalizarEstacionamiento()
+	{
+		this.asistente.actualizarEstado(this);
+	}
 	
 	public void notificarUsuario(String msg)
 	{
@@ -76,6 +85,11 @@ public class App implements MovementSensor
 	public void setModoEstacionamiento( ModoEstacionamiento modo )
 	{
 		this.modoEstacionamiento = modo;
+	}
+	
+	public void setAsistenteUsuario( AsistenciaUsuario asistente )
+	{
+		this.asistente = asistente;
 	}
 	
 	
