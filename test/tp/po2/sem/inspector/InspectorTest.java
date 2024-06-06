@@ -53,7 +53,7 @@ public class InspectorTest {
 
         assertEquals(true, resultado);
     }
-    
+    /*
     @Test
     public void testCuandoUnInspectorConsultaElEstadoDeEstacionamientoDeUnVehiculoYResultaInvalidoRealizaUnaInfraccion() {
     	
@@ -61,9 +61,9 @@ public class InspectorTest {
     	
     	inspector.registrarInfraccion(patente);
     	
-
+*/
     	
-    }
+    
 }
 
 

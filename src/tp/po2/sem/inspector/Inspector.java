@@ -45,12 +45,13 @@ public class Inspector {
 		return this.sistemadeEstacionamientoMedido.poseeEstacionamientoVigente(patente);
 		
 	}
-
+/*
 	public void registrarInfraccion(String patente) {
 		
-		Infraccion infraccion = Infraccion(patente, )
+		Infraccion infraccion = Infraccion(patente, this.zona)
 		
 		this.sistemadeEstacionamientoMedido.
 		
 	}
+	*/
 }
