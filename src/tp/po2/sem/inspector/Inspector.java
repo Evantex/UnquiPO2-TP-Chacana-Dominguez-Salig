@@ -5,6 +5,12 @@ import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 public class Inspector {
 	private String nombreInspector;
 	private SistemaEstacionamiento sistemadeEstacionamientoMedido;
+	
+	public Inspector(String nombreInspector, SistemaEstacionamiento sistemadeEstacionamientoMedido) {
+		super();
+		this.nombreInspector = nombreInspector;
+		this.sistemadeEstacionamientoMedido = sistemadeEstacionamientoMedido;
+	}
 
 	public String getNombreInspector() {
 		return nombreInspector;

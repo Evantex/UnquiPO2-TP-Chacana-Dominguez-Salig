@@ -20,6 +20,7 @@ public class SistemaEstacionamientoTest {
 
 	@BeforeEach
 	public void setUp() {
+		
 		// Creamos el mock de Estacionamiento
 		estacionamientoMock = mock(Estacionamiento.class);
 
