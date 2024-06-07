@@ -11,7 +11,7 @@ public class App implements MovementSensor
 	private boolean deteccionDesplazamiento = true;
 	private SistemaEstacionamiento SEM;
 	private boolean vaCaminando;
-	private double saldoDisponible;
+	private double saldoDisponible; // Fuente de dato del saldo en el SEM. 
 	private AsistenciaUsuario asistente;
 	private ModoEstacionamiento modoEstacionamiento;
 	
@@ -30,7 +30,9 @@ public class App implements MovementSensor
 			this.vaCaminando = false;
 			this.asistente.notificar(this, this.usuarioAsociado.getPatente());
 		}
-			
+			// Va caminadno y va manejando podría ser un state.. dependiendo de eso walking y draving va a ejecutarse o no
+		// Sgate en vaCaminando y .. 
+		// 
 	}
 	
 	
@@ -66,14 +68,16 @@ public class App implements MovementSensor
 					this.usuarioAsociado.getPatente(), this) );
 			this.asistente.actualizarEstado(this);
 		}
-		// Excepción 1° si no tiene saldo
-		// Excepción 2° si está fuera de franja horaria
+		// 1° excepción a añadir: si no tiene saldo.
+		// 2° excepción a añadir: si está fuera de franja horaria.
+		// Deberían ir en lugar del if y antes de la ejecución del código
 	}
 	
 	
 	public void finalizarEstacionamiento()
 	{
 		this.asistente.actualizarEstado(this);
+		this.SEM.
 	}
 	
 	public void notificarUsuario(String msg)

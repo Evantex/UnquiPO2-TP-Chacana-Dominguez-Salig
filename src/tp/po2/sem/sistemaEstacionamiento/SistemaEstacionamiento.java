@@ -3,21 +3,17 @@ package tp.po2.sem.sistemaEstacionamiento;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import tp.po2.sem.estacionamiento.Estacionamiento;
 
 public class SistemaEstacionamiento {
-	private List<Estacionamiento> estacionamientos;
+	private Set<Estacionamiento> estacionamientos = HashSet<Estacionamiento>();
+	
+	private Set<Integer> mutableSet = new HashSet<>();
 
-	public SistemaEstacionamiento(List<Estacionamiento> estacionamientos) {
-		super();
-		this.estacionamientos = estacionamientos;
-	}
 
-	public SistemaEstacionamiento() {
-		estacionamientos = new ArrayList<Estacionamiento>();
-
-	}
 
 	public void registrarEstacionamiento(Estacionamiento unEstacionamiento) {
 		estacionamientos.add(unEstacionamiento);
@@ -34,6 +30,10 @@ public class SistemaEstacionamiento {
 		
 	}
 
+	public void finalizarEstacionamiento( Estacionamiento estacionamiento )
+	{
+		this.estacionamientos.get
+	}
 	
 	
 	

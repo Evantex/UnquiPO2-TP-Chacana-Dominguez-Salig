@@ -6,7 +6,7 @@ public class InicioEstacionamiento implements AsistenciaUsuario
 	@Override
 	public void notificar(App aplicacion, String dominio) 
 	{
-		if( aplicacion.getDeteccionDesplazamiento() )
+		if( aplicacion.getDeteccionDesplazamiento() ) // Delegar en un strategy
 		{
 			aplicacion.notificarUsuario("Posible inicio de estacionamiento");
 			aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion, dominio);

@@ -10,9 +10,9 @@ public class Automatico implements ModoEstacionamiento
 	}
 
 	@Override
-	public void finalizarEstacionamiento(String patente) {
-		// TODO Auto-generated method stub
-		
+	public void finalizarEstacionamiento(App aplicacion)
+	{
+		aplicacion.finalizarEstacionamiento();
 	}
 
 }

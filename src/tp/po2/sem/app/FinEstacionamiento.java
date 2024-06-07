@@ -4,8 +4,13 @@ public class FinEstacionamiento implements AsistenciaUsuario
 {
 
 	@Override
-	public void notificar(App aplicacion, String dominio) {
-		// TODO Auto-generated method stub
+	public void notificar(App aplicacion, String dominio) 
+	{
+		if( aplicacion.getDeteccionDesplazamiento() )
+		{
+			aplicacion.notificarUsuario("Posible fin de estacionamiento");
+			aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
+		}
 		
 	}
 
