@@ -10,10 +10,10 @@ public class App implements MovementSensor
 	private Usuario usuarioAsociado;
 	private boolean deteccionDesplazamiento = true;
 	private SistemaEstacionamiento SEM;
-	private boolean vaCaminando;
 	private double saldoDisponible; // Fuente de dato del saldo en el SEM. 
-	private AsistenciaUsuario asistente;
 	private ModoEstacionamiento modoEstacionamiento;
+	private ModoDesplazamiento modoDesplazamiento;
+	private NotificacionEstacionamiento notificacion;
 	
 	
 	public boolean getDeteccionDesplazamiento()
@@ -25,14 +25,12 @@ public class App implements MovementSensor
 	@Override
 	public void driving()
 	{
-		if( usuarioAsociado.estaEnZonaDeEstacionamiento() && this.vaCaminando )
+		if( usuarioAsociado.estaEnZonaDeEstacionamiento() )
 		{
-			this.vaCaminando = false;
-			this.asistente.notificar(this, this.usuarioAsociado.getPatente());
+			this.modoDesplazamiento.vaConduciendo(this);
 		}
-			// Va caminadno y va manejando podría ser un state.. dependiendo de eso walking y draving va a ejecutarse o no
+		// Va caminadno y va manejando podría ser un state.. dependiendo de eso walking y draving va a ejecutarse o no
 		// Sgate en vaCaminando y .. 
-		// 
 	}
 	
 	
@@ -42,6 +40,7 @@ public class App implements MovementSensor
 	@Override
 	public void walking() 
 	{
+		this.notificacion.
 		if( usuarioAsociado.estaEnZonaDeEstacionamiento() && !this.vaCaminando && 
 				this.SEM.poseeEstacionamientoVigente(this.usuarioAsociado.getPatente()) )
 		{
@@ -91,9 +90,9 @@ public class App implements MovementSensor
 		this.modoEstacionamiento = modo;
 	}
 	
-	public void setAsistenteUsuario( AsistenciaUsuario asistente )
+	public void setModoDesplazamiento( ModoDesplazamiento modo )
 	{
-		this.asistente = asistente;
+		this.modoDesplazamiento = modo;
 	}
 	
 	
