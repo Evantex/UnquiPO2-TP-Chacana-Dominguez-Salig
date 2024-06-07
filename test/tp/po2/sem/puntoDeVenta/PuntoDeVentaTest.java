@@ -40,6 +40,7 @@ class PuntoDeVentaTest {
 
 		// Creamos el mock de SistemaEstacionamiento
 		sistemaEstacionamientoMock = mock(SistemaEstacionamiento.class);
+		
 		// Creamos un spy de la lista de estacionamientos
 		spyListaEstacionamientos = spy(new ArrayList<Estacionamiento>());
 
@@ -57,13 +58,21 @@ class PuntoDeVentaTest {
 		Duration duracion = Duration.ofHours(2).plusMinutes(30);
 		// Ejecutamos el método que queremos probar
 		puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
-
-		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del
-		// conjunto
+		
+		assertEquals(puntoDeVentaSUT.getCantidadCompras(), 1);
+	}
+	
+	@Test	
+	public void testCuandoUnPuntoDeVentaRegistraUnEstacionamientoDeCompraPuntualSeAniadeUnaCompraPuntualAlPuntoDeVenta() {
+		
+		Duration duracion = Duration.ofHours(2).plusMinutes(30);
+		// Ejecutamos el método que queremos probar
+		puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
+		
+		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del conjunto
 		ArgumentCaptor<Compra> captor = ArgumentCaptor.forClass(Compra.class);
 
-		// Verificamos que se haya llamado al método add del conjunto y capturamos el
-		// argumento
+		// Verificamos que se haya llamado al método add del conjunto y capturamos el argumento
 		verify(spySetDeCompras).add(captor.capture());
 
 		// Obtenemos el argumento capturado
@@ -72,10 +81,5 @@ class PuntoDeVentaTest {
 		// Verificamos que el argumento capturado es una instancia de CompraPuntual
 		assertTrue(capturedCompra instanceof CompraPuntual);
 
-		// Verificamos que el número de compras en el conjunto es 1
-		assertEquals(puntoDeVentaSUT.getCantidadCompras(), 1);
-
-		// Verificamos que se llamó al método size del conjunto
-		verify(spySetDeCompras).size();
 	}
 }
