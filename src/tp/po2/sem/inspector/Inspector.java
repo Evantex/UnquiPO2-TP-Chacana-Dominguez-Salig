@@ -56,7 +56,7 @@ public class Inspector {
 
 	public void notificarInfraccion(String patente) {
 
-		this.sem.registrarInfraccion(patente);
+		this.sem.registrarInfraccion(patente, this);
 
 	}
 	

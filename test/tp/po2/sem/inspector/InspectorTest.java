@@ -99,7 +99,7 @@ public class InspectorTest {
         inspector.verificarPatente(patente);
 
         // Verificar que se haya llamado al método notificarInfraccion con los argumentos correctos
-        verify(sem).registrarInfraccion(patente);
+        verify(sem).registrarInfraccion(patente, inspector);
     }
     
     @Test
@@ -109,7 +109,7 @@ public class InspectorTest {
     	
     	inspector.verificarPatente(patente);
     	
-    	verify(sem, never()).registrarInfraccion(patente);
+    	verify(sem, never()).registrarInfraccion(patente, inspector);
     }
 }
 

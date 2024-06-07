@@ -10,6 +10,14 @@ public class Infraccion {
 	private Inspector inspector;		//inspector que realizo la infraccion
 	private ZonaDeEstacionamiento zona; //zona donde se realizo
 	
+	public Infraccion(String patente, LocalDateTime fechaYHora, Inspector inspector, ZonaDeEstacionamiento zona) {
+		super();
+		this.patente = patente;
+		this.fechaYHora = fechaYHora;
+		this.inspector = inspector;
+		this.zona = zona;
+	}
+
 	public String getPatente() {
 		return patente;
 	}
