@@ -3,6 +3,7 @@ package tp.po2.sem.inspector;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -99,6 +100,16 @@ public class InspectorTest {
 
         // Verificar que se haya llamado al método notificarInfraccion con los argumentos correctos
         verify(sem).registrarInfraccion(patente);
+    }
+    
+    @Test
+    public void testUnInspectorNoRealizaNingunaNotificacionSiUnVehiculoTieneEstacionamientoVigente() {
+    	
+    	when(sem.poseeEstacionamientoVigente(patente)).thenReturn(true);
+    	
+    	inspector.verificarPatente(patente);
+    	
+    	verify(sem, never()).registrarInfraccion(patente);
     }
 }
 
