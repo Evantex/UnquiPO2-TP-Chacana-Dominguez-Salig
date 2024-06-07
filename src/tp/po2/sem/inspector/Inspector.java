@@ -5,15 +5,16 @@ import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
 public class Inspector {
 	private String nombreInspector;
-	private SistemaEstacionamiento sistemadeEstacionamientoMedido;
+	private SistemaEstacionamiento sem;
 	private ZonaDeEstacionamiento zonaAsignada;
-	
-	public Inspector() {};
-	
+
+	public Inspector() {
+	};
+
 	public Inspector(String nombreInspector, SistemaEstacionamiento sem, ZonaDeEstacionamiento zona) {
 		super();
 		this.nombreInspector = nombreInspector;
-		this.sistemadeEstacionamientoMedido = sem;
+		this.sem = sem;
 		this.zonaAsignada = zona;
 	}
 
@@ -26,11 +27,11 @@ public class Inspector {
 	}
 
 	public SistemaEstacionamiento getSistemadeEstacionamientoMedido() {
-		return sistemadeEstacionamientoMedido;
+		return sem;
 	}
 
 	public void setSistemadeEstacionamientoMedido(SistemaEstacionamiento sistemadeEstacionamientoMedido) {
-		this.sistemadeEstacionamientoMedido = sistemadeEstacionamientoMedido;
+		this.sem = sistemadeEstacionamientoMedido;
 	}
 
 	public ZonaDeEstacionamiento getZonaAsignada() {
@@ -40,18 +41,23 @@ public class Inspector {
 	public void setZonaAsignada(ZonaDeEstacionamiento zonaAsignada) {
 		this.zonaAsignada = zonaAsignada;
 	}
-
+	
 	public boolean verificarPatente(String patente) {
-		return this.sistemadeEstacionamientoMedido.poseeEstacionamientoVigente(patente);
+		
+		boolean tieneEstacionamientoVigente = sem.poseeEstacionamientoVigente(patente);
+		
+		if (!tieneEstacionamientoVigente) {
+			this.notificarInfraccion(patente);
+		}
+		
+		return tieneEstacionamientoVigente;
 		
 	}
-/*
-	public void registrarInfraccion(String patente) {
-		
-		Infraccion infraccion = Infraccion(patente, this.zona)
-		
-		this.sistemadeEstacionamientoMedido.
-		
+
+	public void notificarInfraccion(String patente) {
+
+		this.sem.registrarInfraccion(patente);
+
 	}
-	*/
+	
 }

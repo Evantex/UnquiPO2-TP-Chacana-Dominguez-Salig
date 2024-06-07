@@ -1,5 +1,6 @@
 package tp.po2.sem.inspector;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
@@ -74,19 +76,30 @@ public class InspectorTest {
 
         assertEquals(true, resultado);
     }
-    /*
-     * 
-    @Test
-    public void testCuandoUnInspectorConsultaElEstadoDeEstacionamientoDeUnVehiculoYResultaInvalidoRealizaUnaInfraccion() {
-    	
-    	when(sem.poseeEstacionamientoVigente(patente)).thenReturn(false);
-    	
-    	inspector.registrarInfraccion(patente);
-    	
-*/
-    	
     
-}
+    @Test
+    public void testUnInspectorConsultaElEstadoDeEstacionamientoDeUnVehiculoYNoEstaVigente() {
+    	
+        when(sem.poseeEstacionamientoVigente(patente)).thenReturn(false);
+        
+        boolean resultado = inspector.verificarPatente(patente);
+        
+        verify(sem).poseeEstacionamientoVigente(patente);
+        
+        assertEquals(false, resultado);
+    }
+    
+    @Test
+    public void testUnInspectorNotificaUnaInfraccionAlSistemaCentralSiUnVehiculoNoTieneEstacionamientoVigente() {
+        // Configurar el mock para que devuelva false cuando se consulta si tiene estacionamiento vigente
+        when(sem.poseeEstacionamientoVigente(patente)).thenReturn(false);
 
+        // Llamar al método que se está probando
+        inspector.verificarPatente(patente);
+
+        // Verificar que se haya llamado al método notificarInfraccion con los argumentos correctos
+        verify(sem).registrarInfraccion(patente);
+    }
+}
 
 

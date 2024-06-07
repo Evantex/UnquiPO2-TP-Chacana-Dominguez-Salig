@@ -34,6 +34,11 @@ public class SistemaEstacionamiento {
 	{
 		this.estacionamientos.get
 	}
+
+	public void registrarInfraccion(String patente) {
+		
+		
+	}
 	
 	
 	
