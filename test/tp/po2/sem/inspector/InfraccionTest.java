@@ -2,17 +2,13 @@
  * 
  */
 package tp.po2.sem.inspector;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-
 import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 
 class InfraccionTest {

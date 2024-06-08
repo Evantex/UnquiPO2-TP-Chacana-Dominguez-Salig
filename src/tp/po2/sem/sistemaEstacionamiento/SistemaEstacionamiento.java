@@ -3,6 +3,7 @@ package tp.po2.sem.sistemaEstacionamiento;
 import java.util.Set;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -13,9 +14,15 @@ import tp.po2.sem.inspector.Infraccion;
 import tp.po2.sem.inspector.Inspector;
 import tp.po2.sem.puntoDeVenta.CompraPuntual;
 
-public class SistemaEstacionamiento {
+public class SistemaEstacionamiento
+{
     private Set<Estacionamiento> estacionamientos;
-	private List<Infraccion> infracciones;
+    private HashMap<String, Double> saldoCelular = new HashMap<>();
+    
+    public void cargarCelular( String nroCelular, double saldo )
+    {
+    	saldoCelular.put(nroCelular, saldo);
+    }
 
     public SistemaEstacionamiento(Set<Estacionamiento> estacionamientos) {
         this.estacionamientos = estacionamientos;

@@ -7,4 +7,5 @@ public interface ModoEstacionamiento
 	
 	public void finalizarEstacionamiento( App aplicacion );
 
+
 }

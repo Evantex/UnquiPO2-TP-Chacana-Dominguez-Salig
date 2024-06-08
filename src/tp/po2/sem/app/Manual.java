@@ -4,17 +4,9 @@ public class Manual implements ModoEstacionamiento
 {
 
 	@Override
-	public void iniciarEstacionamiento(App aplicacion, String patente) 
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	public void iniciarEstacionamiento(App aplicacion, String patente) {}
 
 	@Override
-	public void finalizarEstacionamiento(String patente) 
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	public void finalizarEstacionamiento(App aplicacion) {}
 
 }

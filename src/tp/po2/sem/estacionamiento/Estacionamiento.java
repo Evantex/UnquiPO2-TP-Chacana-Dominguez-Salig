@@ -9,6 +9,7 @@ public abstract class Estacionamiento {
 	protected LocalDateTime finEstacionamiento;
 	protected String patenteVehiculo;
 	protected boolean estaVigente = true;
+	protected String zonaEstacionamiento;
 
 	public Estacionamiento() {}
 	
@@ -19,7 +20,8 @@ public abstract class Estacionamiento {
 		this.estaVigente = finEstacionamiento.isAfter(LocalDateTime.now());
 	}
 
-	public boolean estaVigente() {
+	public boolean estaVigente()
+	{
 		return estaVigente;
 	}
 

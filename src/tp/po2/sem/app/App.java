@@ -7,48 +7,43 @@ import tp.po2.sem.estacionamiento.*;
 
 public class App implements MovementSensor
 {
-	private Usuario usuarioAsociado;
-	private boolean deteccionDesplazamiento = true;
+
 	private SistemaEstacionamiento SEM;
-	private double saldoDisponible; // Fuente de dato del saldo en el SEM. 
 	private ModoEstacionamiento modoEstacionamiento;
-	private ModoDesplazamiento modoDesplazamiento;
-	private NotificacionEstacionamiento notificacion;
+	private ModoDesplazamiento modoDeDesplazamiento; // Instancia de ModalidadManejando
+	private Celular celularAsociado;
+	/*
+	 * Patrón State: Ésta interfaz 'ModoDesplazamiento' cumple el rol de estado dentro de la jerarquía de state. A su vez, la clase App cumple el rol de contexto.
+	 * Además, los estados concretos son las clases: 'ModalidadCaminando' y 'MolidadConduciendo'.
+	 */
 	
+	private ModoNotificaciones modoNotificacion;
 	
-	public boolean getDeteccionDesplazamiento()
+
+	public ModoNotificaciones getModoNotificacion()
 	{
-		return this.deteccionDesplazamiento;
+		return this.modoNotificacion;
 	}
 	
 	
 	@Override
 	public void driving()
 	{
-		if( usuarioAsociado.estaEnZonaDeEstacionamiento() )
-		{
-			this.modoDesplazamiento.vaConduciendo(this);
-		}
-		// Va caminadno y va manejando podría ser un state.. dependiendo de eso walking y draving va a ejecutarse o no
-		// Sgate en vaCaminando y .. 
+		this.modoDeDesplazamiento.conduciendo(this);
 	}
-	
-	
-	
-	
-	
+
+
 	@Override
 	public void walking() 
 	{
-		this.notificacion.
-		if( usuarioAsociado.estaEnZonaDeEstacionamiento() && !this.vaCaminando && 
-				this.SEM.poseeEstacionamientoVigente(this.usuarioAsociado.getPatente()) )
-		{
-			this.vaCaminando = true;
-			this.asistente.notificar(this);
-		}
+		this.modoDeDesplazamiento.caminando(this);		
 	}
 	
+	
+	public boolean estaDentroDeZonaEstacionamiento()
+	{
+		return this.celularAsociado.estaDentroDeZonaEstacionamiento();
+	}
 	
 	public boolean seEncuentraEnFranjaHoraria()
 	{
@@ -81,7 +76,7 @@ public class App implements MovementSensor
 	
 	public void notificarUsuario(String msg)
 	{
-		this.usuarioAsociado.recibirNotificacion(msg);
+		this.celularAsociado.recibirMensaje(msg);
 	}
 	
 	
@@ -90,11 +85,17 @@ public class App implements MovementSensor
 		this.modoEstacionamiento = modo;
 	}
 	
+	
 	public void setModoDesplazamiento( ModoDesplazamiento modo )
 	{
 		this.modoDesplazamiento = modo;
 	}
 	
+	
+	public boolean tieneEstacionamientoVigente()
+	{
+		return this.SEM.poseeEstacionamientoVigente( this.celularAsociado.getNroCelular() );
+	}
 	
 	
 	

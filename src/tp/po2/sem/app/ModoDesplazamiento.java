@@ -3,8 +3,8 @@ package tp.po2.sem.app;
 public interface ModoDesplazamiento 
 {
 	
-	public void vaConduciendo( App aplicacion );
-	public void vaCaminando( App aplicacion );
+	public void caminando( App aplicacion, String patente );
 	
+	public void conduciendo( App aplicacion, String patente );
 
 }
