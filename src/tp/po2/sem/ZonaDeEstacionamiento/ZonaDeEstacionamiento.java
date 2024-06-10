@@ -11,6 +11,14 @@ public class ZonaDeEstacionamiento {
 	private Inspector inspectorAsignado;
 	private List<PuntoDeVenta> puntosDeVenta;
 
+	public ZonaDeEstacionamiento(String identificardorDeZona, Inspector inspectorAsignado,
+			List<PuntoDeVenta> puntosDeVenta) {
+		super();
+		this.identificardorDeZona = identificardorDeZona;
+		this.inspectorAsignado = inspectorAsignado;
+		this.puntosDeVenta = puntosDeVenta;
+	}
+
 	public String getIdentificardorDeZona() {
 		return identificardorDeZona;
 	}
@@ -35,4 +43,13 @@ public class ZonaDeEstacionamiento {
 		this.puntosDeVenta = puntosDeVenta;
 	}
 
+	public void agregarPuntoDeVenta(PuntoDeVenta p) {
+		puntosDeVenta.add(p);
+	}
+
+	public int cantidadDePuntosDeVenta() {
+
+		return puntosDeVenta.size();
+
+	}
 }
