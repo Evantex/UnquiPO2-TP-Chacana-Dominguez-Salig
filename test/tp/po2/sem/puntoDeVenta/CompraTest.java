@@ -31,8 +31,6 @@ public class CompraTest {
 
     @Test
     public void testConstructorSinParametros() {
-        // Mock del punto de venta
-        PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
 
         // Crear instancia de Compra sin parámetros
         Compra compra = new Compra() {};
