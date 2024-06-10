@@ -1,23 +1,38 @@
 package tp.po2.sem.estacionamiento;
 
+import java.awt.Point;
 import java.time.LocalDateTime;
 import tp.po2.sem.app.*;
 
 public class EstacionamientoApp extends Estacionamiento
 {
 	
-	private App appAsociada;
+	private String nroCelularApp;
+
 	
-	public EstacionamientoApp( LocalDateTime inicioEstacionamiento, String dominioVehiculo, App app)
+	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
 	{
-		this.inicioEstacionamiento = inicioEstacionamiento;
-		this.patenteVehículo = dominioVehiculo;
-		this.appAsociada = app;
+		this.inicioEstacionamiento = LocalDateTime.now();
+		this.patenteVehiculo = dominioVehiculo;
+		this.nroCelularApp = celular;
 	}
 
+
 	@Override
-	public String identificadorEstacionamiento() 
+	public boolean estaVigente()
 	{
-		return this.nroCelular;
+		return false;
 	}
+
+
+	@Override
+	public String getIdentificadorEstacionamiento()
+	{
+		return this.nroCelularApp;
+	}
+
+
+
+	
+	
 }

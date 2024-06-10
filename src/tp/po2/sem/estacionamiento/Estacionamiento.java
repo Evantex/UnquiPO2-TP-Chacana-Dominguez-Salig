@@ -1,40 +1,28 @@
 package tp.po2.sem.estacionamiento;
 
+import java.awt.Point;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 
-public abstract class Estacionamiento {
+public abstract class Estacionamiento
+{
 	protected LocalDateTime inicioEstacionamiento;
 	protected LocalDateTime finEstacionamiento;
 	protected String patenteVehiculo;
 	protected boolean estaVigente = true;
-	protected String zonaEstacionamiento;
-
-	public Estacionamiento() {}
+	protected String nombreZonaEstacionamiento;
 	
-	public Estacionamiento(Duration duracion, String patenteVehiculo) {
-		this.inicioEstacionamiento = LocalDateTime.now();
-		this.finEstacionamiento = inicioEstacionamiento.plus(duracion);
-		this.patenteVehiculo = patenteVehiculo;
-		this.estaVigente = finEstacionamiento.isAfter(LocalDateTime.now());
-	}
 
-	public boolean estaVigente()
-	{
-		return estaVigente;
-	}
+	
+	public abstract boolean estaVigente();
 
-	public void finalizarEstacionamiento() { // el sem si quiere puede finalizarlo cuando quiera
-		this.estaVigente = false;
+	
+	public void finalizarEstacionamiento() 
+	{ 
 		this.finEstacionamiento = LocalDateTime.now();
 	}
-
-//	private String datox;
-
-//	public Estacionamiento(String datox) {
-//		super();
-//		this.datox = datox;
-//	}
+	
+	public abstract String getIdentificadorEstacionamiento();
 
 }
