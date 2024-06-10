@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import java.time.Duration;
 import java.util.LinkedHashSet;
 
 import java.util.Set;
@@ -16,8 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import tp.po2.sem.inspector.Inspector;
-import tp.po2.sem.puntoDeVenta.Compra;
-import tp.po2.sem.puntoDeVenta.CompraPuntual;
+
 import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
 class ZonaDeEstacionamientoTest {
