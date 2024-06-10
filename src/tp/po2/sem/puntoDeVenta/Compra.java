@@ -7,7 +7,7 @@ public abstract class Compra {
 
 	private PuntoDeVenta puntoDeVenta;
 	private String numeroDeControl;
-	
+
 	private LocalDateTime fechaHoraCompra;
 
 	// Constructor sin parámetros
@@ -49,4 +49,3 @@ public abstract class Compra {
 		this.fechaHoraCompra = fechaHoraCompra;
 	}
 }
-
