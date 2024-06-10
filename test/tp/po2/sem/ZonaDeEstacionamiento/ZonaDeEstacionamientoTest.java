@@ -12,7 +12,6 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import tp.po2.sem.inspector.Inspector;
 import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
@@ -33,20 +32,44 @@ class ZonaDeEstacionamientoTest {
 	}
 
 	@Test
+	public void testConstructor() {
+
+		ZonaDeEstacionamiento zona = new ZonaDeEstacionamiento("Zona1", inspectorMock, setDePuntosMock);
+
+		assertEquals("Zona1", zona.getIdentificardorDeZona());
+		assertEquals(inspectorMock, zona.getInspectorAsignado());
+		assertEquals(setDePuntosMock, zona.getPuntosDeVenta());
+	}
+
+	public void testSettersAndGetters() {
+		// instancia de la clase ZonaDeEstacionamiento
+		ZonaDeEstacionamiento zonaPrueba = new ZonaDeEstacionamiento("Zona1", null, null);
+
+		// Se establece nuevos valores usando los métodos setters
+		zonaPrueba.setIdentificardorDeZona("NuevaZona");
+
+		zonaPrueba.setInspectorAsignado(inspectorMock);
+
+		zonaPrueba.setPuntosDeVenta(setDePuntosMock);
+
+		// Verificacion de que los valores han sido establecidos correctamente
+		assertEquals("NuevaZona", zonaPrueba.getIdentificardorDeZona());
+		assertEquals(inspectorMock, zonaPrueba.getInspectorAsignado());
+		assertEquals(setDePuntosMock, zonaPrueba.getPuntosDeVenta());
+	}
+
+	@Test
 	void testCuandoUnaZonaDeEstacionamientoNuevoAgregarPuntoDeVentaLaCantidadEs1() {
 		zonaEstacionamientoSUT.agregarPuntoDeVenta(puntoDeVentaMock);
 
 		assertEquals(zonaEstacionamientoSUT.cantidadDePuntosDeVenta(), 1);
 	}
-	
-	
-	
+
 	@Test
 	void testCuandoUnaZonaDeEstacionamientoNuevaRemueveUnPuntoDeVentaLaCantidadEs0() {
 		zonaEstacionamientoSUT.agregarPuntoDeVenta(puntoDeVentaMock);
-		
+
 		zonaEstacionamientoSUT.removerPuntoDeVenta(puntoDeVentaMock);
-		
 
 		assertEquals(zonaEstacionamientoSUT.cantidadDePuntosDeVenta(), 0);
 	}
