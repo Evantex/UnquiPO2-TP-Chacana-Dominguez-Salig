@@ -55,4 +55,9 @@ public class SistemaEstacionamiento
     	infracciones.add(infraccion);
     	
     }
+
+	public void realizarRecargaParaCelular(String numeroCelular, int saldo) {
+		// TODO Auto-generated method stub
+		
+	}
 }

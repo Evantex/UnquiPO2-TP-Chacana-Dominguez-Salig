@@ -44,13 +44,19 @@ public class PuntoDeVenta {
 	}
 
 	public void registrarEstacionamiento(String patente, Duration cantidadDeHoras) {
-	    CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
+		CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
 
-	     sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual); 
+		sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual);
 
-	    setDeCompras.add(compraPuntual);
+		setDeCompras.add(compraPuntual);
 	}
 
+	public void cargarSaldoEnCelular(String numeroCelular, int saldo) {
+		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
+		sem.realizarRecargaParaCelular(numeroCelular, saldo);
+
+		setDeCompras.add(CompraRecargaCelular);
+	}
 
 	public int getCantidadCompras() {
 

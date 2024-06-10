@@ -7,25 +7,23 @@ import java.time.Duration;
 
 import org.junit.Test;
 
-
-
 public class CompraPuntualTest {
 
-    @Test
-    public void testGettersAndSetters() {
-        // Mock del punto de venta
-        PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
+	@Test
+	public void testGettersAndSetters() {
+		// Mock del punto de venta
+		PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
 
-        // Crear instancia de CompraPuntual
-        CompraPuntual compra = new CompraPuntual();
+		// Crear instancia de CompraPuntual
+		CompraPuntual compra = new CompraPuntual();
 
-        // Setter y Getter para PuntoDeVenta
-        compra.setPuntoDeVenta(puntoDeVenta);
-        assertEquals(puntoDeVenta, compra.getPuntoDeVenta());
+		// Setter y Getter para PuntoDeVenta
+		compra.setPuntoDeVenta(puntoDeVenta);
+		assertEquals(puntoDeVenta, compra.getPuntoDeVenta());
 
-        // Setter y Getter para HorasCompradas
-        Duration horasCompradas = Duration.ofHours(2);
-        compra.sethorasCompradas(horasCompradas);
-        assertEquals(horasCompradas, compra.gethorasCompradas());
-    }
+		// Setter y Getter para HorasCompradas
+		Duration horasCompradas = Duration.ofHours(2);
+		compra.sethorasCompradas(horasCompradas);
+		assertEquals(horasCompradas, compra.gethorasCompradas());
+	}
 }

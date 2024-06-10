@@ -7,8 +7,6 @@ import java.time.LocalDateTime;
 
 import org.junit.Test;
 
-import tp.po2.sem.puntoDeVenta.Compra;
-import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
 public class CompraTest {
 
