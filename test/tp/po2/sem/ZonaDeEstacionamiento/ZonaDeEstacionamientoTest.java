@@ -6,7 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,14 +22,14 @@ class ZonaDeEstacionamientoTest {
 	ZonaDeEstacionamiento zonaEstacionamientoSUT;
 	PuntoDeVenta puntoDeVentaMock;
 	Inspector inspectorMock;
-	List<PuntoDeVenta> listaDePuntosMock;
+	Set<PuntoDeVenta> setDePuntosMock;
 
 	@BeforeEach
 	public void setUp() {
 		puntoDeVentaMock = mock(PuntoDeVenta.class);
 		inspectorMock = mock(Inspector.class);
-		listaDePuntosMock = spy(new ArrayList<PuntoDeVenta>());
-		zonaEstacionamientoSUT = new ZonaDeEstacionamiento("identificador", inspectorMock, listaDePuntosMock);
+		setDePuntosMock = spy(new LinkedHashSet<PuntoDeVenta>());
+		zonaEstacionamientoSUT = new ZonaDeEstacionamiento("identificador", inspectorMock, setDePuntosMock);
 
 	}
 

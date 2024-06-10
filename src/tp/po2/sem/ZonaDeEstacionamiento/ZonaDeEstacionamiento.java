@@ -1,6 +1,7 @@
 package tp.po2.sem.ZonaDeEstacionamiento;
 
-import java.util.List;
+
+import java.util.Set;
 
 import tp.po2.sem.inspector.Inspector;
 import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
@@ -9,10 +10,10 @@ public class ZonaDeEstacionamiento {
 
 	private String identificardorDeZona;
 	private Inspector inspectorAsignado;
-	private List<PuntoDeVenta> puntosDeVenta;
+	private Set<PuntoDeVenta> puntosDeVenta;
 
 	public ZonaDeEstacionamiento(String identificardorDeZona, Inspector inspectorAsignado,
-			List<PuntoDeVenta> puntosDeVenta) {
+			Set<PuntoDeVenta> puntosDeVenta) {
 		super();
 		this.identificardorDeZona = identificardorDeZona;
 		this.inspectorAsignado = inspectorAsignado;
@@ -35,11 +36,11 @@ public class ZonaDeEstacionamiento {
 		this.inspectorAsignado = inspectorAsignado;
 	}
 
-	public List<PuntoDeVenta> getPuntosDeVenta() {
+	public Set<PuntoDeVenta> getPuntosDeVenta() {
 		return puntosDeVenta;
 	}
 
-	public void setPuntosDeVenta(List<PuntoDeVenta> puntosDeVenta) {
+	public void setPuntosDeVenta(Set<PuntoDeVenta> puntosDeVenta) {
 		this.puntosDeVenta = puntosDeVenta;
 	}
 
