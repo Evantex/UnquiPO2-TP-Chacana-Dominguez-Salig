@@ -1,4 +1,5 @@
 package tp.po2.sem.app;
+import java.awt.Point;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -9,15 +10,20 @@ public class App implements MovementSensor
 {
 
 	private SistemaEstacionamiento SEM;
-	private ModoEstacionamiento modoEstacionamiento;
-	private ModoDesplazamiento modoDeDesplazamiento; // Instancia de ModalidadManejando
-	private Celular celularAsociado;
+	private ModoEstacionamiento modoEstacionamiento; // Strategy
+	private ModoDesplazamiento modoDeDesplazamiento; // State
 	/*
-	 * Patrón State: Ésta interfaz 'ModoDesplazamiento' cumple el rol de estado dentro de la jerarquía de state. A su vez, la clase App cumple el rol de contexto.
-	 * Además, los estados concretos son las clases: 'ModalidadCaminando' y 'MolidadConduciendo'.
+	 * Patrón State: Ésta interfaz 'ModoDesplazamiento' cumple el rol de estado dentro de la jerarquía de state. A su vez
+	 * la clase App cumple el rol de contexto. Además, los estados concretos son las clases: 'ModalidadCaminando' y 'MolidadConduciendo'.
 	 */
 	
-	private ModoNotificaciones modoNotificacion;
+	private ModoNotificaciones modoNotificacion; // Strategy
+	private Celular celularAsociado;
+	private Point ubicacionUltimoEstacionamiento;
+	private String patenteAsociada;
+
+	
+
 	
 
 	public ModoNotificaciones getModoNotificacion()
@@ -29,14 +35,14 @@ public class App implements MovementSensor
 	@Override
 	public void driving()
 	{
-		this.modoDeDesplazamiento.conduciendo(this);
+		this.modoDeDesplazamiento.conduciendo( this, this.patenteAsociada );
 	}
 
 
 	@Override
 	public void walking() 
 	{
-		this.modoDeDesplazamiento.caminando(this);		
+		this.modoDeDesplazamiento.caminando(this, this.patenteAsociada);		
 	}
 	
 	
@@ -88,7 +94,13 @@ public class App implements MovementSensor
 	
 	public void setModoDesplazamiento( ModoDesplazamiento modo )
 	{
-		this.modoDesplazamiento = modo;
+		this.modoDeDesplazamiento = modo;
+	}
+	
+	
+	public ModoEstacionamiento getModoEstacionamiento()
+	{
+		return this.modoEstacionamiento;
 	}
 	
 	
@@ -99,13 +111,45 @@ public class App implements MovementSensor
 	
 	
 	
-	
-	public ModoEstacionamiento getModoEstacionamiento()
+	public void setUbicacionEstacionamiento( Point ubicacion )
 	{
-		return this.modoEstacionamiento;
+		this.ubicacionUltimoEstacionamiento = ubicacion;
+	}
+	
+	public Point getUbicacionEstacionamiento()
+	{
+		return this.ubicacionUltimoEstacionamiento;
+	}
+	
+	public Point getUbicacionActual()
+	{
+		return this.celularAsociado.getUbicacion();
+	}
+	
+	public String getPatente()
+	{
+		return this.patenteAsociada;
+	}
+
+	
+/*
+	public void setNombreUltimaZonaEstacionamiento()
+	{
+		this.modoDeDesplazamiento.setNombreZonaEstacionamientoActual( this.getNombreEstacionamientoVigenteActual() );
 	}
 	
 	
+	public String getNombreUltimaZonaEstacionamiento()
+	{
+		return this.modoDeDesplazamiento.getNombreZonaEstacionamientoActual();
+	}
 	
-
+	
+	public String getNombreEstacionamientoVigenteActual()
+	{
+		// Colocar excepción en el caso de que la respuesta de. getEstacionamiento de SEM sea un NullPointerExcepcion...
+		return this.SEM.getEstacionamiento( this.celularAsociado.getNroCelular() ).getIdentificadorEstacionamiento();
+	}
+*/
+	
 }
