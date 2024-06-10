@@ -1,6 +1,5 @@
 package tp.po2.sem.ZonaDeEstacionamiento;
 
-
 import java.util.Set;
 
 import tp.po2.sem.inspector.Inspector;
@@ -51,6 +50,11 @@ public class ZonaDeEstacionamiento {
 	public int cantidadDePuntosDeVenta() {
 
 		return puntosDeVenta.size();
+
+	}
+
+	public void removerPuntoDeVenta(PuntoDeVenta p) {
+		puntosDeVenta.remove(p);
 
 	}
 }

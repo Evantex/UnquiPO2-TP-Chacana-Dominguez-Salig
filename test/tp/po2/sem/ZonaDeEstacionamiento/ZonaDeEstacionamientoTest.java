@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import java.util.Set;
@@ -13,7 +12,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import tp.po2.sem.estacionamiento.Estacionamiento;
+
 import tp.po2.sem.inspector.Inspector;
 import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
@@ -38,6 +37,18 @@ class ZonaDeEstacionamientoTest {
 		zonaEstacionamientoSUT.agregarPuntoDeVenta(puntoDeVentaMock);
 
 		assertEquals(zonaEstacionamientoSUT.cantidadDePuntosDeVenta(), 1);
+	}
+	
+	
+	
+	@Test
+	void testCuandoUnaZonaDeEstacionamientoNuevaRemueveUnPuntoDeVentaLaCantidadEs0() {
+		zonaEstacionamientoSUT.agregarPuntoDeVenta(puntoDeVentaMock);
+		
+		zonaEstacionamientoSUT.removerPuntoDeVenta(puntoDeVentaMock);
+		
+
+		assertEquals(zonaEstacionamientoSUT.cantidadDePuntosDeVenta(), 0);
 	}
 
 }
