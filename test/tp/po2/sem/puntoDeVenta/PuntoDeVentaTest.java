@@ -40,7 +40,7 @@ class PuntoDeVentaTest {
 
 		// Creamos el mock de SistemaEstacionamiento
 		sistemaEstacionamientoMock = mock(SistemaEstacionamiento.class);
-		
+
 		// Creamos un spy de la lista de estacionamientos
 		spyListaEstacionamientos = spy(new ArrayList<Estacionamiento>());
 
@@ -58,21 +58,23 @@ class PuntoDeVentaTest {
 		Duration duracion = Duration.ofHours(2).plusMinutes(30);
 		// Ejecutamos el método que queremos probar
 		puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
-		
+
 		assertEquals(puntoDeVentaSUT.getCantidadCompras(), 1);
 	}
-	
-	@Test	
+
+	@Test
 	public void testCuandoUnPuntoDeVentaRegistraUnEstacionamientoDeCompraPuntualSeAniadeUnaCompraPuntualAlPuntoDeVenta() {
-		
+
 		Duration duracion = Duration.ofHours(2).plusMinutes(30);
 		// Ejecutamos el método que queremos probar
 		puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
-		
-		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del conjunto
-		ArgumentCaptor<Compra> captor = ArgumentCaptor.forClass(Compra.class);
 
-		// Verificamos que se haya llamado al método add del conjunto y capturamos el argumento
+		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del
+		// conjunto
+		ArgumentCaptor<CompraPuntual> captor = ArgumentCaptor.forClass(CompraPuntual.class);
+
+		// Verificamos que se haya llamado al método add del conjunto y capturamos el
+		// argumento
 		verify(spySetDeCompras).add(captor.capture());
 
 		// Obtenemos el argumento capturado
@@ -82,4 +84,88 @@ class PuntoDeVentaTest {
 		assertTrue(capturedCompra instanceof CompraPuntual);
 
 	}
+
+	@Test
+	public void testCuandoUnPuntoDeVentaRegistrarUnaRecargaTiene1CompraEnSuSetDeCompras() {
+
+		// Ejecutamos el método que queremos probar
+		puntoDeVentaSUT.cargarSaldoEnCelular("1140414243", 100);
+
+		assertEquals(puntoDeVentaSUT.getCantidadCompras(), 1);
+	}
+
+	@Test
+	public void testCuandoUnPuntoDeVentaRegistraUnaRecargaSeAniadeUnaCompraRecargaAlPuntoDeVenta() {
+
+		// Ejecutamos el método que queremos probar
+		puntoDeVentaSUT.cargarSaldoEnCelular("1140414243", 100);
+
+		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del
+		// conjunto
+		ArgumentCaptor<CompraRecargaCelular> captor = ArgumentCaptor.forClass(CompraRecargaCelular.class);
+
+		// Verificamos que se haya llamado al método add del conjunto y capturamos el
+		// argumento
+		verify(spySetDeCompras).add(captor.capture());
+
+		// Obtenemos el argumento capturado
+		Compra capturedCompra = captor.getValue();
+
+		// Verificamos que el argumento capturado es una instancia de CompraPuntual
+		assertTrue(capturedCompra instanceof CompraRecargaCelular);
+
+	}
+
+	@Test
+	public void testCuandoUnPuntoDeVentaRegistrarUnEstacionamientoYUnaCompraRecargaCelularTiene2CompraEnSuSetDeCompras() {
+		// Crear una duración de 2 horas y 30 minutos
+		Duration duracion = Duration.ofHours(2).plusMinutes(30);
+		// Ejecutamos el método que queremos probar
+		puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
+		// Ejecutamos el método que queremos probar
+		puntoDeVentaSUT.cargarSaldoEnCelular("1140414243", 100);
+
+		assertEquals(puntoDeVentaSUT.getCantidadCompras(), 2);
+	}
+
+	@Test
+	public void testCuandoUnPuntoDeVentaRegistraUnaRecargaYUnaCompraPuntialSeAniadeUnaCompraASuSetompras() {
+
+		// Ejecutamos el método que queremos probar
+		puntoDeVentaSUT.cargarSaldoEnCelular("1140414243", 100);
+
+		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del
+		// conjunto
+		ArgumentCaptor<CompraRecargaCelular> captorCelular = ArgumentCaptor.forClass(CompraRecargaCelular.class);
+
+		// Verificamos que se haya llamado al método add del conjunto y capturamos el
+		// argumento
+		verify(spySetDeCompras).add(captorCelular.capture());
+
+		// Obtenemos el argumento capturado
+		Compra capturedCompraRecargaCelular = captorCelular.getValue();
+
+		// Verificamos que el argumento capturado es una instancia de CompraPuntual
+		assertTrue(capturedCompraRecargaCelular instanceof Compra);
+
+		Duration duracion = Duration.ofHours(2).plusMinutes(30);
+		// Ejecutamos el método que queremos probar
+		puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
+
+		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del
+		// conjunto
+		ArgumentCaptor<CompraPuntual> captorCompraPuntual = ArgumentCaptor.forClass(CompraPuntual.class);
+
+		// Verificamos que se haya llamado al método add del conjunto y capturamos el
+		// argumento
+		verify(spySetDeCompras).add(captorCompraPuntual.capture());
+
+		// Obtenemos el argumento capturado
+		Compra capturedCompraPuntaul = captorCompraPuntual.getValue();
+
+		// Verificamos que el argumento capturado es una instancia de Compra
+		assertTrue(capturedCompraPuntaul instanceof Compra);
+
+	}
+
 }
