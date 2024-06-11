@@ -53,7 +53,7 @@ public class PuntoDeVenta {
 
 	public void cargarSaldoEnCelular(String numeroCelular, int saldo) {
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
-		sem.realizarRecargaParaCelular(numeroCelular, saldo);
+		sem.cargarCelular(numeroCelular, saldo);
 
 		setDeCompras.add(CompraRecargaCelular);
 	}
