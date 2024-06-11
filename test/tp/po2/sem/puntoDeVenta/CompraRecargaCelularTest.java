@@ -33,8 +33,8 @@ public class CompraRecargaCelularTest {
 		// Mock del punto de venta
 		PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
 		PuntoDeVenta nuevoPuntoDeVenta = mock(PuntoDeVenta.class);
-		String numeroDeCelular = "1234567890";
-		String nuevoNumeroDeCelular = "0987654321";
+		String numeroDeCelular = "132";
+		String nuevoNumeroDeCelular = "4444";
 		int montoSaldo = 100;
 		int nuevoMontoSaldo = 200;
 
