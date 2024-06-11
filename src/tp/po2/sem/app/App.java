@@ -24,10 +24,6 @@ public class App implements MovementSensor
 	private Point ubicacionUltimoEstacionamiento;
 	private String patenteAsociada;
 
-	
-
-	
-
 	public ModoNotificaciones getModoNotificacion()
 	{
 		return this.modoNotificacion;
@@ -61,22 +57,6 @@ public class App implements MovementSensor
 		return (horaActual.isBefore(horaMinima)) && (horaActual.isAfter(horaMaxima)); 
 	}
 	
-	
-	/*
-	public void iniciarEstacionamiento( String dominioVehiculo )
-	{
-		if( this.validarSiEsPosibleEstacionar() )
-		{
-			this.SEM.registrarEstacionamiento(new EstacionamientoApp(this, 
-					this.celularAsociado.getNroCelular(), this.getPatente() ));
-		}
-		// 1° excepción a añadir: si no tiene saldo.
-		// 2° excepción a añadir: si está fuera de franja horaria.
-		// Deberían ir en lugar del if y antes de la ejecución del código
-	}
-	*/
-	
-	
 	public void iniciarEstacionamiento(String dominioVehiculo)
 	{
 	    try 
@@ -100,7 +80,7 @@ public class App implements MovementSensor
 	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
-		String fin = "Hora máxima del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
+		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
 		String msg = inicio + "\n" + fin;
 		this.notificarUsuario(msg);
 	}
@@ -108,6 +88,9 @@ public class App implements MovementSensor
 
 	public void finalizarEstacionamiento()
 	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		
 		this.asistente.actualizarEstado(this);
 		this.SEM.
 	}

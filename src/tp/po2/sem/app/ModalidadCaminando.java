@@ -21,7 +21,8 @@ public class ModalidadCaminando implements ModoDesplazamiento
 
 	private boolean validarFinEstacionamiento(App aplicacion)
 	{
-		return aplicacion.tieneEstacionamientoVigente() && this.validarMismoPuntoGeografico(aplicacion);
+		return aplicacion.tieneEstacionamientoVigente()
+				&& this.validarMismoPuntoGeografico(aplicacion);
 	}
 	
 	

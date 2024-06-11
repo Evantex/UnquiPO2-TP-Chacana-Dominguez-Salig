@@ -9,7 +9,7 @@ public class Automatico implements ModoEstacionamiento
 		aplicacion.iniciarEstacionamiento(patente);
 		if( aplicacion.tieneEstacionamientoVigente() )
 		{
-			aplicacion.notificarUsuario("Inicio de estacionamiento relizado"
+			aplicacion.notificarUsuario("Inicio de estacionamiento realizado"
 					+ "de forma automática");
 		}
 	}
