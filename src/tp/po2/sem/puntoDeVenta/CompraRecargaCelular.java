@@ -3,9 +3,9 @@ package tp.po2.sem.puntoDeVenta;
 public class CompraRecargaCelular extends Compra {
 	private PuntoDeVenta puntoDeVenta;
 	private String numeroDecelular;
-	private int montoSaldo;
+	private double montoSaldo;
 
-	public CompraRecargaCelular(PuntoDeVenta puntoDeVenta, String numeroDecelular, int montoSaldo) {
+	public CompraRecargaCelular(PuntoDeVenta puntoDeVenta, String numeroDecelular, double montoSaldo) {
 		super();
 		this.puntoDeVenta = puntoDeVenta;
 		this.numeroDecelular = numeroDecelular;
@@ -20,11 +20,11 @@ public class CompraRecargaCelular extends Compra {
 		this.puntoDeVenta = puntoDeVenta;
 	}
 
-	public int getMontoSaldo() {
+	public double getMontoSaldo() {
 		return montoSaldo;
 	}
 
-	public void setMontoSaldo(int montoSaldo) {
+	public void setMontoSaldo(double montoSaldo) {
 		this.montoSaldo = montoSaldo;
 	}
 

@@ -51,7 +51,7 @@ public class PuntoDeVenta {
 		setDeCompras.add(compraPuntual);
 	}
 
-	public void cargarSaldoEnCelular(String numeroCelular, int saldo) {
+	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
 		sem.cargarCelular(numeroCelular, saldo);
 
