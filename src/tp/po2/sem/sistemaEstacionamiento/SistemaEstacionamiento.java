@@ -41,7 +41,8 @@ public class SistemaEstacionamiento {
 	 * @param nroCelular El número de celular cuyo saldo se desea consultar.
 	 * @return El saldo actual del número de celular, o 0.0 si no existe.
 	 */
-	public double obtenerSaldoCelular(String nroCelular) {
+	public double obtenerSaldoCelular(String nroCelular) 
+	{
 		return saldoCelular.getOrDefault(nroCelular, 0.0);
 	}
 

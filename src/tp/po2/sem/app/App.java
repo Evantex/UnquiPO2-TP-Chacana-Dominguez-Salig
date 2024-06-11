@@ -3,6 +3,8 @@ import java.awt.Point;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import tp.po2.sem.sistemaEstacionamiento.*;
 import tp.po2.sem.estacionamiento.*;
 
@@ -60,25 +62,82 @@ public class App implements MovementSensor
 	}
 	
 	
+	/*
 	public void iniciarEstacionamiento( String dominioVehiculo )
 	{
-		if( this.saldoDisponible >= 40 && this.seEncuentraEnFranjaHoraria() )
+		if( this.validarSiEsPosibleEstacionar() )
 		{
-			this.SEM.registrarEstacionamiento( new EstacionamientoApp( LocalDateTime.now(), 
-					this.usuarioAsociado.getPatente(), this) );
-			this.asistente.actualizarEstado(this);
+			this.SEM.registrarEstacionamiento(new EstacionamientoApp(this, 
+					this.celularAsociado.getNroCelular(), this.getPatente() ));
 		}
 		// 1° excepción a añadir: si no tiene saldo.
 		// 2° excepción a añadir: si está fuera de franja horaria.
 		// Deberían ir en lugar del if y antes de la ejecución del código
 	}
+	*/
 	
 	
+	public void iniciarEstacionamiento(String dominioVehiculo)
+	{
+	    try 
+	    {
+	        this.verificarSaldoSuficiente();
+	        this.verificarHorarioPermitido();
+	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, this.celularAsociado.getNroCelular(),
+	        		this.getPatente() );
+	        this.SEM.registrarEstacionamiento( nuevoEstacionamiento );
+	        this.enviarDetallesEstacionamiento( nuevoEstacionamiento );
+	    } 
+	    catch (Exception e)
+	    {
+	        this.notificarUsuario( e.getMessage() );
+	        // Aquí puedes añadir lógica adicional para manejar el caso de error
+	    }
+	}
+	
+	
+	public void enviarDetallesEstacionamiento( Estacionamiento estacionamiento )
+	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
+		String fin = "Hora máxima del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
+		String msg = inicio + "\n" + fin;
+		this.notificarUsuario(msg);
+	}
+	
+
 	public void finalizarEstacionamiento()
 	{
 		this.asistente.actualizarEstado(this);
 		this.SEM.
 	}
+	
+	
+	private void verificarSaldoSuficiente() throws Exception 
+	{
+	    if ( this.SEM.obtenerSaldoCelular(this.celularAsociado.getNroCelular()) 
+	    		< 40 )
+	    {
+	        throw new Exception("No tiene saldo suficiente para estacionar.");
+	    }
+	}
+	
+	
+	private void verificarHorarioPermitido() throws Exception 
+	{
+	    if ( !this.seEncuentraEnFranjaHoraria() )
+	    {
+	        throw new Exception("Horario no permitido");
+	    }
+	}
+	
+	
+	public boolean validarSiEsPosibleEstacionar()
+	{
+		return this.SEM.obtenerSaldoCelular(this.celularAsociado.getNroCelular()) >= 40
+				&& this.seEncuentraEnFranjaHoraria();
+	}
+	
 	
 	public void notificarUsuario(String msg)
 	{

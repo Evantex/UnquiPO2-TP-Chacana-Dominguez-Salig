@@ -10,11 +10,16 @@ public class ModalidadCaminando implements ModoDesplazamiento
 	@Override
 	public void conduciendo(App aplicacion, String patente) 
 	{
-		aplicacion.getModoNotificacion().notificarFinEstacionamiento(aplicacion);
+		if( this.validarFinEstacionamiento(aplicacion) )
+		{
+			aplicacion.getModoNotificacion().notificarFinEstacionamiento(aplicacion);
+			aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
+		}
+
 		// getModoEstacionamiento... manual/automático
 	}
 
-	private boolean validarZonaEstacionamiento(App aplicacion)
+	private boolean validarFinEstacionamiento(App aplicacion)
 	{
 		return aplicacion.tieneEstacionamientoVigente() && this.validarMismoPuntoGeografico(aplicacion);
 	}

@@ -24,5 +24,15 @@ public abstract class Estacionamiento
 	}
 	
 	public abstract String getIdentificadorEstacionamiento();
+	
+	public LocalDateTime getInicioEstacionamiento()
+	{
+		return this.inicioEstacionamiento;
+	}
+	
+	public LocalDateTime getFinEstacionamiento()
+	{
+		return this.finEstacionamiento;
+	}
 
 }
