@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
@@ -27,6 +28,7 @@ class PuntoDeVentaTest {
 	SistemaEstacionamiento sistemaEstacionamientoMock;
 	Estacionamiento estacionamientoMock;
 	CompraPuntual compraDeEstacionamientoMock;
+	ZonaDeEstacionamiento zonaMock;
 	List<Estacionamiento> spyListaEstacionamientos;
 	Set<Compra> spySetDeCompras;
 
@@ -34,6 +36,8 @@ class PuntoDeVentaTest {
 	public void setUp() {
 		// Creamos el mock de Estacionamiento
 		estacionamientoMock = mock(Estacionamiento.class);
+		// Creamos el mock de Estacionamiento
+		zonaMock = mock(ZonaDeEstacionamiento.class);
 
 		// Creamos el mock de CompraPuntual
 		compraDeEstacionamientoMock = mock(CompraPuntual.class);
@@ -49,7 +53,7 @@ class PuntoDeVentaTest {
 
 		// Creamos la instancia de PuntoDeVenta con el SistemaEstacionamiento mockeado y
 		// el conjunto de compras espiado
-		puntoDeVentaSUT = new PuntoDeVenta("identificador", sistemaEstacionamientoMock, spySetDeCompras);
+		puntoDeVentaSUT = new PuntoDeVenta("identificador", sistemaEstacionamientoMock, spySetDeCompras, zonaMock);
 	}
 
 	@Test

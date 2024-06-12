@@ -15,10 +15,9 @@ public abstract class Estacionamiento
 	
 
 	
-	public Estacionamiento(LocalDateTime inicioEstacionamiento, LocalDateTime finEstacionamiento,
-			String patenteVehiculo,String nombreZonaEstacionamiento) {
+	public Estacionamiento(LocalDateTime finEstacionamiento,String patenteVehiculo,String nombreZonaEstacionamiento) {
 		super();
-		this.inicioEstacionamiento = inicioEstacionamiento;
+		this.inicioEstacionamiento = LocalDateTime.now();
 		this.finEstacionamiento = finEstacionamiento;
 		this.patenteVehiculo = patenteVehiculo;
 		this.nombreZonaEstacionamiento = nombreZonaEstacionamiento;

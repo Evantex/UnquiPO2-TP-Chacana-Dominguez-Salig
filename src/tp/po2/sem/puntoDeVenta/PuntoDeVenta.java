@@ -3,6 +3,7 @@ package tp.po2.sem.puntoDeVenta;
 import java.time.Duration;
 import java.util.Set;
 
+import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
@@ -11,12 +12,22 @@ public class PuntoDeVenta {
 	private String identificadorPuntoDeVenta;
 	private SistemaEstacionamiento sem;
 	private Set<Compra> setDeCompras;
+	private ZonaDeEstacionamiento zona;
 
-	public PuntoDeVenta(String identificadorPuntoDeVenta, SistemaEstacionamiento sem, Set<Compra> setDeCompras) {
+	public PuntoDeVenta(String identificadorPuntoDeVenta, SistemaEstacionamiento sem, Set<Compra> setDeCompras,ZonaDeEstacionamiento zona) {
 		super();
 		this.identificadorPuntoDeVenta = identificadorPuntoDeVenta;
 		this.sem = sem;
+		this.zona =zona;
 		this.setDeCompras = setDeCompras;
+	}
+
+	public ZonaDeEstacionamiento getZona() {
+		return zona;
+	}
+
+	public void setZona(ZonaDeEstacionamiento zona) {
+		this.zona = zona;
 	}
 
 	public String getIdentificadorPuntoDeVenta() {
@@ -45,8 +56,9 @@ public class PuntoDeVenta {
 
 	public void registrarEstacionamiento(String patente, Duration cantidadDeHoras) {
 		CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
+		String IdentificardorDeZonaDelPuntoDeVenta  = this.getZona().getIdentificardorDeZona();
 
-		sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual);
+		sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual,IdentificardorDeZonaDelPuntoDeVenta);
 
 		setDeCompras.add(compraPuntual);
 	}

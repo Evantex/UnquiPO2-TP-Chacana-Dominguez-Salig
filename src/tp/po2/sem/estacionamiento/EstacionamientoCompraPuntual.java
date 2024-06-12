@@ -6,35 +6,36 @@ import java.time.LocalDateTime;
 import tp.po2.sem.puntoDeVenta.*;
 
 public class EstacionamientoCompraPuntual extends Estacionamiento {
-	private CompraPuntual compraAsociada;
-	private Duration duracion;
+    private CompraPuntual compraAsociada;
+    private Duration duracion;
 
-	public EstacionamientoCompraPuntual(LocalDateTime inicioEstacionamiento, LocalDateTime finEstacionamiento,
-			String patenteVehiculo, boolean estaVigente, String nombreZonaEstacionamiento,
-			CompraPuntual compraAsociada) {
-		super(inicioEstacionamiento, finEstacionamiento, patenteVehiculo, nombreZonaEstacionamiento);
-		this.compraAsociada = compraAsociada;
-		this.finEstacionamiento = this.inicioEstacionamiento.plus(duracion); // se establece la hora fin en base a la
-																				// horas alquiladas
-	}
+    // Constructor que inicializa el estacionamiento con la duración comprada
+    public EstacionamientoCompraPuntual(Duration duracion, String patenteVehiculo,
+            String nombreZonaEstacionamiento, CompraPuntual compraAsociada) {
+        super(LocalDateTime.now().plus(duracion), patenteVehiculo, nombreZonaEstacionamiento);
+        this.compraAsociada = compraAsociada;
+        this.duracion = duracion;
+    }
 
-	public CompraPuntual getCompraAsociada() {
-		return compraAsociada;
-	}
+    // Getter para la compra asociada
+    public CompraPuntual getCompraAsociada() {
+        return compraAsociada;
+    }
 
-	public void setCompraAsociada(CompraPuntual compraAsociada) {
-		this.compraAsociada = compraAsociada;
-	}
+    // Setter para la compra asociada
+    public void setCompraAsociada(CompraPuntual compraAsociada) {
+        this.compraAsociada = compraAsociada;
+    }
 
-	@Override
-	public boolean estaVigente() {
-		return LocalDateTime.now().isBefore(this.finEstacionamiento);
-	}
+    // Implementación del método abstracto para verificar si el estacionamiento está vigente
+    @Override
+    public boolean estaVigente() {
+        return LocalDateTime.now().isBefore(this.finEstacionamiento);
+    }
 
-	@Override
-	public String getIdentificadorEstacionamiento() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    // Implementación del método abstracto para obtener el identificador del estacionamiento
+    @Override
+    public String getIdentificadorEstacionamiento() {
+        return "Puntual-" + this.patenteVehiculo + "-" + this.inicioEstacionamiento.toString();
+    }
 }
