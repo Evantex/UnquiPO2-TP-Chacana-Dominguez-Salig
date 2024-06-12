@@ -1,6 +1,7 @@
 package tp.po2.sem.puntoDeVenta;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Set;
 
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
@@ -14,11 +15,12 @@ public class PuntoDeVenta {
 	private Set<Compra> setDeCompras;
 	private ZonaDeEstacionamiento zona;
 
-	public PuntoDeVenta(String identificadorPuntoDeVenta, SistemaEstacionamiento sem, Set<Compra> setDeCompras,ZonaDeEstacionamiento zona) {
+	public PuntoDeVenta(String identificadorPuntoDeVenta, SistemaEstacionamiento sem, Set<Compra> setDeCompras,
+			ZonaDeEstacionamiento zona) {
 		super();
 		this.identificadorPuntoDeVenta = identificadorPuntoDeVenta;
 		this.sem = sem;
-		this.zona =zona;
+		this.zona = zona;
 		this.setDeCompras = setDeCompras;
 	}
 
@@ -56,21 +58,49 @@ public class PuntoDeVenta {
 
 	public void registrarEstacionamiento(String patente, Duration cantidadDeHoras) {
 		try {
-			this.verificarHorarioLaboral();
-			this.verificarSiLaCantidadDeHorasEsValidaEnEsteHorario();
-		CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
-		String IdentificardorDeZonaDelPuntoDeVenta  = this.getZona().getIdentificardorDeZona();
 
-		sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual,IdentificardorDeZonaDelPuntoDeVenta);
+			this.verificarHorarioPermitido();
+			this.verificarSiLaCantidadDeHorasEsValidaEnEsteHorario(cantidadDeHoras);
 
-		setDeCompras.add(compraPuntual);
+			CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
+			String IdentificardorDeZonaDelPuntoDeVenta = this.getZona().getIdentificardorDeZona(); // esto esta de mas?
+
+			sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual,
+					IdentificardorDeZonaDelPuntoDeVenta);
+
+			setDeCompras.add(compraPuntual);
+		} catch (Exception e) {
+			// Imprimir el mensaje de la excepción
+			System.out.println("Ocurrió un error: " + e.getMessage());
 		}
-		catch (Exception e) {
 	}
+
+	private void verificarSiLaCantidadDeHorasEsValidaEnEsteHorario(Duration cantidadDeHoras) throws Exception {
+		if (!this.esValidaLaCantidadDeHorasEnEsteMomento(cantidadDeHoras)) {
+			throw new Exception("No es valida la cantidad de horas solicitada en este momento");
+		}
 	}
-	private void verificarHorarioLaboral() {
-		return sem.
-		
+
+	private boolean esValidaLaCantidadDeHorasEnEsteMomento(Duration cantidadDeHoras) {
+		LocalTime horaActual = LocalTime.now();
+		LocalTime horaFinAlquiler = horaActual.plus(cantidadDeHoras);
+
+		// Verifica si la hora de fin del alquiler es antes o igual a la hora de cierre
+		return !horaFinAlquiler.isAfter(sem.getHoraLaboralFin());
+	}
+
+	private void verificarHorarioPermitido() throws Exception {
+		if (!this.seEncuentraEnFranjaHoraria()) {
+			throw new Exception("Horario no permitido");
+		}
+	}
+
+	public boolean seEncuentraEnFranjaHoraria() {
+		LocalTime horaActual = LocalTime.now();
+		LocalTime horaMinima = sem.getHoraLaboralInicio();
+		LocalTime horaMaxima = sem.getHoraLaboralFin();
+
+		return (horaActual.isAfter(horaMinima)) && (horaActual.isBefore(horaMaxima));
 	}
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
