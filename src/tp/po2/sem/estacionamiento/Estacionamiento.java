@@ -15,6 +15,16 @@ public abstract class Estacionamiento
 	
 
 	
+	public Estacionamiento(LocalDateTime inicioEstacionamiento, LocalDateTime finEstacionamiento,
+			String patenteVehiculo,String nombreZonaEstacionamiento) {
+		super();
+		this.inicioEstacionamiento = inicioEstacionamiento;
+		this.finEstacionamiento = finEstacionamiento;
+		this.patenteVehiculo = patenteVehiculo;
+		this.nombreZonaEstacionamiento = nombreZonaEstacionamiento;
+	}
+
+
 	public abstract boolean estaVigente();
 
 	
