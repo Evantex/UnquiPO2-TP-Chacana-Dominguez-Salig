@@ -138,4 +138,21 @@ public class SistemaEstacionamiento {
 	public void setHoraLaboralFin(LocalTime horaLaboralFin) {
 		this.horaLaboralFin = horaLaboralFin;
 	}
+	
+	
+	public void finalizarEstacionamiento(String identificadorEstacionamiento)
+	{
+	    this.estacionamientos.stream()
+	        .filter(e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
+	        .findAny()
+	        .ifPresent(estacionamiento -> estacionamiento.setFinEstacionamiento());
+	}
+
+	public Estacionamiento getEstacionamiento(String identificadorEstacionamiento) throws Exception {
+	    return this.estacionamientos.stream()
+	            .filter(e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
+	            .findAny()
+	            .orElseThrow(() -> new Exception("El estacionamiento no existe o no está vigente"));
+	}
+	
 }

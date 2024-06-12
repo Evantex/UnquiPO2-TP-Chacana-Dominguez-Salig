@@ -86,24 +86,22 @@ public class App implements MovementSensor
 	}
 	
 
-	public void finalizarEstacionamiento()
+	public void finalizarEstacionamiento() throws Exception
 	{
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		
-		
-		this.asistente.actualizarEstado(this);
-		this.SEM.
+		Estacionamiento est = this.SEM.getEstacionamiento( this.celularAsociado.getNroCelular() );
+		this.SEM.finalizarEstacionamiento(this.celularAsociado.getNroCelular());
+		this.enviarDetallesFinEstacionamiento(est);
 	}
 	
 	
-	public void enviarDetallesFinEstacionamiento( Estacionamiento estacionamiento )
+	public void enviarDetallesFinEstacionamiento( Estacionamiento estacionamiento ) throws Exception
 	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
 		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
 		String duracion = "La duración en horas del estacionamiento fué de " + estacionamiento.getDuracionEnHoras();
-		String precio = "El costo del estacionamiento fué de: " + 
-		String msg = inicio + "\n" + fin;
+		String precio = "El costo del estacionamiento fué de: " + estacionamiento.getCostoEstacionamiento();
+		String msg = inicio + "\n" + fin + "\n" + duracion + "\n" + precio;
 		this.notificarUsuario(msg);
 	}
 	

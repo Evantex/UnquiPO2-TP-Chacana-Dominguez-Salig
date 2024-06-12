@@ -40,4 +40,9 @@ public abstract class Estacionamiento
 	{
 		return this.duracionEnHoras.toHoursPart();
 	}
+	
+	public void setFinEstacionamiento()
+	{
+		this.finEstacionamiento = LocalDateTime.now();
+	}
 }

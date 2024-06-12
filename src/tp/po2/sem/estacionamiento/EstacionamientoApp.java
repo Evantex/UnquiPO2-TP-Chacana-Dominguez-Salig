@@ -25,14 +25,12 @@ public class EstacionamientoApp extends Estacionamiento
 		return false;
 	}
 
-
 	@Override
 	public String getIdentificadorEstacionamiento()
 	{
 		return this.nroCelularApp;
 	}
 
-	
 	@Override
 	public int getDuracionEnHoras() throws Exception
 	{
