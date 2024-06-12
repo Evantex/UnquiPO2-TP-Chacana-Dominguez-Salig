@@ -1,5 +1,4 @@
 package tp.po2.sem.estacionamiento;
-
 import java.awt.Point;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,27 +11,16 @@ public abstract class Estacionamiento
 	protected String patenteVehiculo;
 	protected boolean estaVigente = true;
 	protected String nombreZonaEstacionamiento;
-	
-
-	
-	public Estacionamiento(LocalDateTime finEstacionamiento,String patenteVehiculo,String nombreZonaEstacionamiento) {
-		super();
-		this.inicioEstacionamiento = LocalDateTime.now();
-		this.finEstacionamiento = finEstacionamiento;
-		this.patenteVehiculo = patenteVehiculo;
-		this.nombreZonaEstacionamiento = nombreZonaEstacionamiento;
-	}
-
+	protected Duration duracionEnHoras;
 
 	public abstract boolean estaVigente();
-
+	public abstract String getIdentificadorEstacionamiento();
+	public abstract int getDuracionEnHoras();
 	
 	public void finalizarEstacionamiento() 
 	{ 
 		this.finEstacionamiento = LocalDateTime.now();
 	}
-	
-	public abstract String getIdentificadorEstacionamiento();
 	
 	public LocalDateTime getInicioEstacionamiento()
 	{
@@ -43,5 +31,4 @@ public abstract class Estacionamiento
 	{
 		return this.finEstacionamiento;
 	}
-
 }

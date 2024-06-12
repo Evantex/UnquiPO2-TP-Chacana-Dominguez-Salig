@@ -66,7 +66,7 @@ public class App implements MovementSensor
 	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, this.celularAsociado.getNroCelular(),
 	        		this.getPatente() );
 	        this.SEM.registrarEstacionamiento( nuevoEstacionamiento );
-	        this.enviarDetallesEstacionamiento( nuevoEstacionamiento );
+	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
 	    } 
 	    catch (Exception e)
 	    {
@@ -76,7 +76,7 @@ public class App implements MovementSensor
 	}
 	
 	
-	public void enviarDetallesEstacionamiento( Estacionamiento estacionamiento )
+	public void enviarDetallesInicioEstacionamiento( Estacionamiento estacionamiento )
 	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
@@ -94,6 +94,18 @@ public class App implements MovementSensor
 		this.asistente.actualizarEstado(this);
 		this.SEM.
 	}
+	
+	
+	public void enviarDetallesFinEstacionamiento( Estacionamiento estacionamiento )
+	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
+		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
+		String duracion = "La duración en horas del estacionamiento fué de " + 
+		String msg = inicio + "\n" + fin;
+		this.notificarUsuario(msg);
+	}
+	
 	
 	
 	private void verificarSaldoSuficiente() throws Exception 
