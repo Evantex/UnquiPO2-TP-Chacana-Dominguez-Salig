@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public abstract class Estacionamiento
 {
 	protected LocalDateTime inicioEstacionamiento;
-	protected LocalDateTime finEstacionamiento;
+	protected LocalDateTime finEstacionamiento = null;
 	protected String patenteVehiculo;
 	protected boolean estaVigente = true;
 	protected String nombreZonaEstacionamiento;
@@ -15,7 +15,6 @@ public abstract class Estacionamiento
 
 	public abstract boolean estaVigente();
 	public abstract String getIdentificadorEstacionamiento();
-	public abstract int getDuracionEnHoras();
 	
 	public void finalizarEstacionamiento() 
 	{ 
@@ -30,5 +29,15 @@ public abstract class Estacionamiento
 	public LocalDateTime getFinEstacionamiento()
 	{
 		return this.finEstacionamiento;
+	}
+	
+	public double getCostoEstacionamiento()
+	{
+		return this.duracionEnHoras.toHours() * 40;
+	}
+	
+	public int getDuracionEnHoras() throws Exception 
+	{
+		return this.duracionEnHoras.toHoursPart();
 	}
 }

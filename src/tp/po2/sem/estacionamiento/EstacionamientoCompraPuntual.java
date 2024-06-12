@@ -38,11 +38,4 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
     public String getIdentificadorEstacionamiento() {
         return "Puntual-" + this.patenteVehiculo + "-" + this.inicioEstacionamiento.toString();
     }
-
-
-	@Override
-	public int getDuracionEnHoras() 
-	{
-		return this.duracionEnHoras.toHoursPart();
-	}
 }

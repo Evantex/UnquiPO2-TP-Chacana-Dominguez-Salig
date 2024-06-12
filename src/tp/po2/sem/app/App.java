@@ -101,7 +101,8 @@ public class App implements MovementSensor
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
 		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
-		String duracion = "La duración en horas del estacionamiento fué de " + 
+		String duracion = "La duración en horas del estacionamiento fué de " + estacionamiento.getDuracionEnHoras();
+		String precio = "El costo del estacionamiento fué de: " + 
 		String msg = inicio + "\n" + fin;
 		this.notificarUsuario(msg);
 	}
