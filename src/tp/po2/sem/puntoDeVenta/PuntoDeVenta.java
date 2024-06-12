@@ -55,12 +55,22 @@ public class PuntoDeVenta {
 	}
 
 	public void registrarEstacionamiento(String patente, Duration cantidadDeHoras) {
+		try {
+			this.verificarHorarioLaboral();
+			this.verificarSiLaCantidadDeHorasEsValidaEnEsteHorario();
 		CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
 		String IdentificardorDeZonaDelPuntoDeVenta  = this.getZona().getIdentificardorDeZona();
 
 		sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual,IdentificardorDeZonaDelPuntoDeVenta);
 
 		setDeCompras.add(compraPuntual);
+		}
+		catch (Exception e) {
+	}
+	}
+	private void verificarHorarioLaboral() {
+		return sem.
+		
 	}
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
