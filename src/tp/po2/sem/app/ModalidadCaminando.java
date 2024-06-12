@@ -24,7 +24,7 @@ public class ModalidadCaminando implements ModoDesplazamiento
 		return aplicacion.tieneEstacionamientoVigente()
 				&& this.validarMismoPuntoGeografico(aplicacion);
 	}
-	
+
 	
 	private boolean validarMismoPuntoGeografico(App aplicacion)
 	{

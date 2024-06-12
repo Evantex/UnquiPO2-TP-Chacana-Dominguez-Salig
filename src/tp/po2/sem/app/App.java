@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
 import tp.po2.sem.sistemaEstacionamiento.*;
 import tp.po2.sem.estacionamiento.*;
 
@@ -14,16 +13,25 @@ public class App implements MovementSensor
 	private SistemaEstacionamiento SEM;
 	private ModoEstacionamiento modoEstacionamiento; // Strategy
 	private ModoDesplazamiento modoDeDesplazamiento; // State
-	/*
-	 * Patrón State: Ésta interfaz 'ModoDesplazamiento' cumple el rol de estado dentro de la jerarquía de state. A su vez
-	 * la clase App cumple el rol de contexto. Además, los estados concretos son las clases: 'ModalidadCaminando' y 'MolidadConduciendo'.
-	 */
+/*
+ 	Patrón State: Ésta interfaz 'ModoDesplazamiento' cumple el rol de estado dentro de la jerarquía de state. A su vez
+		la clase App cumple el rol de contexto. Además, los estados concretos son las clases: 'ModalidadCaminando' y 'MolidadConduciendo'.
+*/
 	
 	private ModoNotificaciones modoNotificacion; // Strategy
 	private Celular celularAsociado;
 	private Point ubicacionUltimoEstacionamiento;
 	private String patenteAsociada;
 
+	
+	App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
+	{
+		this.celularAsociado  = cel;
+		this.SEM = sistema;
+		this.patenteAsociada = patenteAsociada;
+	}
+	
+	
 	public ModoNotificaciones getModoNotificacion()
 	{
 		return this.modoNotificacion;
@@ -148,6 +156,11 @@ public class App implements MovementSensor
 	public void setModoDesplazamiento( ModoDesplazamiento modo )
 	{
 		this.modoDeDesplazamiento = modo;
+	}
+	
+	public void setModoNotificacion( ModoNotificaciones modo )
+	{
+		this.modoNotificacion = modo;
 	}
 	
 	

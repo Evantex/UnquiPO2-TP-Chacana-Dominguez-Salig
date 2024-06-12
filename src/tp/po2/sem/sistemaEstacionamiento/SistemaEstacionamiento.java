@@ -70,7 +70,8 @@ public class SistemaEstacionamiento {
 		return estacionamientos.size();
 	}
 
-	public boolean poseeEstacionamientoVigente(String patente) {
+	public boolean poseeEstacionamientoVigente(String identificadorEstacionamiento) 
+	{
 		return true;
 	}
 
