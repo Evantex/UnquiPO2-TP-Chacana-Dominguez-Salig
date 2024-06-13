@@ -18,14 +18,15 @@ import tp.po2.sem.puntoDeVenta.CompraPuntual;
 
 public class SistemaEstacionamiento {
 	private Set<Estacionamiento> estacionamientos;
-	private HashMap<String, Double> saldoCelular = new HashMap<>();
+	private HashMap<String, Double> saldoCelular;
 	private HashMap<String, List<Infraccion>> infraccionesPorPatente;
 	private LocalTime horaLaboralInicio;
 	private LocalTime horaLaboralFin;
 
-	public SistemaEstacionamiento(Set<Estacionamiento> estacionamientos) {
+	public SistemaEstacionamiento() 
+	{
 		super();
-		this.estacionamientos = estacionamientos;
+		this.estacionamientos = new HashSet<>();
 		this.saldoCelular = new HashMap<>();
 		this.infraccionesPorPatente = new HashMap<>();
 		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM

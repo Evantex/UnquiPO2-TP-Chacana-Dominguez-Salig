@@ -42,7 +42,7 @@ public class ModalidadConduciendoTest
 	{
 		modo = new ModalidadConduciendo();
 		cel = mock( Celular.class );
-		sem = mock( SistemaEstacionamiento.class );
+		sem = spy( SistemaEstacionamiento.class );
 		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
 		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
 		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
@@ -60,7 +60,7 @@ public class ModalidadConduciendoTest
 
 		// Set condiciones para poder estacionar
 		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
-		when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
+		// when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
 		when( aplicacion.seEncuentraEnFranjaHoraria() ).thenReturn(true);
 		when( cel.getNroCelular() ).thenReturn("1145241966");
 		when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);
