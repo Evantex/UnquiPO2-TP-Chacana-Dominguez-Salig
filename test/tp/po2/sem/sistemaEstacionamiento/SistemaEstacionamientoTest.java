@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
+import tp.po2.sem.app.App;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 
 public class SistemaEstacionamientoTest {
@@ -17,6 +18,9 @@ public class SistemaEstacionamientoTest {
 	SistemaEstacionamiento sistemaEstacionamiento;
 	Estacionamiento estacionamientoMock;
 	Set<Estacionamiento> spyListaEstacionamientos;
+	private Observer callCenter;
+    private Observer otroSistema;
+    private App appUsuario;
 
 	@BeforeEach
 	public void setUp() {
@@ -27,7 +31,12 @@ public class SistemaEstacionamientoTest {
 		spyListaEstacionamientos = spy(new HashSet<Estacionamiento>());
 
 		// Creamos el SistemaEstacionamiento con el spy de la lista de estacionamientos
-		sistemaEstacionamiento = new SistemaEstacionamiento(spyListaEstacionamientos);
+		sistemaEstacionamiento = new SistemaEstacionamiento();
+		
+		appUsuario = mock (App.class);
+		
+		callCenter = mock(Observer.class);
+        otroSistema = mock(Observer.class);
 	}
 
 	@Test
@@ -93,4 +102,47 @@ public class SistemaEstacionamientoTest {
 		double saldoEsperado = saldo1 + saldo2 + saldo3;
 		assertEquals(saldoEsperado, sistemaEstacionamiento.obtenerSaldoCelular(nroCelular), 0.01);
 	}
+	
+	 @Test
+	    public void testNotificarObservadores_IniciarEstacionamiento() {
+		 
+		 sistemaEstacionamiento.agregarObservador(callCenter);
+		 sistemaEstacionamiento.agregarObservador(otroSistema);
+
+	     appUsuario.iniciarEstacionamiento("Patente");
+
+	     EventoEstacionamiento eventoEsperado = new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, "Patente", "nroTel");
+	     verify(callCenter).actualizar(eventoEsperado);
+	     verify(otroSistema).actualizar(eventoEsperado);
+	    }
+	 
+	 @Test
+	 public void testNotificarObservadores_FinalizarEstacionamiento() {
+	     sistemaEstacionamiento.agregarObservador(callCenter);
+	     sistemaEstacionamiento.agregarObservador(otroSistema);
+
+	     appUsuario.iniciarEstacionamiento("Patente");  // Primero iniciar el estacionamiento
+
+	     sistemaEstacionamiento.finalizarEstacionamiento("Patente");  // Llamar directamente a SEM para finalizar
+
+	     EventoEstacionamiento eventoEsperado = new EventoEstacionamiento(EventoEstacionamiento.Tipo.FIN, "Patente", "nroTel");
+	     verify(callCenter).actualizar(eventoEsperado);
+	     verify(otroSistema).actualizar(eventoEsperado);
+	 }
+	 
+	 @Test
+	 public void testAgregarYEliminarObservador() {
+	     sistemaEstacionamiento.agregarObservador(callCenter);
+	     sistemaEstacionamiento.eliminarObservador(callCenter);
+
+	     appUsuario.iniciarEstacionamiento("Patente");
+
+	     EventoEstacionamiento eventoNoEsperado = new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, "Patente", "nroTel");
+	     verify(callCenter, never()).actualizar(eventoNoEsperado);
+	 }
+
+	 
+
+	 
+	
 }
