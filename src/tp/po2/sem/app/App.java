@@ -73,10 +73,12 @@ public class App implements MovementSensor
 	        this.verificarHorarioPermitido();
 	        this.verificarSiPoseeEstacionamientoVigente();
 	        this.verificarZonaEstacionamiento();
-	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, this.celularAsociado.getNroCelular(),
-	        		this.getPatente() );
+	        String celular = this.celularAsociado.getNroCelular();
+	        String patente = this.getPatente();
+	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
 	        this.SEM.registrarEstacionamiento( nuevoEstacionamiento );
 	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
+	        this.SEM.notificarSistemaAlertasInicioEstacionamiento(patente, celular);
 	    } 
 	    catch (Exception e)
 	    {
@@ -97,10 +99,13 @@ public class App implements MovementSensor
 	
 
 	public void finalizarEstacionamiento() throws Exception
-	{
-		Estacionamiento est = this.SEM.getEstacionamiento( this.celularAsociado.getNroCelular() );
-		this.SEM.finalizarEstacionamiento(this.celularAsociado.getNroCelular());
+	{	
+		String celular = this.celularAsociado.getNroCelular();
+		String patente = this.getPatente();
+		Estacionamiento est = this.SEM.getEstacionamiento( celular );
+		this.SEM.finalizarEstacionamiento( celular );
 		this.enviarDetallesFinEstacionamiento(est);
+		this.SEM.notificarSistemaAlertasFinEstacionamiento(patente, celular);
 	}
 	
 	

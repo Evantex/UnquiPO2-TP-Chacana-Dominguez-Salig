@@ -23,6 +23,7 @@ public class SistemaEstacionamiento {
 	private HashMap<String, List<Infraccion>> infraccionesPorPatente;
 	private LocalTime horaLaboralInicio;
 	private LocalTime horaLaboralFin;
+	private Notificador sistemaAlertas;
 
 	public SistemaEstacionamiento() 
 	{
@@ -32,8 +33,10 @@ public class SistemaEstacionamiento {
 		this.infraccionesPorPatente = new HashMap<>();
 		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
 		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
+		this.setSistemaAlertas(new Notificador());
 	}
-
+	
+	
 	/**
 	 * Carga saldo a un número de celular. Si el celular ya tiene saldo, suma el
 	 * saldo nuevo al existente.
@@ -83,13 +86,14 @@ public class SistemaEstacionamiento {
 		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(horasCompradas, patente,
 				 compraAsociada);
 		estacionamientos.add(estacionamiento);
+		
 	}
 
 	public Integer getCantidadEstacionamientos() {
 		return estacionamientos.size();
 	}
 	
-	//Metodo que utiliza el Inspector, este debe consultar por patente
+	//metodo que utiliza el Inspector, este debe consultar por patente
 	public boolean poseeEstacionamientoVigente(String patente) {
 		
 		//dada la patente: filtro para que me retorne el identificador de estacionamiento asociada a esa patente
@@ -184,5 +188,35 @@ public class SistemaEstacionamiento {
 	            .findAny()
 	            .orElseThrow(() -> new Exception("El estacionamiento no existe o no está vigente"));
 	}
+	
+	
+	// LOGICA DE OBSERVER
+	public void agregarObservador(Observer observador) {
+        getSistemaAlertas().agregarObservador(observador);
+    }
+
+    public void eliminarObservador(Observer observador) {
+        getSistemaAlertas().eliminarObservador(observador);
+    }
+	
+	public Notificador getSistemaAlertas() {
+		return sistemaAlertas;
+	}
+
+	public void setSistemaAlertas(Notificador sistemaAlertas) {
+		this.sistemaAlertas = sistemaAlertas;
+	}
+
+	public void notificarSistemaAlertasFinEstacionamiento(String patente, String celular) {
+		
+		sistemaAlertas.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.FIN, patente, celular));
+		
+	}
+
+	public void notificarSistemaAlertasInicioEstacionamiento(String patente, String celular) {
+		sistemaAlertas.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, patente, celular));
+		
+	}
+	
 	
 }
