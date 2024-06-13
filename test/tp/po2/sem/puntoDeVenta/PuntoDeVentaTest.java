@@ -5,15 +5,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
+
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,37 +40,43 @@ class PuntoDeVentaTest {
 
 	@BeforeEach
 	public void setUp() {
-		// Creamos el mock de Estacionamiento
-		estacionamientoMock = mock(Estacionamiento.class);
-		// Creamos el mock de Estacionamiento
-		zonaMock = mock(ZonaDeEstacionamiento.class);
-
-		// Creamos el mock de CompraPuntual
-		compraDeEstacionamientoMock = mock(CompraPuntual.class);
-
-		// Creamos el mock de SistemaEstacionamiento
-		sistemaEstacionamientoMock = mock(SistemaEstacionamiento.class);
-
-		// Creamos un spy de la lista de estacionamientos
-		spyListaEstacionamientos = spy(new ArrayList<Estacionamiento>());
-
-		// Creamos un spy del conjunto de compras
-		spySetDeCompras = spy(new LinkedHashSet<Compra>());
-
-		// Creamos la instancia de PuntoDeVenta con el SistemaEstacionamiento mockeado y
-		// el conjunto de compras espiado
-		puntoDeVentaSUT = new PuntoDeVenta("identificador", sistemaEstacionamientoMock, spySetDeCompras, zonaMock);
+	    
+	    estacionamientoMock = mock(Estacionamiento.class);
+	    zonaMock = mock(ZonaDeEstacionamiento.class);
+	    compraDeEstacionamientoMock = mock(CompraPuntual.class);
+	    sistemaEstacionamientoMock = mock(SistemaEstacionamiento.class);
+	    spyListaEstacionamientos = spy(new ArrayList<Estacionamiento>());
+	    spySetDeCompras = spy(new LinkedHashSet<Compra>());
+	    puntoDeVentaSUT = new PuntoDeVenta("identificador", sistemaEstacionamientoMock, spySetDeCompras, zonaMock);
+	    
+	    // Configurar horarios válidos
+	    when(sistemaEstacionamientoMock.getHoraLaboralInicio()).thenReturn(LocalTime.of(7, 0));
+	    when(sistemaEstacionamientoMock.getHoraLaboralFin()).thenReturn(LocalTime.of(20, 0));
 	}
+
 
 	@Test
 	public void testCuandoUnPuntoDeVentaRegistrarUnEstacionamientoTiene1CompraEnSuSetDeCompras() {
-		// Crear una duración de 2 horas y 30 minutos
-		Duration duracion = Duration.ofHours(2).plusMinutes(30);
-		// Ejecutamos el método que queremos probar
-		puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
+		
+	    // Crear una duración de 2 horas y 30 minutos
+	    Duration duracion = Duration.ofHours(2).plusMinutes(30);
 
-		assertEquals(puntoDeVentaSUT.getCantidadCompras(), 1);
+	    when(zonaMock.getIdentificardorDeZona()).thenReturn("Zona1");
+
+	    // Mockear LocalTime.now() para que devuelva una hora dentro del horario laboral
+	    LocalTime mockedHoraActual = LocalTime.of(10, 0);
+	    try (MockedStatic<LocalTime> mockedLocalTime = mockStatic(LocalTime.class)) {
+            mockedLocalTime.when(LocalTime::now).thenReturn(mockedHoraActual);
+            
+            //Excercise
+            puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
+        
+	    }
+
+	    // Verificamos que se haya agregado una compra
+	    assertEquals(1, puntoDeVentaSUT.getCantidadCompras());
 	}
+
 
 	@Test
 	public void testCuandoUnPuntoDeVentaRegistraUnEstacionamientoDeCompraPuntualSeAniadeUnaCompraPuntualAlPuntoDeVenta() {

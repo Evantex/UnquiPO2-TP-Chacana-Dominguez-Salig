@@ -84,7 +84,7 @@ public class PuntoDeVenta {
 	private boolean esValidaLaCantidadDeHorasEnEsteMomento(Duration cantidadDeHoras) {
 		LocalTime horaActual = LocalTime.now();
 		LocalTime horaFinAlquiler = horaActual.plus(cantidadDeHoras);
-
+		
 		// Verifica si la hora de fin del alquiler es antes o igual a la hora de cierre
 		return !horaFinAlquiler.isAfter(sem.getHoraLaboralFin());
 	}
