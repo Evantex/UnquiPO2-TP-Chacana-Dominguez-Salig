@@ -1,3 +1,4 @@
+
 package tp.po2.sem.app;
 import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,34 +43,71 @@ public class ModalidadConduciendoTest
 		modo = new ModalidadConduciendo();
 		cel = mock( Celular.class );
 		sem = mock( SistemaEstacionamiento.class );
-		aplicacion = spy( App.class );
+		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
+		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
 		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
 		modoNotificacionActivada = spy( NotificacionActivada.class );
 		modoEstacionamientoManual = spy( Manual.class);
 		modoEstacionamientoAutomatico = spy( Automatico.class );
 		
-	
+		
+		aplicacion.setModoDesplazamiento(modo);
+		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
+		when( aplicacion.getPatente() ).thenReturn("GIO 002");
+		when( cel. )
 
+
+
+		// Set condiciones para poder estacionar
+		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
+		when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
+		
 		
 		/*
 		when( cel.getNroCelular() ).thenReturn("1145241966");
 		when( cel.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
 		*/
 		
-		
+		// return aplicacion.estaDentroDeZonaEstacionamiento() && !aplicacion.tieneEstacionamientoVigente();
 		
 	}
 
 	@Test
-	void asignoNotificacionDesactivadaYChequeoQueNoSeEnvíeElMensajeAlUsuario()
+	void verificoQueNoSeEnvíenMensajesConNotificaciónDesactivada()
 	{
-		aplicacion.setModoNotificacion(new NotificacionDesactivada() );
-		aplicacion.setModoDesplazamiento(modalidadConduciendo);
-		aplicacion.setModoEstacionamiento( new Manual() );
-		aplicacion.walking();
-		verify( modalidadConduciendo ).caminando(aplicacion, aplicacion.getPatente() );
-		verify(cel, never()).recibirMensaje("Posible inicio de estacionamiento");
+		aplicacion.setModoNotificacion(modoNotificacionDesactivada);
+		modo.caminando(aplicacion, "GIO 002");
+		verify(aplicacion, never()).notificarUsuario("Posible inicio de estacionamiento");
 	}
+	
+	@Test
+	void verificoQueEfectivamenteSeEnvíenMensajesConNotificaciónActivada()
+	{
+		aplicacion.setModoNotificacion(modoNotificacionActivada);
+		modo.caminando(aplicacion, "GIO 002");
+		verify(aplicacion, times(1)).notificarUsuario("Posible inicio de estacionamiento");	
+	}
+	
+	@Test
+	void verificoQueNoSeEjecuteEstacionamientoEnModoManual()
+	{
+		aplicacion.setModoNotificacion(modoNotificacionActivada);
+		modo.caminando(aplicacion, "GIO 002");
+		verify(aplicacion, never()).iniciarEstacionamiento("GIO 002");
+	}
+	
+	@Test
+	void verificoQueEfectivamenteSeEjecuteEstacionamientoEnModoAutomatico()
+	{
+		aplicacion.setModoNotificacion(modoNotificacionActivada);
+		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
+		modo.caminando(aplicacion, "GIO 002");
+		verify(aplicacion, times(1)).iniciarEstacionamiento("GIO 002");
+		verify(aplicacion, times(1)).notificarUsuario("Inicio de estacionamiento realizado de forma automática");
+	}
+	
+	
+	
 
 
 }

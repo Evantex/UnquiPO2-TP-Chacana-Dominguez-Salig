@@ -39,7 +39,8 @@ public class SistemaEstacionamiento {
 	 * @param nroCelular El número de celular al que se cargará el saldo.
 	 * @param saldo      El monto de saldo a cargar.
 	 */
-	public void cargarCelular(String nroCelular, double saldo) {
+	public void cargarCelular(String nroCelular, double saldo)
+	{
 		// Obtiene el saldo actual del número de celular o 0.0 si no existe,
 		// y luego suma el saldo nuevo al saldo actual.
 		saldoCelular.put(nroCelular, saldoCelular.getOrDefault(nroCelular, 0.0) + saldo);
@@ -51,10 +52,26 @@ public class SistemaEstacionamiento {
 	 * @param nroCelular El número de celular cuyo saldo se desea consultar.
 	 * @return El saldo actual del número de celular, o 0.0 si no existe.
 	 */
-	public double obtenerSaldoCelular(String nroCelular) {
-		return saldoCelular.getOrDefault(nroCelular, 0.0);
+	
+	public double obtenerSaldoCelular(String nroCelular)
+	{
+		this.verificarSiExisteCelular(nroCelular);
+		return this.saldoCelular.get(nroCelular);
 	}
 
+	private void verificarSiExisteCelular( String nroCelular )
+	{
+		if( !this.saldoCelular.containsKey(nroCelular) )
+		{
+			this.agregarCelular(nroCelular);
+		}
+	}
+	
+	public void agregarCelular( String nroCelular )
+	{
+		this.saldoCelular.put(nroCelular, 0.0);
+	}
+	
 	public void registrarEstacionamiento(Estacionamiento unEstacionamiento) {
 		estacionamientos.add(unEstacionamiento);
 	}
