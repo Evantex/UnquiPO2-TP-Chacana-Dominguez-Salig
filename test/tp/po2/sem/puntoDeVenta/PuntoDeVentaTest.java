@@ -67,8 +67,8 @@ class PuntoDeVentaTest {
 	    LocalTime mockedHoraActual = LocalTime.of(10, 0);
 	    try (MockedStatic<LocalTime> mockedLocalTime = mockStatic(LocalTime.class)) {
             mockedLocalTime.when(LocalTime::now).thenReturn(mockedHoraActual);
-            
-            //Excercise
+           
+        //Excercise
             puntoDeVentaSUT.registrarEstacionamiento("Patente", duracion);
         
 	    }

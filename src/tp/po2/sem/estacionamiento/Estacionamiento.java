@@ -46,6 +46,10 @@ public abstract class Estacionamiento
 	{
 		this.finEstacionamiento = LocalDateTime.now();
 	}
+	public String getPatente() {
+		
+		return this.patenteVehiculo;
+	}
 	
 
 }

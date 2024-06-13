@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.estacionamiento.Estacionamiento;
@@ -88,9 +89,18 @@ public class SistemaEstacionamiento {
 		return estacionamientos.size();
 	}
 	
-	//hardcodeado mientras para que corran los test de Inspector(debe consultar por patente)
+	//Metodo que utiliza el Inspector, este debe consultar por patente
 	public boolean poseeEstacionamientoVigente(String patente) {
-		return true;
+		
+		//dada la patente: filtro para que me retorne el identificador de estacionamiento asociada a esa patente
+		//de ese modo puedo utilizar el metodo estaVigente()
+	    Optional<String> identificadorEstacionamientoOptional = estacionamientos.stream()
+	            .filter(e -> e.getPatente().equals(patente))
+	            .map(e -> String.valueOf(e.getIdentificadorEstacionamiento()))
+	            .findFirst();
+
+	    String identificadorEstacionamiento = identificadorEstacionamientoOptional.orElse(null);
+	    return estaVigente(identificadorEstacionamiento);
 	}
 	
 	public boolean estaVigente(String identificadorEstacionamiento) 
