@@ -179,7 +179,7 @@ public class App implements MovementSensor
 	
 	public boolean tieneEstacionamientoVigente()
 	{
-		return this.SEM.poseeEstacionamientoVigente( this.celularAsociado.getNroCelular() );
+		return this.SEM.estaVigente( this.celularAsociado.getNroCelular() );
 	}
 	
 	

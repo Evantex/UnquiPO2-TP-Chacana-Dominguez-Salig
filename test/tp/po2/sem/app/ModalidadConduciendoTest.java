@@ -41,29 +41,30 @@ public class ModalidadConduciendoTest
 	void setUp() throws Exception 
 	{
 		modo = new ModalidadConduciendo();
+		
 		cel = mock( Celular.class );
-		sem = spy( SistemaEstacionamiento.class );
-		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
+		when( cel.getNroCelular() ).thenReturn("1145241966");
+		// when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);
+		
+		
+		// El SEM lo seteo como objeto real por problemas con el manejo de listas
+		sem = new SistemaEstacionamiento();
+		sem.cargarCelular("1145241966", 100.0);
+
 		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
+	
+		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
 		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
 		modoNotificacionActivada = spy( NotificacionActivada.class );
 		modoEstacionamientoManual = spy( Manual.class);
 		modoEstacionamientoAutomatico = spy( Automatico.class );
-		
-		
 		aplicacion.setModoDesplazamiento(modo);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
-		when( aplicacion.getPatente() ).thenReturn("GIO 002");
-
-
-
+		// when( aplicacion.getPatente() ).thenReturn("GIO 002");
 
 		// Set condiciones para poder estacionar
 		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
-		// when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
 		when( aplicacion.seEncuentraEnFranjaHoraria() ).thenReturn(true);
-		when( cel.getNroCelular() ).thenReturn("1145241966");
-		when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);
 		
 		
 		/*
@@ -76,6 +77,12 @@ public class ModalidadConduciendoTest
 	}
 
 	@Test
+	void verificoQueAppNoTengaEstacionamientosVigentes()
+	{
+		assertFalse( aplicacion.tieneEstacionamientoVigente() );
+	}
+	
+	@Test
 	void verificoQueNoSeEnvíenMensajesConNotificaciónDesactivada()
 	{
 		aplicacion.setModoNotificacion(modoNotificacionDesactivada);
@@ -83,14 +90,16 @@ public class ModalidadConduciendoTest
 		verify(aplicacion, never()).notificarUsuario("Posible inicio de estacionamiento");
 	}
 	
+	
 	@Test
 	void verificoQueEfectivamenteSeEnvíenMensajesConNotificaciónActivada()
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion, "GIO 002");
+		modo.caminando(aplicacion, aplicacion.getPatente());
 		verify(aplicacion, times(1)).notificarUsuario("Posible inicio de estacionamiento");	
 	}
 	
+
 	@Test
 	void verificoQueNoSeEjecuteEstacionamientoEnModoManual()
 	{
@@ -99,6 +108,16 @@ public class ModalidadConduciendoTest
 		verify(aplicacion, never()).iniciarEstacionamiento("GIO 002");
 	}
 	
+	
+	@Test
+	void verificoQueAppTengaEstacionamientoVigente()
+	{
+		aplicacion.iniciarEstacionamiento( aplicacion.getPatente() );
+		assertEquals( 1,  sem.getEstacionamientos().size() );
+		assertTrue( aplicacion.tieneEstacionamientoVigente() );
+	}
+	
+	
 	@Test
 	void verificoQueEfectivamenteSeEjecuteEstacionamientoEnModoAutomatico()
 	{
@@ -106,9 +125,26 @@ public class ModalidadConduciendoTest
 		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
 		modo.caminando(aplicacion, "GIO 002");
 		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion, "GIO 002");
-		verify(aplicacion, times(1)).iniciarEstacionamiento("GIO 002");
+		verify(aplicacion, times(1)).iniciarEstacionamiento( aplicacion.getPatente() );
 		verify(aplicacion, times(1)).notificarUsuario("Inicio de estacionamiento realizado de forma automática");
 	}
+	
+	
+	
+	
+	/*
+
+	@Test
+	void verificoQueEfectivamenteSeEjecuteEstacionamientoEnModoAutomatico()
+	{
+		aplicacion.setModoNotificacion(modoNotificacionActivada);
+		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
+		modo.caminando(aplicacion, "GIO 002");
+		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion, aplicacion.getPatente());
+		verify(aplicacion, times(1)).iniciarEstacionamiento( aplicacion.getPatente() );
+		verify(aplicacion, times(1)).notificarUsuario("Inicio de estacionamiento realizado de forma automática");
+	}
+	*/
 	
 	
 	

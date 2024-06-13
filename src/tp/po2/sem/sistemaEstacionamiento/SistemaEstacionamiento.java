@@ -88,9 +88,10 @@ public class SistemaEstacionamiento {
 		return estacionamientos.size();
 	}
 
-	public boolean poseeEstacionamientoVigente(String identificadorEstacionamiento) 
+	public boolean estaVigente(String identificadorEstacionamiento) 
 	{
-		return true;
+	    return this.estacionamientos.stream()
+	            .anyMatch(e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento));
 	}
 
 	public void registrarInfraccion(String patente, Inspector inspector) {

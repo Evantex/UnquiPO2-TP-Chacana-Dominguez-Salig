@@ -34,8 +34,17 @@ public class EstacionamientoApp extends Estacionamiento
 	@Override
 	public boolean estaVigente()
 	{
-		return false;
+		try
+		{
+			this.verificarSiFinalizo();
+			return false;
+		}
+		catch (Exception e)
+		{
+			return true;
+		}
 	}
+	
 
 	@Override
 	public String getIdentificadorEstacionamiento()
