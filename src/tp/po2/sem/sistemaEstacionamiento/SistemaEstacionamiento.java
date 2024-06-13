@@ -125,9 +125,11 @@ public class SistemaEstacionamiento {
 		this.estacionamientos = estacionamientos;
 	}
 
+	/*
 	public HashMap<String, Double> getSaldoCelular() {
 		return saldoCelular;
 	}
+	*/
 
 	public void setSaldoCelular(HashMap<String, Double> saldoCelular) {
 		this.saldoCelular = saldoCelular;

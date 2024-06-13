@@ -15,6 +15,7 @@ public abstract class Estacionamiento
 
 	public abstract boolean estaVigente();
 	public abstract String getIdentificadorEstacionamiento();
+	public abstract LocalDateTime getHoraMaximaFinEstacionamiento();
 	
 	public void finalizarEstacionamiento() 
 	{ 
@@ -45,4 +46,6 @@ public abstract class Estacionamiento
 	{
 		this.finEstacionamiento = LocalDateTime.now();
 	}
+	
+
 }

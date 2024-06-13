@@ -5,7 +5,7 @@ public interface ModoEstacionamiento
 	
 	public void iniciarEstacionamiento( App aplicacion, String patente );
 	
-	public void finalizarEstacionamiento( App aplicacion );
+	public void finalizarEstacionamiento( App aplicacion ) throws Exception;
 
 
 }

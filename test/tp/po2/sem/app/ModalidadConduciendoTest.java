@@ -54,13 +54,16 @@ public class ModalidadConduciendoTest
 		aplicacion.setModoDesplazamiento(modo);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
 		when( aplicacion.getPatente() ).thenReturn("GIO 002");
-		when( cel. )
+
 
 
 
 		// Set condiciones para poder estacionar
 		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
 		when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
+		when( aplicacion.seEncuentraEnFranjaHoraria() ).thenReturn(true);
+		when( cel.getNroCelular() ).thenReturn("1145241966");
+		when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);
 		
 		
 		/*
@@ -102,6 +105,7 @@ public class ModalidadConduciendoTest
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
 		modo.caminando(aplicacion, "GIO 002");
+		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion, "GIO 002");
 		verify(aplicacion, times(1)).iniciarEstacionamiento("GIO 002");
 		verify(aplicacion, times(1)).notificarUsuario("Inicio de estacionamiento realizado de forma automática");
 	}

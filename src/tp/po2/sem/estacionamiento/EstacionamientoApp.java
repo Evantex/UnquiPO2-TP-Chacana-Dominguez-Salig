@@ -7,17 +7,29 @@ import tp.po2.sem.app.*;
 
 public class EstacionamientoApp extends Estacionamiento
 {
-	
+	private App aplicacion;
 	private String nroCelularApp;
 
 	
 	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
 	{
+		this.aplicacion = app;
 		this.inicioEstacionamiento = LocalDateTime.now();
+		// this.finEstacionamiento = app.
 		this.patenteVehiculo = dominioVehiculo;
 		this.nroCelularApp = celular;
 	}
 
+	
+	@Override
+	public LocalDateTime getHoraMaximaFinEstacionamiento()
+	{
+		LocalDateTime horaMáximaPermitidaSaldo = this.inicioEstacionamiento.plusHours( aplicacion.getHorasMaximasPermitidasEstacionamiento() );
+		LocalDateTime horaMáximaPermitidaDelDía = LocalDateTime.of( this.inicioEstacionamiento.getYear(), 	this.inicioEstacionamiento.getMonth(), 
+						this.inicioEstacionamiento.getDayOfMonth(), 	20, 00);
+		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo : horaMáximaPermitidaDelDía;
+	}
+	
 
 	@Override
 	public boolean estaVigente()

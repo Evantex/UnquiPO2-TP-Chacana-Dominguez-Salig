@@ -88,7 +88,7 @@ public class App implements MovementSensor
 	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
-		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
+		String fin = "Hora máxima fin del estacionamiento respecto al saldo: " + estacionamiento.getHoraMaximaFinEstacionamiento().format(formatter);
 		String msg = inicio + "\n" + fin;
 		this.notificarUsuario(msg);
 	}
@@ -131,6 +131,13 @@ public class App implements MovementSensor
 	    {
 	        throw new Exception("Horario no permitido");
 	    }
+	}
+	
+	
+	public int getHorasMaximasPermitidasEstacionamiento()
+	{
+		double saldoCelular = this.SEM.obtenerSaldoCelular(this.celularAsociado.getNroCelular());
+		return (int) Math.round(saldoCelular / 40);
 	}
 	
 	

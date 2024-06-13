@@ -9,13 +9,12 @@ public class Automatico implements ModoEstacionamiento
 		aplicacion.iniciarEstacionamiento(patente);
 		if( aplicacion.tieneEstacionamientoVigente() )
 		{
-			aplicacion.notificarUsuario("Inicio de estacionamiento realizado"
-					+ "de forma automática");
+			aplicacion.notificarUsuario("Inicio de estacionamiento realizado de forma automática");
 		}
 	}
 
 	@Override
-	public void finalizarEstacionamiento(App aplicacion)
+	public void finalizarEstacionamiento(App aplicacion) throws Exception
 	{
 		aplicacion.finalizarEstacionamiento();
 	}
