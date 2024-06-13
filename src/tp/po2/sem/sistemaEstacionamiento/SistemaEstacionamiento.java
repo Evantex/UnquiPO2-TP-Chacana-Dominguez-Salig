@@ -62,7 +62,7 @@ public class SistemaEstacionamiento {
 	public void registrarEstacionamientoCompraPuntual(String patente, Duration horasCompradas,
 			CompraPuntual compraAsociada, String nombreZonaEstacionamiento) {
 		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(horasCompradas, patente,
-				nombreZonaEstacionamiento, compraAsociada);
+				 compraAsociada);
 		estacionamientos.add(estacionamiento);
 	}
 
