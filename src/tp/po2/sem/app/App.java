@@ -71,6 +71,8 @@ public class App implements MovementSensor
 	    {
 	        this.verificarSaldoSuficiente();
 	        this.verificarHorarioPermitido();
+	        this.verificarSiPoseeEstacionamientoVigente();
+	        this.verificarZonaEstacionamiento();
 	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, this.celularAsociado.getNroCelular(),
 	        		this.getPatente() );
 	        this.SEM.registrarEstacionamiento( nuevoEstacionamiento );
@@ -133,6 +135,22 @@ public class App implements MovementSensor
 	    }
 	}
 	
+	public void verificarZonaEstacionamiento() throws Exception 
+	{
+		if ( !this.estaDentroDeZonaEstacionamiento() )
+		{
+			throw new Exception("No está en una zona de estacionamiento");
+		}
+	}
+	
+	public void verificarSiPoseeEstacionamientoVigente() throws Exception 
+	{
+		if ( this.tieneEstacionamientoVigente() )
+		{
+			throw new Exception("Ya tienes un estacionamiento vigente");
+		}
+	}
+	
 	
 	public int getHorasMaximasPermitidasEstacionamiento()
 	{
@@ -141,11 +159,13 @@ public class App implements MovementSensor
 	}
 	
 	
+	/*
 	public boolean validarSiEsPosibleEstacionar()
 	{
 		return this.SEM.obtenerSaldoCelular(this.celularAsociado.getNroCelular()) >= 40
 				&& this.seEncuentraEnFranjaHoraria();
 	}
+	*/
 	
 	
 	public void notificarUsuario(String msg)

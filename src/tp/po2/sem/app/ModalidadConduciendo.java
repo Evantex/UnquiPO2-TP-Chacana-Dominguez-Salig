@@ -5,14 +5,20 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	
 	
 	@Override
-	public void caminando(App aplicacion, String patente) 
+	public void caminando(App aplicacion, String patente) throws Exception 
 	{
-			if(  this.validarSiPuedeEstacionar(aplicacion) )
-			{
+		try
+		{
+			aplicacion.verificarSiPoseeEstacionamientoVigente();
+			aplicacion.verificarZonaEstacionamiento();
 			aplicacion.getModoNotificacion().notificarInicioEstacionamiento(aplicacion);
 			aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion, patente);
 			this.update(aplicacion);
-			}
+		}
+		catch (Exception e)
+		{
+			// En este caso, si una de las dos validaciones lanza error, no se ejecuta ninguna acción.
+		}
 	}
 
 	@Override
@@ -27,12 +33,6 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 			aplicacion.setModoDesplazamiento( new ModalidadCaminando() );
 			aplicacion.setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
 		}
-	}
-	
-
-	private boolean validarSiPuedeEstacionar(App aplicacion)
-	{
-		return aplicacion.estaDentroDeZonaEstacionamiento() && !aplicacion.tieneEstacionamientoVigente();
 	}
 	
 	
