@@ -25,4 +25,13 @@ public class CompraPuntual extends Compra {
 	public void sethorasCompradas(Duration cantidadDeHorasCompradas) {
 		this.horasCompradas = cantidadDeHorasCompradas;
 	}
+
+	public boolean esCompraPuntual() {
+		return true;
+	}
+
+	public boolean esCompraRecargaCelular() {
+		return false;
+	}
+
 }
