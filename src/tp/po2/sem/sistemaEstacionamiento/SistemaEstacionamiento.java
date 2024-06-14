@@ -92,6 +92,11 @@ public class SistemaEstacionamiento {
 		return estacionamientos.size();
 	}
 
+	// validaciones de acciones
+
+	public boolean esValidoRegistrarEstacionamiento() {
+		return true; // agregar logica de validaciones de horarios, exepciones
+	}
 	// registraciones
 
 	public void registrarCompra(Compra compra) {

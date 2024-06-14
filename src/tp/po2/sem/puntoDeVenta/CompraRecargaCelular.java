@@ -35,7 +35,7 @@ public class CompraRecargaCelular extends Compra {
 	public void setNumeroDecelular(String numeroDecelular) {
 		this.numeroDecelular = numeroDecelular;
 	}
-	
+
 	public boolean esCompraPuntual() {
 		return false;
 	}

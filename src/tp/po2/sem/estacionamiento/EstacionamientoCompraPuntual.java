@@ -47,6 +47,13 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
 	public boolean esEstacionamientoApp() {
 		return false;
 	}
+
+
+	@Override
+	public LocalDateTime getHoraMaximaFinEstacionamiento() { // para que es esto?
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     
     
