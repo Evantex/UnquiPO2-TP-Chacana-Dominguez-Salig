@@ -50,6 +50,8 @@ public abstract class Estacionamiento
 		
 		return this.patenteVehiculo;
 	}
-	
+	public abstract boolean esEstacionamientoCompraPuntual();
+
+	public abstract boolean esEstacionamientoApp();
 
 }

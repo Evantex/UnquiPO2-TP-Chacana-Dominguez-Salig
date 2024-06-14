@@ -38,4 +38,18 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
     public String getIdentificadorEstacionamiento() {
         return "Puntual-" + this.patenteVehiculo + "-" + this.inicioEstacionamiento.toString();
     }
+    
+    
+	public boolean esEstacionamientoCompraPuntual() {
+		return true;
+	}
+
+	public boolean esEstacionamientoApp() {
+		return false;
+	}
+    
+    
+    
+    
+    
 }

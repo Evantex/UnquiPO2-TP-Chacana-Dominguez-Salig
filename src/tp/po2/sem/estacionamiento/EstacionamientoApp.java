@@ -5,14 +5,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import tp.po2.sem.app.*;
 
-public class EstacionamientoApp extends Estacionamiento
-{
+public class EstacionamientoApp extends Estacionamiento {
 	private App aplicacion;
 	private String nroCelularApp;
 
-	
-	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
-	{
+	public EstacionamientoApp(App app, String celular, String dominioVehiculo) {
 		this.aplicacion = app;
 		this.inicioEstacionamiento = LocalDateTime.now();
 		// this.finEstacionamiento = app.
@@ -20,60 +17,56 @@ public class EstacionamientoApp extends Estacionamiento
 		this.nroCelularApp = celular;
 	}
 
-	
 	@Override
-	public LocalDateTime getHoraMaximaFinEstacionamiento()
-	{
-		LocalDateTime horaMáximaPermitidaSaldo = this.inicioEstacionamiento.plusHours( aplicacion.getHorasMaximasPermitidasEstacionamiento() );
-		LocalDateTime horaMáximaPermitidaDelDía = LocalDateTime.of( this.inicioEstacionamiento.getYear(), 	this.inicioEstacionamiento.getMonth(), 
-						this.inicioEstacionamiento.getDayOfMonth(), 	20, 00);
-		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo : horaMáximaPermitidaDelDía;
+	public LocalDateTime getHoraMaximaFinEstacionamiento() {
+		LocalDateTime horaMáximaPermitidaSaldo = this.inicioEstacionamiento
+				.plusHours(aplicacion.getHorasMaximasPermitidasEstacionamiento());
+		LocalDateTime horaMáximaPermitidaDelDía = LocalDateTime.of(this.inicioEstacionamiento.getYear(),
+				this.inicioEstacionamiento.getMonth(), this.inicioEstacionamiento.getDayOfMonth(), 20, 00);
+		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo
+				: horaMáximaPermitidaDelDía;
 	}
-	
 
 	@Override
-	public boolean estaVigente()
-	{
-		try
-		{
+	public boolean estaVigente() {
+		try {
 			this.verificarSiFinalizo();
 			return false;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			return true;
 		}
 	}
-	
 
 	@Override
-	public String getIdentificadorEstacionamiento()
-	{
+	public String getIdentificadorEstacionamiento() {
 		return this.nroCelularApp;
 	}
 
 	@Override
-	public int getDuracionEnHoras() throws Exception
-	{
+	public int getDuracionEnHoras() throws Exception {
 		this.verificarSiFinalizo();
 		return super.getDuracionEnHoras();
 	}
-	
-	
+
 	@Override
-	public void finalizarEstacionamiento() 
-	{ 
+	public void finalizarEstacionamiento() {
 		this.finEstacionamiento = LocalDateTime.now();
 		Duration duracion = Duration.between(this.inicioEstacionamiento, this.finEstacionamiento);
 		this.duracionEnHoras = duracion;
 	}
-	
-	
-	private void verificarSiFinalizo() throws Exception 
-	{
-	    if ( this.finEstacionamiento == null )
-	    {
-	        throw new Exception("Aún no ha finalizado el estacionamiento.");
-	    }
+
+	private void verificarSiFinalizo() throws Exception {
+		if (this.finEstacionamiento == null) {
+			throw new Exception("Aún no ha finalizado el estacionamiento.");
+		}
 	}
+
+	public boolean esEstacionamientoCompraPuntual() {
+		return false;
+	}
+
+	public boolean esEstacionamientoApp() {
+		return true;
+	}
+
 }
