@@ -3,7 +3,10 @@ package tp.po2.sem.sistemaEstacionamiento;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +15,8 @@ import org.mockito.InOrder;
 
 import tp.po2.sem.app.App;
 import tp.po2.sem.estacionamiento.Estacionamiento;
+import tp.po2.sem.inspector.Infraccion;
+import tp.po2.sem.puntoDeVenta.Compra;
 
 public class SistemaEstacionamientoTest {
 
@@ -38,7 +43,84 @@ public class SistemaEstacionamientoTest {
 		callCenter = mock(Observer.class);
         otroSistema = mock(Observer.class);
 	}
+	
+	//TEST GETTERS Y SETTERS
+	
+	@Test
+    void testGetHoraLaboralInicio() {
+        LocalTime horaLaboralInicio = LocalTime.of(7, 0);
+        assertEquals(horaLaboralInicio, sistemaEstacionamiento.getHoraLaboralInicio());
+    }
 
+    @Test
+    void testSetHoraLaboralInicio() {
+        LocalTime nuevaHora = LocalTime.of(8, 0);
+        sistemaEstacionamiento.setHoraLaboralInicio(nuevaHora);
+        assertEquals(nuevaHora, sistemaEstacionamiento.getHoraLaboralInicio());
+    }
+
+    @Test
+    void testGetHoraLaboralFin() {
+        LocalTime horaLaboralFin = LocalTime.of(20, 0);
+        assertEquals(horaLaboralFin, sistemaEstacionamiento.getHoraLaboralFin());
+    }
+
+    @Test
+    void testSetHoraLaboralFin() {
+        LocalTime nuevaHora = LocalTime.of(21, 0);
+        sistemaEstacionamiento.setHoraLaboralFin(nuevaHora);
+        assertEquals(nuevaHora, sistemaEstacionamiento.getHoraLaboralFin());
+    }
+
+    @Test
+    void testGetEstacionamientos() {
+        sistemaEstacionamiento.setEstacionamientos(spyListaEstacionamientos);
+        assertEquals(spyListaEstacionamientos, sistemaEstacionamiento.getEstacionamientos());
+    }
+
+    @Test
+    void testSetEstacionamientos() {
+        Set<Estacionamiento> nuevosEstacionamientos = new HashSet<>();
+        sistemaEstacionamiento.setEstacionamientos(nuevosEstacionamientos);
+        assertEquals(nuevosEstacionamientos, sistemaEstacionamiento.getEstacionamientos());
+    }
+
+    @Test
+    void testGetComprasPuntoDeVenta() {
+        Set<Compra> compras = new HashSet<>();
+        sistemaEstacionamiento.setComprasPuntoDeVenta(compras);
+        assertEquals(compras, sistemaEstacionamiento.getComprasPuntoDeVenta());
+    }
+
+    @Test
+    void testSetComprasPuntoDeVenta() {
+        Set<Compra> nuevasCompras = new HashSet<>();
+        sistemaEstacionamiento.setComprasPuntoDeVenta(nuevasCompras);
+        assertEquals(nuevasCompras, sistemaEstacionamiento.getComprasPuntoDeVenta());
+    }
+
+    @Test
+    void testGetInfracciones() {
+        List<Infraccion> infracciones = new ArrayList<>();
+        assertEquals(infracciones, sistemaEstacionamiento.getInfracciones());
+    }
+
+    @Test
+    void testSetInfracciones() {
+        List<Infraccion> nuevasInfracciones = new ArrayList<>();
+        sistemaEstacionamiento.setInfracciones(nuevasInfracciones);
+        assertEquals(nuevasInfracciones, sistemaEstacionamiento.getInfracciones());
+    }
+
+    @Test
+    void testGetCantidadEstacionamientos() {
+        assertEquals(0, sistemaEstacionamiento.getCantidadEstacionamientos());
+        sistemaEstacionamiento.registrarEstacionamientoApp(mock(Estacionamiento.class));
+        assertEquals(1, sistemaEstacionamiento.getCantidadEstacionamientos());
+    }
+
+	
+	
 	@Test
 	public void testRegistrarUnEstacionamiento() {
 		// Ejecutamos el método que queremos probar, pasando el mock de Estacionamiento
@@ -135,7 +217,7 @@ public class SistemaEstacionamientoTest {
 	     sistemaEstacionamiento.agregarObservador(callCenter);
 	     sistemaEstacionamiento.eliminarObservador(callCenter);
 
-	     appUsuario.iniciarEstacionamiento("Patente");
+	     appUsuario.iniciarEstacionamiento();
 
 	     EventoEstacionamiento eventoNoEsperado = new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, "Patente", "nroTel");
 	     verify(callCenter, never()).actualizar(eventoNoEsperado);
