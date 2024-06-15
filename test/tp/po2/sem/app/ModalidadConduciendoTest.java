@@ -30,7 +30,7 @@ public class ModalidadConduciendoTest
 	ModalidadConduciendo modo;
 	App aplicacion;
 	SistemaEstacionamiento sem;
-	Celular cel;
+	CelularDeUsuario cel;
 	NotificacionActivada modoNotificacionActivada;
 	NotificacionDesactivada modoNotificacionDesactivada;
 	Manual modoEstacionamientoManual;
@@ -44,7 +44,7 @@ public class ModalidadConduciendoTest
 	{
 		modo = new ModalidadConduciendo();
 		
-		cel = mock( Celular.class );
+		cel = mock( CelularDeUsuario.class );
 		when( cel.getNroCelular() ).thenReturn("1145241966");
 		when( cel.getUbicacion() ).thenReturn(new Point(1,2));
 		// when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);

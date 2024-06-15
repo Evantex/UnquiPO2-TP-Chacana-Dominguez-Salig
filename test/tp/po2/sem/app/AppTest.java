@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 public class AppTest 
 {
 	App aplicacion;
-	Celular cel;
+	CelularDeUsuario cel;
 	SistemaEstacionamiento sem;
 	ModoDesplazamiento modalidadCaminando;
 	ModoDesplazamiento modalidadConduciendo;
@@ -30,7 +30,7 @@ public class AppTest
 	@BeforeEach
 	void setUp() throws Exception 
 	{
-		cel = mock( Celular.class );
+		cel = mock( CelularDeUsuario.class );
 		sem = mock( SistemaEstacionamiento.class );
 		modalidadCaminando = spy( ModalidadCaminando.class );
 		modalidadConduciendo = spy( ModalidadConduciendo.class );

@@ -19,12 +19,12 @@ public class App implements MovementSensor
 */
 	
 	private ModoNotificaciones modoNotificacion; // Strategy
-	private Celular celularAsociado;
+	private CelularDeUsuario celularAsociado;
 	private Point ubicacionUltimoEstacionamiento;
 	private String patenteAsociada;
 
 	
-	App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
+	App( CelularDeUsuario cel, SistemaEstacionamiento sistema, String patenteAsociada )
 	{
 		this.celularAsociado  = cel;
 		this.SEM = sistema;

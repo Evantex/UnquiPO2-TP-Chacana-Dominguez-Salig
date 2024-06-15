@@ -10,7 +10,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import tp.po2.sem.Usuario.Usuario;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
+import tp.po2.sem.app.CelularDeUsuario;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
 import tp.po2.sem.inspector.Infraccion;
@@ -20,7 +22,7 @@ import tp.po2.sem.puntoDeVenta.CompraPuntual;
 
 public class SistemaEstacionamiento {
 	private Set<Estacionamiento> estacionamientos;
-	private HashMap<String, Double> saldoCelular;
+	private Set<CelularDeUsuario> usuarios;
 	private HashMap<String, List<Infraccion>> infraccionesPorPatente;
 	private Set<Compra> comprasPuntoDeVenta;
 	private LocalTime horaLaboralInicio;
@@ -30,7 +32,7 @@ public class SistemaEstacionamiento {
 	public SistemaEstacionamiento() {
 		super();
 		this.estacionamientos = new HashSet<>();
-		this.saldoCelular = new HashMap<>();
+		this.usuarios = new HashSet<>();
 		this.infraccionesPorPatente = new HashMap<>();
 		this.comprasPuntoDeVenta = new HashSet<>();
 		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
@@ -39,10 +41,6 @@ public class SistemaEstacionamiento {
 	}
 
 	// gettes and setters
-
-	public void setSaldoCelular(HashMap<String, Double> saldoCelular) {
-		this.saldoCelular = saldoCelular;
-	}
 
 	public LocalTime getHoraLaboralInicio() {
 		return horaLaboralInicio;
@@ -84,10 +82,6 @@ public class SistemaEstacionamiento {
 		this.comprasPuntoDeVenta = comprasPuntoDeVenta;
 	}
 
-	public HashMap<String, Double> getSaldoCelular() {
-		return saldoCelular;
-	}
-
 	public Integer getCantidadEstacionamientos() {
 		return estacionamientos.size();
 	}
@@ -119,24 +113,17 @@ public class SistemaEstacionamiento {
 	// CAMBIAR RECARGAS
 
 	public void cargarCelular(String nroCelular, double saldo) {
-		// Obtiene el saldo actual del número de celular o 0.0 si no existe,
-		// y luego suma el saldo nuevo al saldo actual.
-		saldoCelular.put(nroCelular, saldoCelular.getOrDefault(nroCelular, 0.0) + saldo);
-	}
+		Optional<CelularDeUsuario> usuarioEncontrado = usuarios.stream()
+				.filter(usuario -> usuario.getNroCelular().equals(nroCelular)).findFirst();
 
-	public double obtenerSaldoCelular(String nroCelular) {
-		this.verificarSiExisteCelular(nroCelular);
-		return this.saldoCelular.get(nroCelular);
-	}
-
-	private void verificarSiExisteCelular(String nroCelular) {
-		if (!this.saldoCelular.containsKey(nroCelular)) {
-			this.agregarCelular(nroCelular);
+		if (usuarioEncontrado.isPresent()) {
+			CelularDeUsuario usuario = usuarioEncontrado.get();
+			usuario.recibirRecargaDeSaldo(saldo);
+		} else {
+			CelularDeUsuario usuarionuevo = new CelularDeUsuario(nroCelular, saldo);
+			usuarios.add(usuarionuevo); // Añadir el nuevo usuario a la lista
+			usuarionuevo.recibirRecargaDeSaldo(saldo);
 		}
-	}
-
-	public void agregarCelular(String nroCelular) {
-		this.saldoCelular.put(nroCelular, 0.0);
 	}
 
 	// Logica Inspector
