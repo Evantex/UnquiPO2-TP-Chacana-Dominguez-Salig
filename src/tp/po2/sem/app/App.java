@@ -73,14 +73,14 @@ public class App implements MovementSensor
 	        String celular = this.celularAsociado.getNroCelular();
 	        String patente = this.getPatente();
 	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
-	        this.SEM.registrarEstacionamiento( nuevoEstacionamiento );
+	        this.SEM.registrarEstacionamientoApp( nuevoEstacionamiento );
 	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
-	        this.SEM.notificarSistemaAlertasInicioEstacionamiento(patente, celular);
+	        
 	    } 
 	    catch (Exception e)
 	    {
 	        this.notificarUsuario( e.getMessage() );
-	        // Aquí puedes añadir lógica adicional para manejar el caso de error
+	       
 	    }
 	}
 	
@@ -91,6 +91,16 @@ public class App implements MovementSensor
 		this.verificarZonaEstacionamiento();
 	}
 	
+	public void finalizarEstacionamiento() throws Exception
+	{	
+		String celular = this.celularAsociado.getNroCelular();
+		Estacionamiento est = this.SEM.getEstacionamiento( celular );
+		this.SEM.finalizarEstacionamiento( celular );
+		this.enviarDetallesFinEstacionamiento(est);
+		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
+	}
+	
+	// LOGICA DE Información al Usuario en Estacionamiento vía App
 	public void enviarDetallesInicioEstacionamiento( Estacionamiento estacionamiento )
 	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -101,17 +111,6 @@ public class App implements MovementSensor
 	}
 	
 
-	public void finalizarEstacionamiento() throws Exception
-	{	
-		String celular = this.celularAsociado.getNroCelular();
-		String patente = this.getPatente();
-		Estacionamiento est = this.SEM.getEstacionamiento( celular );
-		this.SEM.finalizarEstacionamiento( celular );
-		this.enviarDetallesFinEstacionamiento(est);
-		this.SEM.notificarSistemaAlertasFinEstacionamiento(patente, celular);
-	}
-	
-	
 	public void enviarDetallesFinEstacionamiento( Estacionamiento estacionamiento ) throws Exception
 	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -120,8 +119,9 @@ public class SistemaEstacionamiento {
 		comprasPuntoDeVenta.add(compra);
 	}
 
-	public void registrarEstacionamiento(Estacionamiento unEstacionamiento) {
+	public void registrarEstacionamientoApp(Estacionamiento unEstacionamiento) {
 		estacionamientos.add(unEstacionamiento);
+		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
 	}
 
 	public void registrarEstacionamientoCompraPuntual(String patente, Duration horasCompradas,
@@ -219,16 +219,16 @@ public class SistemaEstacionamiento {
 		this.sistemaAlertas = sistemaAlertas;
 	}
 
-	public void notificarSistemaAlertasFinEstacionamiento(String patente, String celular) {
+	public void notificarSistemaAlertasFinEstacionamiento(Estacionamiento unEstacionamiento) {
 
 		sistemaAlertas
-				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.FIN, patente, celular));
+				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.FIN, unEstacionamiento));
 
 	}
 
-	public void notificarSistemaAlertasInicioEstacionamiento(String patente, String celular) {
+	public void notificarSistemaAlertasInicioEstacionamiento(Estacionamiento unEstacionamento) {
 		sistemaAlertas
-				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, patente, celular));
+				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, unEstacionamento));
 
 	}
 

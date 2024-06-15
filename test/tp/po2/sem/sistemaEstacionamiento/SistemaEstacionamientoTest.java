@@ -42,7 +42,7 @@ public class SistemaEstacionamientoTest {
 	@Test
 	public void testRegistrarUnEstacionamiento() {
 		// Ejecutamos el método que queremos probar, pasando el mock de Estacionamiento
-		sistemaEstacionamiento.registrarEstacionamiento(estacionamientoMock);
+		sistemaEstacionamiento.registrarEstacionamientoApp(estacionamientoMock);
 
 		// Con el spy verifico que se le mandó correctamente el mensaje add a la
 		// colección dentro del mensaje getCantidadEstacionamientos().

@@ -1,5 +1,7 @@
 package tp.po2.sem.sistemaEstacionamiento;
 
+import tp.po2.sem.estacionamiento.Estacionamiento;
+
 public class EventoEstacionamiento {
     public enum Tipo {
         INICIO,
@@ -7,25 +9,25 @@ public class EventoEstacionamiento {
     }
 
     private Tipo tipo;
-    private String patente;
-    private String nroTelefono;
+    private Estacionamiento estacionamiento;
 
-    public EventoEstacionamiento(Tipo tipo, String patente, String nroTelefono) {
+    public EventoEstacionamiento(Tipo tipo, Estacionamiento unEstacionamiento) {
         this.tipo = tipo;
-        this.patente = patente;
-        this.nroTelefono = nroTelefono;
+        this.setEstacionamiento(unEstacionamiento);
     }
 
     public Tipo getTipo() {
         return tipo;
     }
 
-    public String getPatente() {
-        return patente;
-    }
+	public Estacionamiento getEstacionamiento() {
+		return estacionamiento;
+	}
 
-   public String getNroTelefono() {
-	   return nroTelefono;
-   }
+	public void setEstacionamiento(Estacionamiento estacionamiento) {
+		this.estacionamiento = estacionamiento;
+	}
+
+    
 }
 
