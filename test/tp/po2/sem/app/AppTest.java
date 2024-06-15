@@ -48,7 +48,7 @@ public class AppTest
 	}
 	
 	@Test
-	void asignoNotificacionDesactivadaYChequeoQueNoSeEnvíeElMensajeAlUsuario()
+	void asignoNotificacionDesactivadaYChequeoQueNoSeEnvíeElMensajeAlUsuario() throws Exception
 	{
 		aplicacion.setModoNotificacion(new NotificacionDesactivada() );
 		aplicacion.setModoDesplazamiento(modalidadConduciendo);
@@ -59,7 +59,7 @@ public class AppTest
 	}
 	
 	@Test
-	void asignoNotificacionActivadaYChequeoQueEfectivamenteSeEnvíeElMensajeAlUsuario()
+	void asignoNotificacionActivadaYChequeoQueEfectivamenteSeEnvíeElMensajeAlUsuario() throws Exception
 	{
 		aplicacion.setModoNotificacion(new NotificacionActivada() );
 		aplicacion.setModoDesplazamiento(modalidadConduciendo);
@@ -69,6 +69,24 @@ public class AppTest
 		verify(cel, times(1)).recibirMensaje("Posible inicio de estacionamiento");	
 	}
 	
+	@Test
+	void testElUsuarioDeLaAppNoTieneSaldoSuficienteParaIniciarUnEstacionamient() throws Exception
+	{
+		when (cel.getSaldo()).thenReturn(0.0);
+		Exception exception = assertThrows(Exception.class, () -> {
+	        aplicacion.verificarSaldoSuficiente();
+	    });
+		assertEquals("No tiene saldo suficiente para estacionar.", exception.getMessage());
+	}
+	
+	@Test 
+	void testElUsuarioTieneSaldoSuficienteParaIniciarUnEstacionamiento() throws Exception 
+	{
+		when (cel.getSaldo()).thenReturn(200.0);
+		assertDoesNotThrow(() -> {
+            aplicacion.verificarSaldoSuficiente();
+        });
+	}
 	
 	
 	

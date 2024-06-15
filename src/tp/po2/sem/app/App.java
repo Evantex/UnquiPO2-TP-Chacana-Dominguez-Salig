@@ -46,7 +46,7 @@ public class App implements MovementSensor
 
 
 	@Override
-	public void walking() 
+	public void walking() throws Exception 
 	{
 		this.modoDeDesplazamiento.caminando(this, this.patenteAsociada);		
 	}
@@ -122,10 +122,9 @@ public class App implements MovementSensor
 	
 	
 	
-	private void verificarSaldoSuficiente() throws Exception 
+	public void verificarSaldoSuficiente() throws Exception 
 	{
-	    if ( this.SEM.obtenerSaldoCelular(this.celularAsociado.getNroCelular()) 
-	    		< 40 )
+	    if (celularAsociado.getSaldo() < 40)
 	    {
 	        throw new Exception("No tiene saldo suficiente para estacionar.");
 	    }

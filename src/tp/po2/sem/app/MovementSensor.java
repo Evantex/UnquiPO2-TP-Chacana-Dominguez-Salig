@@ -4,6 +4,6 @@ public interface MovementSensor
 {
 	
 	public void driving();
-	public void walking();
+	public void walking() throws Exception;
 
 }
