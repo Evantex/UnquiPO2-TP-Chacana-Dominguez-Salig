@@ -62,17 +62,14 @@ public class App implements MovementSensor
 		LocalTime horaActual = LocalTime.now();
 		LocalTime horaMinima = LocalTime.of(7, 0);
 		LocalTime horaMaxima = LocalTime.of(20, 0);
-		return (horaActual.isBefore(horaMinima)) && (horaActual.isAfter(horaMaxima)); 
+		return (horaActual.isAfter(horaMinima)) && (horaActual.isBefore(horaMaxima)); 
 	}
 	
-	public void iniciarEstacionamiento(String dominioVehiculo)
+	public void iniciarEstacionamiento()
 	{
 	    try 
-	    {
-	        this.verificarSaldoSuficiente();
-	        this.verificarHorarioPermitido();
-	        this.verificarSiPoseeEstacionamientoVigente();
-	        this.verificarZonaEstacionamiento();
+	    {	
+	    	this.verificarValidacionesParaIniciarEstacionamiento();
 	        String celular = this.celularAsociado.getNroCelular();
 	        String patente = this.getPatente();
 	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
@@ -87,6 +84,12 @@ public class App implements MovementSensor
 	    }
 	}
 	
+	public void verificarValidacionesParaIniciarEstacionamiento() throws Exception {
+		this.verificarSiPoseeEstacionamientoVigente();
+		this.verificarSaldoSuficiente();
+  //  	this.verificarHorarioPermitido(); en que contexto se encontraria dentro de un estacionamiento en horario no permitido?
+		this.verificarZonaEstacionamiento();
+	}
 	
 	public void enviarDetallesInicioEstacionamiento( Estacionamiento estacionamiento )
 	{
@@ -130,15 +133,15 @@ public class App implements MovementSensor
 	    }
 	}
 	
-	
+	/* VER ANOTACION EN VERIFICACIONES
 	private void verificarHorarioPermitido() throws Exception 
 	{
-	    if ( !this.seEncuentraEnFranjaHoraria() )
+	    if ( this.seEncuentraEnFranjaHoraria() )
 	    {
 	        throw new Exception("Horario no permitido");
 	    }
 	}
-	
+	*/
 	public void verificarZonaEstacionamiento() throws Exception 
 	{
 		if ( !this.estaDentroDeZonaEstacionamiento() )
@@ -149,7 +152,7 @@ public class App implements MovementSensor
 	
 	public void verificarSiPoseeEstacionamientoVigente() throws Exception 
 	{
-		if ( this.tieneEstacionamientoVigente() )
+		if ( SEM.poseeEstacionamientoVigente(patenteAsociada) )
 		{
 			throw new Exception("Ya tienes un estacionamiento vigente");
 		}
@@ -158,7 +161,7 @@ public class App implements MovementSensor
 	
 	public int getHorasMaximasPermitidasEstacionamiento()
 	{
-		double saldoCelular = this.SEM.obtenerSaldoCelular(this.celularAsociado.getNroCelular());
+		double saldoCelular = this.celularAsociado.getSaldo();
 		return (int) Math.round(saldoCelular / 40);
 	}
 	
@@ -199,13 +202,6 @@ public class App implements MovementSensor
 	{
 		return this.modoEstacionamiento;
 	}
-	
-	
-	public boolean tieneEstacionamientoVigente()
-	{
-		return this.SEM.estaVigente( this.celularAsociado.getNroCelular() );
-	}
-	
 	
 	
 	public void setUbicacionEstacionamiento( Point ubicacion )

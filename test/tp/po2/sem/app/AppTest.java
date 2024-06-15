@@ -39,7 +39,7 @@ public class AppTest
 		
 		when( cel.getNroCelular() ).thenReturn("1145241966");
 		when( cel.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
-		when( sem.poseeEstacionamientoVigente( "1145241966") ).thenReturn(false);
+		when( sem.poseeEstacionamientoVigente( "GIO 002") ).thenReturn(false);
 		
 		
 		
@@ -85,6 +85,35 @@ public class AppTest
 		when (cel.getSaldo()).thenReturn(200.0);
 		assertDoesNotThrow(() -> {
             aplicacion.verificarSaldoSuficiente();
+        });
+	}
+	
+	@Test
+	void testElUsuarioNoSeEncuentraEnLaFranjaHorariaPermitida() throws Exception
+	{
+		//PUEDE UN USUARIO ESTAR DENTRO DE UN ESTACIONAMIENTO EN UNA FRANJA HORARIO NO PERMITIDA?
+	}
+	
+	@Test
+	void testElUsuarioNoPuedeIniciarDosEstacionamientosEnSimultaneoConLaMismaPatente() throws Exception 
+	{
+		aplicacion.iniciarEstacionamiento();
+		
+		when( sem.poseeEstacionamientoVigente( "GIO 002") ).thenReturn(true);
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+	        aplicacion.verificarSiPoseeEstacionamientoVigente();
+	    });
+		
+		assertEquals("Ya tienes un estacionamiento vigente", exception.getMessage());
+		
+	}
+	
+	@Test
+	void testElUsuarioNoTieneUnEstacionamientoVigenteSiNuncaInicioUnEstacionamiento() throws Exception
+	{
+		assertDoesNotThrow(() -> {
+            aplicacion.verificarSiPoseeEstacionamientoVigente();
         });
 	}
 	

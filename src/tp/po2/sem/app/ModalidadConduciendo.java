@@ -24,15 +24,15 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	@Override
 	public void update(App aplicacion)
 	/*
-			- Vuelvo a validar si tiene estacionamiento vigente debido a que en el proceso puede que no se inicie un estacionamiento si
-				el usuario no tiene saldo disponible...
+	- Vuelvo a validar si tiene estacionamiento vigente debido a que en el proceso puede que no se inicie un estacionamiento si
+		el usuario no tiene saldo disponible...
 	 */
 	{
-		if( aplicacion.tieneEstacionamientoVigente() )
-		{
+		//if( aplicacion.verificarSiPoseeEstacionamientoVigente() )
+		//{
 			aplicacion.setModoDesplazamiento( new ModalidadCaminando() );
 			aplicacion.setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
-		}
+		//}
 	}
 	
 	

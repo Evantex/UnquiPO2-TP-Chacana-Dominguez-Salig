@@ -44,5 +44,10 @@ public class CelularDeUsuario {
 		
 		saldo += saldoNuevo;
 	}
+
+	public Point getUbicacion() {
+		
+		return this.ubicacion;
+	}
 	
 }
