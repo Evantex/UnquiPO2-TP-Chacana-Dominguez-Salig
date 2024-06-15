@@ -1,6 +1,7 @@
 package tp.po2.sem.sistemaEstacionamiento;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import tp.po2.sem.Usuario.Usuario;
+
 import tp.po2.sem.Reloj.RelojSem;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.app.CelularDeUsuario;
@@ -24,7 +25,7 @@ import tp.po2.sem.puntoDeVenta.CompraPuntual;
 public class SistemaEstacionamiento {
 	private Set<Estacionamiento> estacionamientos;
 	private Set<CelularDeUsuario> usuarios;
-	private HashMap<String, List<Infraccion>> infraccionesPorPatente;
+	private List<Infraccion> infracciones;
 	private Set<Compra> comprasPuntoDeVenta;
 	private LocalTime horaLaboralInicio;
 	private LocalTime horaLaboralFin;
@@ -35,7 +36,7 @@ public class SistemaEstacionamiento {
 		super();
 		this.estacionamientos = new HashSet<>();
 		this.usuarios = new HashSet<>();
-		this.infraccionesPorPatente = new HashMap<>();
+		this.setInfracciones(new ArrayList<>());
 		this.comprasPuntoDeVenta = new HashSet<>();
 		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
 		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
@@ -69,13 +70,6 @@ public class SistemaEstacionamiento {
 		this.estacionamientos = estacionamientos;
 	}
 
-	public HashMap<String, List<Infraccion>> getInfraccionesPorPatente() {
-		return infraccionesPorPatente;
-	}
-
-	public void setInfraccionesPorPatente(HashMap<String, List<Infraccion>> infraccionesPorPatente) {
-		this.infraccionesPorPatente = infraccionesPorPatente;
-	}
 
 	public Set<Compra> getComprasPuntoDeVenta() {
 		return comprasPuntoDeVenta;
@@ -88,7 +82,15 @@ public class SistemaEstacionamiento {
 	public Integer getCantidadEstacionamientos() {
 		return estacionamientos.size();
 	}
+	
+	public List<Infraccion> getInfracciones() {
+		return infracciones;
+	}
 
+	public void setInfracciones(List<Infraccion> infracciones) {
+		this.infracciones = infracciones;
+	}
+	
 	// validaciones de acciones
 
 	public boolean esValidoRegistrarEstacionamiento(Duration cantidadDeHoras) {
@@ -173,26 +175,16 @@ public class SistemaEstacionamiento {
 		ZonaDeEstacionamiento zonaInspector = inspector.getZonaAsignada();
 		Infraccion infraccion = new Infraccion(patente, fechaYHoraActual, inspector, zonaInspector);
 
-		// Obtener la lista de infracciones asociada con la patente
-		// El .get es un metodo por default del hashmap que te trae el value asociada a
-		// esa key
-		List<Infraccion> infracciones = infraccionesPorPatente.get(patente);
-
-		// Si no tenia infracciones, se crea una nueva lista de infracciones y la agrega
-		// al HashMap
-		if (infracciones == null) {
-			infracciones = new ArrayList<>();
-			infraccionesPorPatente.put(patente, infracciones);
-		}
-
-		// Agrega la infracción a la lista si ya tenia infracciones anteriores.
 		infracciones.add(infraccion);
 	}
 
 	// Método para obtener las infracciones por patente
-	public List<Infraccion> obtenerInfraccionesDeLaPatente(String patente) {
-		return infraccionesPorPatente.get(patente);
-	}
+	public List<Infraccion> buscarInfraccionesPorPatente(String patente) {
+        return infracciones.stream()
+                           .filter(infraccion -> infraccion.getPatente().equals(patente))
+                           .collect(Collectors.toList());
+    }
+
 
 	/*
 	 * public HashMap<String, Double> getSaldoCelular() { return saldoCelular; }
@@ -239,5 +231,7 @@ public class SistemaEstacionamiento {
 				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, patente, celular));
 
 	}
+
+
 
 }
