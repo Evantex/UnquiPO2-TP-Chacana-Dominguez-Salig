@@ -49,6 +49,7 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 	public void registrarEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras) {
 
 		if (sem.esValidoRegistrarEstacionamiento(cantidadDeHoras)) {
+			
 			CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
 
 			sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual);
@@ -59,7 +60,7 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
-		sem.cargarCelular(numeroCelular, saldo); // modificarLogica
+		sem.cargarCelular(numeroCelular, saldo);
 
 		sem.registrarCompra(CompraRecargaCelular);
 	}
