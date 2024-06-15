@@ -99,6 +99,8 @@ public class SistemaEstacionamiento {
 	public boolean esHorarioLaboral() {
 		LocalTime horaActual = relojSem.horaActual();
 		return !horaActual.isBefore(horaLaboralInicio) && !horaActual.isAfter(horaLaboralFin);
+		
+		// se deberian agregar exepciones?
 	}
 
 	public boolean esValidaLaCantidadDeHorasSolicitadas(Duration cantidadDeHoras) {
@@ -107,6 +109,7 @@ public class SistemaEstacionamiento {
 
 		// Verificar si la hora final estimada NO está fuera del rango laboral
 		return !(horaFinalEstimada.isBefore(horaLaboralInicio) || horaFinalEstimada.isAfter(horaLaboralFin));
+		// se deberian agregar exepciones?
 	}
 	// registraciones
 
