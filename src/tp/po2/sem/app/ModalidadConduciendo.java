@@ -28,11 +28,11 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 		el usuario no tiene saldo disponible...
 	 */
 	{
-		//if( aplicacion.verificarSiPoseeEstacionamientoVigente() )
-		//{
+		if( aplicacion.tieneEstacionamientoVigente() )
+		{
 			aplicacion.setModoDesplazamiento( new ModalidadCaminando() );
 			aplicacion.setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
-		//}
+		}
 	}
 	
 	

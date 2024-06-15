@@ -8,7 +8,7 @@ public class ModalidadCaminando implements ModoDesplazamiento
 	public void caminando(App aplicacion, String patente) {}
 
 	@Override
-	public void conduciendo(App aplicacion, String patente) 
+	public void conduciendo(App aplicacion, String patente) throws Exception 
 	{
 		if( this.validarFinEstacionamiento(aplicacion) )
 		{

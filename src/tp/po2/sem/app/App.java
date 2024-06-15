@@ -39,7 +39,7 @@ public class App implements MovementSensor
 	
 	
 	@Override
-	public void driving()
+	public void driving() throws Exception
 	{
 		this.modoDeDesplazamiento.conduciendo( this, this.patenteAsociada );
 	}
@@ -152,12 +152,15 @@ public class App implements MovementSensor
 	
 	public void verificarSiPoseeEstacionamientoVigente() throws Exception 
 	{
-		if ( SEM.poseeEstacionamientoVigente(patenteAsociada) )
+		if ( this.tieneEstacionamientoVigente() )
 		{
 			throw new Exception("Ya tienes un estacionamiento vigente");
 		}
 	}
 	
+	public boolean tieneEstacionamientoVigente() {
+		return SEM.poseeEstacionamientoVigente(patenteAsociada);
+	}
 	
 	public int getHorasMaximasPermitidasEstacionamiento()
 	{
