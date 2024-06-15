@@ -59,12 +59,11 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
-		sem.cargarCelular(numeroCelular, saldo); //modificarLogica
+		sem.cargarCelular(numeroCelular, saldo); // modificarLogica
 
 		sem.registrarCompra(CompraRecargaCelular);
 	}
-	
-	
+
 	/*
 	 * private void verificarSiLaCantidadDeHorasEsValidaEnEsteHorario(Duration
 	 * cantidadDeHoras) throws Exception { if
@@ -90,6 +89,5 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 	 * return (horaActual.isAfter(horaMinima)) && (horaActual.isBefore(horaMaxima));
 	 * }
 	 */
-
 
 }
