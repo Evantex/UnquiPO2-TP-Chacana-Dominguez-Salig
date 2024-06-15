@@ -48,7 +48,7 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 
 	public void registrarEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras) {
 
-		if (sem.esValidoRegistrarEstacionamiento()) {
+		if (sem.esValidoRegistrarEstacionamiento(cantidadDeHoras)) {
 			CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
 
 			sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual);
