@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import tp.po2.sem.Usuario.Usuario;
+import tp.po2.sem.Reloj.RelojSem;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.app.CelularDeUsuario;
 import tp.po2.sem.estacionamiento.Estacionamiento;
@@ -28,6 +29,7 @@ public class SistemaEstacionamiento {
 	private LocalTime horaLaboralInicio;
 	private LocalTime horaLaboralFin;
 	private Notificador sistemaAlertas;
+	private RelojSem relojSem;
 
 	public SistemaEstacionamiento() {
 		super();
@@ -38,6 +40,7 @@ public class SistemaEstacionamiento {
 		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
 		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
 		this.setSistemaAlertas(new Notificador());
+		this.relojSem = new RelojSem();
 	}
 
 	// gettes and setters
@@ -88,8 +91,22 @@ public class SistemaEstacionamiento {
 
 	// validaciones de acciones
 
-	public boolean esValidoRegistrarEstacionamiento() {
-		return true; // agregar logica de validaciones de horarios, exepciones
+	public boolean esValidoRegistrarEstacionamiento(Duration cantidadDeHoras) {
+
+		return (this.esHorarioLaboral() && this.esValidaLaCantidadDeHorasSolicitadas(cantidadDeHoras));
+	}
+
+	public boolean esHorarioLaboral() {
+		LocalTime horaActual = relojSem.horaActual();
+		return !horaActual.isBefore(horaLaboralInicio) && !horaActual.isAfter(horaLaboralFin);
+	}
+
+	public boolean esValidaLaCantidadDeHorasSolicitadas(Duration cantidadDeHoras) {
+		LocalTime horaActual = relojSem.horaActual();
+		LocalTime horaFinalEstimada = horaActual.plus(cantidadDeHoras);
+
+		// Verificar si la hora final estimada NO está fuera del rango laboral
+		return !(horaFinalEstimada.isBefore(horaLaboralInicio) || horaFinalEstimada.isAfter(horaLaboralFin));
 	}
 	// registraciones
 
