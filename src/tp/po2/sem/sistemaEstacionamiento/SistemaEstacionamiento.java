@@ -90,7 +90,16 @@ public class SistemaEstacionamiento {
 		this.infracciones = infracciones;
 	}
 	
+	public Set<CelularDeUsuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(Set<CelularDeUsuario> usuarios) {
+		this.usuarios = usuarios;
+	}
+	
 	// validaciones de acciones
+
 
 	public boolean esValidoRegistrarEstacionamiento(Duration cantidadDeHoras) {
 
@@ -143,9 +152,13 @@ public class SistemaEstacionamiento {
 			usuario.recibirRecargaDeSaldo(saldo);
 		} else {
 			CelularDeUsuario usuarionuevo = new CelularDeUsuario(nroCelular, saldo);
-			usuarios.add(usuarionuevo); // Añadir el nuevo usuario a la lista
+			agregarUsuario(usuarionuevo); // Añadir el nuevo usuario a la lista
 			usuarionuevo.recibirRecargaDeSaldo(saldo);
 		}
+	}
+	
+	public void agregarUsuario(CelularDeUsuario c) {
+		usuarios.add(c);
 	}
 
 	// Logica Inspector
@@ -200,6 +213,17 @@ public class SistemaEstacionamiento {
 		return this.estacionamientos.stream().filter(
 				e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
 				.findAny().orElseThrow(() -> new Exception("El estacionamiento no existe o no está vigente"));
+	}
+	
+	// LOGICA DE "FIN DE FRANJA HORARIA, FINALIZAR TODOS LOS ESTACIONAMIENTOS VIGENTES"
+	public void finalizarTodosLosEstacionamientos() {
+		
+		LocalTime horaActual = relojSem.horaActual();
+		if (horaActual == this.horaLaboralFin) {
+	    this.estacionamientos.stream()
+	        .filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
+	        .forEach(e -> e.finalizarEstacionamiento()); // Finalizar solo los vigentes
+		}
 	}
 
 	// LOGICA DE OBSERVER

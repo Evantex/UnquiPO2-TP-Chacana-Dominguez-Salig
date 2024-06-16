@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 import tp.po2.sem.app.App;
+import tp.po2.sem.app.CelularDeUsuario;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.inspector.Infraccion;
 import tp.po2.sem.puntoDeVenta.Compra;
@@ -23,6 +24,7 @@ public class SistemaEstacionamientoTest {
 	SistemaEstacionamiento sistemaEstacionamiento;
 	Estacionamiento estacionamientoMock;
 	Set<Estacionamiento> spyListaEstacionamientos;
+	private CelularDeUsuario celular;
 	private Observer callCenter;
     private Observer otroSistema;
     private App appUsuario;
@@ -37,6 +39,8 @@ public class SistemaEstacionamientoTest {
 
 		// Creamos el SistemaEstacionamiento con el spy de la lista de estacionamientos
 		sistemaEstacionamiento = new SistemaEstacionamiento();
+		
+		celular = mock (CelularDeUsuario.class);
 		
 		appUsuario = mock (App.class);
 		
@@ -119,7 +123,18 @@ public class SistemaEstacionamientoTest {
         assertEquals(1, sistemaEstacionamiento.getCantidadEstacionamientos());
     }
 
+	@Test
+	void testGetUsuarios() {
+		Set<CelularDeUsuario> usuarios = new HashSet<>();
+		assertEquals(usuarios, sistemaEstacionamiento.getUsuarios());
+	}
 	
+	@Test 
+	void testSetUsuarios() {
+		Set<CelularDeUsuario> nuevosUsuarios = new HashSet<>();
+		sistemaEstacionamiento.setUsuarios(nuevosUsuarios);
+		assertEquals(nuevosUsuarios, sistemaEstacionamiento.getUsuarios());
+	}
 	
 	@Test
 	public void testRegistrarUnEstacionamiento() {
@@ -138,34 +153,41 @@ public class SistemaEstacionamientoTest {
 		// obtener la cantidad de estacionamientos esperada.
 		verify(spyListaEstacionamientos).size();
 	}
-
+	
 	@Test
-	public void testCargarCelularNuevo() {
+	public void testElSistemaAgregaUnUsuarioASuListaDeUsuarios() {
+		
+		sistemaEstacionamiento.agregarUsuario(celular);
+		Set<CelularDeUsuario> usuarios = sistemaEstacionamiento.getUsuarios();
+		
+		assertEquals(1, usuarios);
+		assertTrue(usuarios.contains(celular));
+	}
+	
+	@Test
+	public void testCuandoElSistemaCargaUnCelularNuevoLoAgregaASuListaDeUsuarios() {
 		String nroCelular = "1234567890";
 		double saldo = 100.0;
-
+		Set<CelularDeUsuario> usuarios = sistemaEstacionamiento.getUsuarios();
+		
 		// Cargar saldo por primera vez
 		sistemaEstacionamiento.cargarCelular(nroCelular, saldo);
 
 		// Verificar que el saldo se haya cargado correctamente
-		assertEquals(saldo, sistemaEstacionamiento.obtenerSaldoCelular(nroCelular), 0.01);
+		 assertEquals(1, sistemaEstacionamiento.getUsuarios().size());
+		 assertTrue(usuarios.contains(celular));
 	}
 
 	@Test
 	public void testCargarCelularExistente() {
 		String nroCelular = "1234567890";
-		double saldoInicial = 100.0;
-		double saldoAdicional = 50.0;
+        double saldoRecarga = 20.0;
+		
+		sistemaEstacionamiento.agregarUsuario(celular);
+		
+		sistemaEstacionamiento.cargarCelular(nroCelular, saldoRecarga);
 
-		// Cargar saldo por primera vez
-		sistemaEstacionamiento.cargarCelular(nroCelular, saldoInicial);
-
-		// Cargar saldo adicional
-		sistemaEstacionamiento.cargarCelular(nroCelular, saldoAdicional);
-
-		// Verificar que el saldo se haya sumado correctamente
-		double saldoEsperado = saldoInicial + saldoAdicional;
-		assertEquals(saldoEsperado, sistemaEstacionamiento.obtenerSaldoCelular(nroCelular), 0.01);
+		verify(celular).recibirRecargaDeSaldo(saldoRecarga);
 	}
 
 	@Test
