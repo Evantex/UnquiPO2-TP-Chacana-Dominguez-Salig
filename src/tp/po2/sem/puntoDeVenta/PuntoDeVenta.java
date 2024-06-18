@@ -68,30 +68,6 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 		sem.registrarCompra(CompraRecargaCelular);
 	}
 
-	/*
-	 * private void verificarSiLaCantidadDeHorasEsValidaEnEsteHorario(Duration
-	 * cantidadDeHoras) throws Exception { if
-	 * (!this.esValidaLaCantidadDeHorasEnEsteMomento(cantidadDeHoras)) { throw new
-	 * Exception("No es valida la cantidad de horas solicitada en este momento"); }
-	 * }
-	 * 
-	 * private boolean esValidaLaCantidadDeHorasEnEsteMomento(Duration
-	 * cantidadDeHoras) { LocalTime horaActual = LocalTime.now(); LocalTime
-	 * horaFinAlquiler = horaActual.plus(cantidadDeHoras);
-	 * 
-	 * // Verifica si la hora de fin del alquiler es antes o igual a la hora de
-	 * cierre return !horaFinAlquiler.isAfter(sem.getHoraLaboralFin()); }
-	 * 
-	 * private void verificarHorarioPermitido() throws Exception { if
-	 * (!this.seEncuentraEnFranjaHoraria()) { throw new
-	 * Exception("Horario no permitido"); } }
-	 * 
-	 * public boolean seEncuentraEnFranjaHoraria() { LocalTime horaActual =
-	 * LocalTime.now(); LocalTime horaMinima = sem.getHoraLaboralInicio(); LocalTime
-	 * horaMaxima = sem.getHoraLaboralFin();
-	 * 
-	 * return (horaActual.isAfter(horaMinima)) && (horaActual.isBefore(horaMaxima));
-	 * }
-	 */
+	
 
 }
