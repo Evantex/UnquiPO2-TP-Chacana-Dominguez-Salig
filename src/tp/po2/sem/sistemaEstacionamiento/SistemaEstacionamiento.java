@@ -43,7 +43,7 @@ public class SistemaEstacionamiento {
 		this.relojSem = new RelojSem();
 	}
 
-	// gettes and setters
+	// getters and setters
 
 	public LocalTime getHoraLaboralInicio() {
 		return horaLaboralInicio;
@@ -110,17 +110,17 @@ public class SistemaEstacionamiento {
 		LocalTime horaActual = relojSem.horaActual();
 		return !horaActual.isBefore(horaLaboralInicio) && !horaActual.isAfter(horaLaboralFin);
 		
-		// se deberian agregar exepciones?
 	}
 
 	public boolean esValidaLaCantidadDeHorasSolicitadas(Duration cantidadDeHoras) {
 		LocalTime horaActual = relojSem.horaActual();
 		LocalTime horaFinalEstimada = horaActual.plus(cantidadDeHoras);
 
-		// Verificar si la hora final estimada NO está fuera del rango laboral
+		
 		return !(horaFinalEstimada.isBefore(horaLaboralInicio) || horaFinalEstimada.isAfter(horaLaboralFin));
-		// se deberian agregar exepciones?
+		
 	}
+
 	// registraciones
 
 	public void registrarCompra(Compra compra) {

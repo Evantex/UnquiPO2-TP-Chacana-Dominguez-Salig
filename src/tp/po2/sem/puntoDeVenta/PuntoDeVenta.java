@@ -46,9 +46,11 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 		this.sem = sem;
 	}
 
-	public void registrarEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras) {
-
-		if (sem.esValidoRegistrarEstacionamiento(cantidadDeHoras)) {
+	public void registrarEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras) throws Exception {
+		
+		if (!sem.esValidoRegistrarEstacionamiento(cantidadDeHoras))  {
+	        throw new Exception("No es un horario apto para procesar el estacionamiento");
+	    }
 			
 			CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
 
@@ -56,7 +58,8 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 
 			sem.registrarCompra(compraPuntual);
 		}
-	}
+		
+		
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);

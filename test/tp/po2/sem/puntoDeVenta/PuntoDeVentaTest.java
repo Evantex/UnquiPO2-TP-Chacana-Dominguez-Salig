@@ -101,7 +101,26 @@ class PuntoDeVentaTest {
         verify(sistemaEstacionamientoMock).cargarCelular(numeroCelular, saldo);
         verify(sistemaEstacionamientoMock).registrarCompra(any(CompraRecargaCelular.class));
 		}
-	}
+	
+
+	@Test
+    public void testNoSePuedeRegistrarUnEstacionamientoEnUnHorarioNoValido() throws Exception {
+		
+		when(sistemaEstacionamientoMock.esHorarioLaboral()).thenReturn(false);
+		
+        Duration cantidadDeHoras = Duration.ofHours(2);
+        
+        Exception exception = assertThrows(Exception.class, () -> {
+            puntoDeVentaSUT.registrarEstacionamientoCompraPuntual("Patente", cantidadDeHoras);
+        });
+
+        // Verificar el mensaje de la excepción
+        assertEquals("No es un horario apto para procesar el estacionamiento", exception.getMessage());
+    }
+}
+
+
+	
 	/*
 	 * @Test public void
 	 * testCuandoUnPuntoDeVentaRegistrarUnEstacionamientoTiene1CompraEnSuSetDeCompras
