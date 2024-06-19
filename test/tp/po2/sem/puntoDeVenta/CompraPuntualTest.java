@@ -23,7 +23,7 @@ public class CompraPuntualTest {
 
 		// Setter y Getter para HorasCompradas
 		Duration horasCompradas = Duration.ofHours(2);
-		compra.sethorasCompradas(horasCompradas);
-		assertEquals(horasCompradas, compra.gethorasCompradas());
+		compra.setHorasCompradas(horasCompradas);
+		assertEquals(horasCompradas, compra.getHorasCompradas());
 	}
 }

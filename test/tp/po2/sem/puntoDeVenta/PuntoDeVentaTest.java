@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,10 +42,16 @@ class PuntoDeVentaTest {
 	ZonaDeEstacionamiento zonaMock;
 	List<Estacionamiento> spyListaEstacionamientos;
 	Set<Compra> spySetDeCompras;
+	@Captor
+    private ArgumentCaptor<CompraPuntual> compraPuntualCaptor;
+	@Captor
+	private ArgumentCaptor<CompraRecargaCelular> compraCelularCaptor;
 
 	@BeforeEach
 	public void setUp() {
-
+		
+		MockitoAnnotations.openMocks(this);	//INICIALIZO LOS MOCK "CAPTOR"
+		
 		estacionamientoMock = mock(Estacionamiento.class);
 		zonaMock = mock(ZonaDeEstacionamiento.class);
 		compraDeEstacionamientoMock = mock(CompraPuntual.class);
@@ -103,19 +111,21 @@ class PuntoDeVentaTest {
 
 	@Test
 	public void testRegistrarEstacionamientoCompraPuntual_Valido() throws Exception {
-		
-		Duration cantidadDeHoras = Duration.ofHours(2);
-		when(sistemaEstacionamientoMock.esValidoRegistrarEstacionamiento(cantidadDeHoras)).thenReturn(true);
+        Duration cantidadDeHoras = Duration.ofHours(2);
+        when(sistemaEstacionamientoMock.esValidoRegistrarEstacionamiento(cantidadDeHoras)).thenReturn(true);
 
-		
-		puntoDeVentaSUT.registrarEstacionamientoCompraPuntual("ABC123", cantidadDeHoras);
+        puntoDeVentaSUT.registrarEstacionamientoCompraPuntual("ABC123", cantidadDeHoras);
+        
+        //Verificacion: se mandaron los mensajes al SEM
+        verify(sistemaEstacionamientoMock).registrarEstacionamientoCompraPuntual(eq("ABC123"), eq(cantidadDeHoras), compraPuntualCaptor.capture());
+        verify(sistemaEstacionamientoMock).registrarCompra(compraPuntualCaptor.capture());
 
-		// Verificar que se llamaron los métodos esperados en el mock
-		verify(sistemaEstacionamientoMock).registrarEstacionamientoCompraPuntual(eq("ABC123"), eq(cantidadDeHoras),
-				any(CompraPuntual.class));
-
-		verify(sistemaEstacionamientoMock).registrarCompra(any(CompraPuntual.class));
-	}
+        // Verificacion: se creó una instancia de CompraPuntual
+        CompraPuntual compraPuntual = compraPuntualCaptor.getValue();
+        assertNotNull(compraPuntual);
+        assertEquals(cantidadDeHoras, compraPuntual.getHorasCompradas());
+    }
+	
 	
 	@Test
     public void testNoSePuedeRegistrarUnEstacionamientoEnUnHorarioNoValido() throws Exception {
@@ -148,7 +158,12 @@ class PuntoDeVentaTest {
 
         // Verificar que se llamaron los métodos esperados en el mock
         verify(sistemaEstacionamientoMock).cargarCelular(numeroCelular, saldo);
-        verify(sistemaEstacionamientoMock).registrarCompra(any(CompraRecargaCelular.class));
+        verify(sistemaEstacionamientoMock).registrarCompra(compraCelularCaptor.capture());
+        
+        // Verifico la instancia correcta de compra
+        CompraRecargaCelular compraRecarga = compraCelularCaptor.getValue();
+        assertNotNull(compraRecarga);
+        assertEquals(saldo, compraRecarga.getMontoSaldo());
 		}
 	
 	

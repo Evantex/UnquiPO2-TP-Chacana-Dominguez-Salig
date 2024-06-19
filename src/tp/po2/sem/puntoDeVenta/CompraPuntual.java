@@ -18,14 +18,16 @@ public class CompraPuntual extends Compra {
 	}
 
 	// Getters y setters
-	public Duration gethorasCompradas() {
+	public Duration getHorasCompradas() {
 		return horasCompradas;
 	}
 
-	public void sethorasCompradas(Duration cantidadDeHorasCompradas) {
+	public void setHorasCompradas(Duration cantidadDeHorasCompradas) {
 		this.horasCompradas = cantidadDeHorasCompradas;
 	}
-
+	
+	
+	// Distincion
 	public boolean esCompraPuntual() {
 		return true;
 	}
