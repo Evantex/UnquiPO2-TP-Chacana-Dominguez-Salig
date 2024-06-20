@@ -1,53 +1,77 @@
 package tp.po2.sem.puntoDeVenta;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
 
 public class CompraRecargaCelularTest {
-
+	
+	private CompraRecargaCelular compra;
+	private PuntoDeVenta puntoDeVentaMock;
+	private String numeroDeCelular;
+	private double montoSaldo;
+	
+	@BeforeEach
+	public void setUp() {
+		numeroDeCelular = "123456789";
+        montoSaldo = 100.0;
+		puntoDeVentaMock = mock(PuntoDeVenta.class);
+		compra = new CompraRecargaCelular(puntoDeVentaMock, numeroDeCelular, montoSaldo); 
+	}
+	
     @Test
-    public void testConstructor() {
-        // Mock del punto de venta
-        PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
-        String numeroDeCelular = "1234567890";
-        double montoSaldo = 100.0;
-
-        // Crear instancia de CompraRecargaCelular con parámetros
-        CompraRecargaCelular compra = new CompraRecargaCelular(puntoDeVenta, numeroDeCelular, montoSaldo);
-
-        // Verificar que los valores se hayan establecido correctamente
-        assertEquals(puntoDeVenta, compra.getPuntoDeVenta());
+    public void testConstructorConParametros() {
+    	
+        assertEquals(puntoDeVentaMock, compra.getPuntoDeVenta());
         assertEquals(numeroDeCelular, compra.getNumeroDecelular());
         assertEquals(montoSaldo, compra.getMontoSaldo(), 0.001);
     }
+    
+    @Test
+    public void getPuntoDeVenta() {
+    	assertEquals(puntoDeVentaMock, compra.getPuntoDeVenta());
+    }
+    
+    @Test
+    public void testSetPuntoDeVenta() {
+
+        PuntoDeVenta otroPuntoDeVenta = mock(PuntoDeVenta.class);
+        compra.setPuntoDeVenta(otroPuntoDeVenta);
+        assertEquals(otroPuntoDeVenta, compra.getPuntoDeVenta());
+    }
+    
+    @Test
+    public void getMontoSaldo() {
+    	assertEquals(montoSaldo, compra.getMontoSaldo());
+    }
+    
+    @Test
+    public void testSetMontoSaldo() {
+   
+        double nuevoMonto = 200.0;
+        compra.setMontoSaldo(nuevoMonto);
+        assertEquals(nuevoMonto, compra.getMontoSaldo(), 0.001);
+    }
+    
+    @Test
+    public void testGetNumeroDeCelular() {
+    	
+    	assertEquals(numeroDeCelular, compra.getNumeroDecelular());
+    }
+    
+    @Test
+    public void testSetNumeroDeCelular() {
+        String nuevoNumero = "987654321";
+        compra.setNumeroDecelular(nuevoNumero);
+        assertEquals(nuevoNumero, compra.getNumeroDecelular());
+    }
 
     @Test
-    public void testSettersAndGetters() {
-        // Mock del punto de venta
-        PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
-        PuntoDeVenta nuevoPuntoDeVenta = mock(PuntoDeVenta.class);
-        String numeroDeCelular = "132";
-        String nuevoNumeroDeCelular = "4444";
-        double montoSaldo = 100.0;
-        double nuevoMontoSaldo = 200.0;
-
-        // Crear instancia de CompraRecargaCelular con parámetros
-        CompraRecargaCelular compra = new CompraRecargaCelular(puntoDeVenta, numeroDeCelular, montoSaldo);
-
-        // Verificar los getters
-        assertEquals(puntoDeVenta, compra.getPuntoDeVenta());
-        assertEquals(numeroDeCelular, compra.getNumeroDecelular());
-        assertEquals(montoSaldo, compra.getMontoSaldo(), 0.001);
-
-        // Usar setters para cambiar los valores
-        compra.setPuntoDeVenta(nuevoPuntoDeVenta);
-        compra.setNumeroDecelular(nuevoNumeroDeCelular);
-        compra.setMontoSaldo(nuevoMontoSaldo);
-
-        // Verificar los nuevos valores con los getters
-        assertEquals(nuevoPuntoDeVenta, compra.getPuntoDeVenta());
-        assertEquals(nuevoNumeroDeCelular, compra.getNumeroDecelular());
-        assertEquals(nuevoMontoSaldo, compra.getMontoSaldo(), 0.001);
+    public void testEsCompraRecargaCelular() {
+       
+        assertFalse(compra.esCompraPuntual());
+        assertTrue(compra.esCompraRecargaCelular());
     }
 }

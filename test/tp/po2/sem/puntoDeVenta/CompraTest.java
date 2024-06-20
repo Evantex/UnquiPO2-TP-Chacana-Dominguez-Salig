@@ -1,72 +1,66 @@
 package tp.po2.sem.puntoDeVenta;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-import java.time.LocalDateTime;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
-import org.junit.Test;
-
+import java.time.Duration;
 
 public class CompraTest {
-
-	@Test
-	public void testGettersAndSetters() {
-		// Mock del punto de venta
-		PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
-
-		// Crear instancia de Compra
-		Compra compra = new Compra() {
-		};
-
-		// Setter y Getter para PuntoDeVenta
-		compra.setPuntoDeVenta(puntoDeVenta);
-		assertEquals(puntoDeVenta, compra.getPuntoDeVenta());
-
-		// Setter y Getter para FechaHoraCompra
-		// No se puede cambiar directamente la fecha y hora de compra, ya que se
-		// establece automáticamente al crear la instancia
-		// Por lo tanto, no hay un test directo para el setter de FechaHoraCompra
+	
+	private CompraPuntual compraSinParametros;
+	private CompraPuntual compraConParametros;
+	private PuntoDeVenta puntoDeVentaMock;
+	
+	@BeforeEach 
+	public void setUp() {
+		puntoDeVentaMock = mock(PuntoDeVenta.class);
+		compraSinParametros = new CompraPuntual();
+		compraConParametros = new CompraPuntual(puntoDeVentaMock, Duration.ofHours(2));
+		
 	}
+	
+    @Test
+    public void testUnaCompraPuntualSeInicializaConUnNumeroDeControlYUnaFechaYHora() {
+        
+        assertNotNull(compraSinParametros.getNumeroDeControl());
+        assertNotNull(compraSinParametros.getFechaHoraCompra());
+    }
 
-	@Test
-	public void testConstructorSinParametros() {
+    @Test
+    public void testUnaCompraPuntualSePuedeInicializarConUnPuntoDeVenta() {
+       
+    	PuntoDeVenta puntoDeVentaMock = mock(PuntoDeVenta.class);
+        Compra compra = new CompraPuntual(puntoDeVentaMock, Duration.ofHours(2));
+        assertEquals(puntoDeVentaMock, compra.getPuntoDeVenta());
+        
+    }
 
-		// Crear instancia de Compra sin parámetros
-		Compra compra = new Compra() {
-		};
+    @Test
+    public void testGenerarNumeroDeControl() {
+        Compra compra1 = new CompraPuntual();
+        Compra compra2 = new CompraPuntual();
+        assertNotEquals(compra1.getNumeroDeControl(), compra2.getNumeroDeControl());
+    }
 
-		// Verificar que el número de control no sea nulo
-		assertEquals(false, compra.getNumeroDeControl().isEmpty());
-
-		// Verificar que la fecha y hora de la compra sea válida
-		LocalDateTime fechaHoraActual = LocalDateTime.now();
-		LocalDateTime fechaHoraCompra = compra.getFechaHoraCompra();
-		assertEquals(fechaHoraActual.getDayOfMonth(), fechaHoraCompra.getDayOfMonth());
-		assertEquals(fechaHoraActual.getMonth(), fechaHoraCompra.getMonth());
-		assertEquals(fechaHoraActual.getYear(), fechaHoraCompra.getYear());
-	}
-
-	@Test
-	public void testConstructorConParametros() {
-		// Mock del punto de venta
-		PuntoDeVenta puntoDeVenta = mock(PuntoDeVenta.class);
-
-		// Crear instancia de Compra con parámetros
-		Compra compra = new Compra(puntoDeVenta) {
-		};
-
-		// Verificar que el número de control no sea nulo
-		assertEquals(false, compra.getNumeroDeControl().isEmpty());
-
-		// Verificar que la fecha y hora de la compra sea válida
-		LocalDateTime fechaHoraActual = LocalDateTime.now();
-		LocalDateTime fechaHoraCompra = compra.getFechaHoraCompra();
-		assertEquals(fechaHoraActual.getDayOfMonth(), fechaHoraCompra.getDayOfMonth());
-		assertEquals(fechaHoraActual.getMonth(), fechaHoraCompra.getMonth());
-		assertEquals(fechaHoraActual.getYear(), fechaHoraCompra.getYear());
-
-		// Verificar que el punto de venta sea el esperado
-		assertEquals(puntoDeVenta, compra.getPuntoDeVenta());
-	}
+    @Test
+    public void testGetPuntoDeVenta() {
+        
+        assertEquals(puntoDeVentaMock, compraConParametros.getPuntoDeVenta());
+    }
+    
+    @Test
+    public void testSetPuntoDeVenta() {
+    	compraSinParametros.setPuntoDeVenta(puntoDeVentaMock);
+    	assertEquals(puntoDeVentaMock, compraSinParametros.getPuntoDeVenta());
+    }
+    
+    @Test 
+    public void testGetFechaYHora() {
+        
+        assertNotNull(compraSinParametros.getFechaHoraCompra());
+    }
+    
 }

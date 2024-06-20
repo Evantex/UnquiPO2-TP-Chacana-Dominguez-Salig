@@ -45,9 +45,6 @@ public abstract class Compra {
 		return fechaHoraCompra;
 	}
 
-	public void setFechaHoraCompra(LocalDateTime fechaHoraCompra) {
-		this.fechaHoraCompra = fechaHoraCompra;
-	}
 
 	public abstract boolean esCompraPuntual();
 
