@@ -30,7 +30,9 @@ public class SistemaEstacionamiento {
 	private LocalTime horaLaboralFin;
 	private Notificador sistemaAlertas;
 	private RelojSem relojSem;
+	private EstadoSistema estadoActual;
 
+	//Constructor sin parametros, pero CON EL ESTADO EN NULL
 	public SistemaEstacionamiento() {
 		super();
 		this.estacionamientos = new HashSet<>();
@@ -41,6 +43,20 @@ public class SistemaEstacionamiento {
 		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
 		this.setSistemaAlertas(new Notificador());
 		this.relojSem = new RelojSem();
+	}
+	
+	//Constructor con el parametro seteado
+	public SistemaEstacionamiento(EstadoSistema estado) {
+		super();
+		this.estacionamientos = new HashSet<>();
+		this.usuarios = new HashSet<>();
+		this.setInfracciones(new ArrayList<>());
+		this.comprasPuntoDeVenta = new HashSet<>();
+		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
+		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
+		this.setSistemaAlertas(new Notificador());
+		this.relojSem = new RelojSem();
+		this.estadoActual = estado;
 	}
 
 	// getters and setters
@@ -98,22 +114,20 @@ public class SistemaEstacionamiento {
 		this.usuarios = usuarios;
 	}
 	
+	public void setEstadoSistema(EstadoSistema estado) {
+		this.estadoActual = estado;
+	}
+	
 	// validaciones de acciones
 
 
 	public boolean esValidoRegistrarEstacionamiento(Duration cantidadDeHoras) {
 
-		return (this.esHorarioLaboral() && this.esValidaLaCantidadDeHorasSolicitadas(cantidadDeHoras));
-	}
-
-	public boolean esHorarioLaboral() {
-		LocalTime horaActual = relojSem.horaActual();
-		return !horaActual.isBefore(horaLaboralInicio) && !horaActual.isAfter(horaLaboralFin);
-		
+		return estadoActual.esEstadoAbierto() && this.esValidaLaCantidadDeHorasSolicitadas(cantidadDeHoras);
 	}
 
 	public boolean esValidaLaCantidadDeHorasSolicitadas(Duration cantidadDeHoras) {
-		LocalTime horaActual = relojSem.horaActual();
+		LocalTime horaActual = relojSem.getHoraActual();
 		LocalTime horaFinalEstimada = horaActual.plus(cantidadDeHoras);
 
 		
@@ -127,7 +141,26 @@ public class SistemaEstacionamiento {
 
 		comprasPuntoDeVenta.add(compra);
 	}
+	
+	public void registrarEstacionamientoApp(Estacionamiento unEstacionamiento) throws Exception {
+		estadoActual.registrarEstacionamiento(this, unEstacionamiento);
+		
+	}
+	
+	public void registrarEstacionamientoCompraPuntual(String patente, Duration horasCompradas,
+			CompraPuntual compraAsociada) throws Exception {
+		
+		EstacionamientoCompraPuntual estacionamientoCompuntal = new EstacionamientoCompraPuntual(horasCompradas,
+				patente, compraAsociada);
+		estadoActual.registrarEstacionamiento(this, estacionamientoCompuntal);
 
+	}
+	
+	public void addEstacionamiento(Estacionamiento estacionamiento) {
+		estacionamientos.add(estacionamiento);
+	}
+	
+	/*
 	public void registrarEstacionamientoApp(Estacionamiento unEstacionamiento) {
 		estacionamientos.add(unEstacionamiento);
 		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
@@ -140,7 +173,8 @@ public class SistemaEstacionamiento {
 		estacionamientos.add(estacionamientoCompuntal);
 
 	}
-
+ 	*/
+	
 	// CAMBIAR RECARGAS
 
 	public void cargarCelular(String nroCelular, double saldo) {
@@ -218,7 +252,7 @@ public class SistemaEstacionamiento {
 	// LOGICA DE "FIN DE FRANJA HORARIA, FINALIZAR TODOS LOS ESTACIONAMIENTOS VIGENTES"
 	public void finalizarTodosLosEstacionamientos() {
 		
-		LocalTime horaActual = relojSem.horaActual();
+		LocalTime horaActual = relojSem.getHoraActual();
 		if (horaActual == this.horaLaboralFin) {
 	    this.estacionamientos.stream()
 	        .filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
@@ -255,6 +289,8 @@ public class SistemaEstacionamiento {
 				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, unEstacionamento));
 
 	}
+
+	
 
 
 

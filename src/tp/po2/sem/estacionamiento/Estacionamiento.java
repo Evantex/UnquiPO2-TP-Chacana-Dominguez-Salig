@@ -9,7 +9,6 @@ public abstract class Estacionamiento
 	protected LocalDateTime inicioEstacionamiento;
 	protected LocalDateTime finEstacionamiento = null;
 	protected String patenteVehiculo;
-	// protected boolean estaVigente = true;
 	protected String nombreZonaEstacionamiento;
 	protected Duration duracionEnHoras;
 
