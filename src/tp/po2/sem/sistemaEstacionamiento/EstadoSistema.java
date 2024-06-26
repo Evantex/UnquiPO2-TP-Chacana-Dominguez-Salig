@@ -1,11 +1,20 @@
 package tp.po2.sem.sistemaEstacionamiento;
 
-import tp.po2.sem.estacionamiento.Estacionamiento;
+
+import java.time.Duration;
+
+import tp.po2.sem.app.App;
+import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
 public interface EstadoSistema {
 	
-	void registrarEstacionamiento(SistemaEstacionamiento sem, Estacionamiento estacionamiento) throws Exception;
 
 	boolean esEstadoAbierto();
+
+	void registrarEstacionamientoCompraPuntual(SistemaEstacionamiento sistemaEstacionamiento, String patente,
+			Duration cantidadDeHoras, PuntoDeVenta puntoDeVenta);
+
+	void registrarEstacionamientoApp(SistemaEstacionamiento sistemaEstacionamiento, App app, String nroCelular,
+			String patente);
 	
 }

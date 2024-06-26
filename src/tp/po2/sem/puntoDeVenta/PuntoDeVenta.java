@@ -7,6 +7,7 @@ import java.util.Set;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
+import tp.po2.sem.sistemaEstacionamiento.EstadoSistema;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
 public class PuntoDeVenta { // responsabilidad de generar objetos compras
@@ -46,18 +47,11 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 		this.sem = sem;
 	}
 
-	public void registrarEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras) throws Exception {
+	public void registrarEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras)  {
 		
-		if (!sem.esValidoRegistrarEstacionamiento(cantidadDeHoras))  {
-	        throw new Exception("No es un horario apto para procesar el estacionamiento");
-	    }
-			
-			CompraPuntual compraPuntual = new CompraPuntual(this, cantidadDeHoras);
-
-			sem.registrarEstacionamientoCompraPuntual(patente, cantidadDeHoras, compraPuntual);
-
-			sem.registrarCompra(compraPuntual);
-		}
+		sem.solicitudDeEstacionamientoCompraPuntual(patente, cantidadDeHoras, this);
+		
+	}
 		
 		
 

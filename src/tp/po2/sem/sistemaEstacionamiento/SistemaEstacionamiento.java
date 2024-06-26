@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import tp.po2.sem.Reloj.RelojSem;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
+import tp.po2.sem.app.App;
 import tp.po2.sem.app.CelularDeUsuario;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
@@ -20,6 +21,7 @@ import tp.po2.sem.inspector.Infraccion;
 import tp.po2.sem.inspector.Inspector;
 import tp.po2.sem.puntoDeVenta.Compra;
 import tp.po2.sem.puntoDeVenta.CompraPuntual;
+import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
 public class SistemaEstacionamiento {
 	private Set<Estacionamiento> estacionamientos;
@@ -31,6 +33,7 @@ public class SistemaEstacionamiento {
 	private Notificador sistemaAlertas;
 	private RelojSem relojSem;
 	private EstadoSistema estadoActual;
+	private Set<ZonaDeEstacionamiento> zonasDeEstacionamiento;
 
 	//Constructor sin parametros, pero CON EL ESTADO EN NULL
 	public SistemaEstacionamiento() {
@@ -43,6 +46,7 @@ public class SistemaEstacionamiento {
 		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
 		this.setSistemaAlertas(new Notificador());
 		this.relojSem = new RelojSem();
+		this.setZonasDeEstacionamiento(new HashSet<>());
 	}
 	
 	//Constructor con el parametro seteado
@@ -118,62 +122,52 @@ public class SistemaEstacionamiento {
 		this.estadoActual = estado;
 	}
 	
-	// validaciones de acciones
-
-
-	public boolean esValidoRegistrarEstacionamiento(Duration cantidadDeHoras) {
-
-		return estadoActual.esEstadoAbierto() && this.esValidaLaCantidadDeHorasSolicitadas(cantidadDeHoras);
+	public EstadoSistema getEstadoSistema() {
+		return estadoActual;
 	}
 
-	public boolean esValidaLaCantidadDeHorasSolicitadas(Duration cantidadDeHoras) {
-		LocalTime horaActual = relojSem.getHoraActual();
-		LocalTime horaFinalEstimada = horaActual.plus(cantidadDeHoras);
-
-		
-		return !(horaFinalEstimada.isBefore(horaLaboralInicio) || horaFinalEstimada.isAfter(horaLaboralFin));
-		
+	public Set<ZonaDeEstacionamiento> getZonasDeEstacionamiento() {
+		return zonasDeEstacionamiento;
 	}
 
+	public void setZonasDeEstacionamiento(Set<ZonaDeEstacionamiento> zonasDeEstacionamiento) {
+		this.zonasDeEstacionamiento = zonasDeEstacionamiento;
+	}
+	
+	
 	// registraciones
+	public void registrarZonaEstacionamiento(ZonaDeEstacionamiento zona) {
+		zonasDeEstacionamiento.add(zona);
+	}
+	
+	public void removerZonaEstacionamiento(ZonaDeEstacionamiento zona) {
+		zonasDeEstacionamiento.remove(zona);
+	}
+	
 
 	public void registrarCompra(Compra compra) {
 
 		comprasPuntoDeVenta.add(compra);
 	}
 	
-	public void registrarEstacionamientoApp(Estacionamiento unEstacionamiento) throws Exception {
-		estadoActual.registrarEstacionamiento(this, unEstacionamiento);
-		
-	}
-	
-	public void registrarEstacionamientoCompraPuntual(String patente, Duration horasCompradas,
-			CompraPuntual compraAsociada) throws Exception {
-		
-		EstacionamientoCompraPuntual estacionamientoCompuntal = new EstacionamientoCompraPuntual(horasCompradas,
-				patente, compraAsociada);
-		estadoActual.registrarEstacionamiento(this, estacionamientoCompuntal);
-
-	}
-	
 	public void addEstacionamiento(Estacionamiento estacionamiento) {
 		estacionamientos.add(estacionamiento);
+		this.notificarSistemaAlertasInicioEstacionamiento(estacionamiento);
 	}
 	
-	/*
-	public void registrarEstacionamientoApp(Estacionamiento unEstacionamiento) {
-		estacionamientos.add(unEstacionamiento);
-		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
+	public void solicitudDeEstacionamientoApp(App app, String celular, String patente)  {
+		
+		estadoActual.registrarEstacionamientoApp(this, app, celular, patente);
+		
 	}
-
-	public void registrarEstacionamientoCompraPuntual(String patente, Duration horasCompradas,
-			CompraPuntual compraAsociada) {
-		EstacionamientoCompraPuntual estacionamientoCompuntal = new EstacionamientoCompraPuntual(horasCompradas,
-				patente, compraAsociada);
-		estacionamientos.add(estacionamientoCompuntal);
-
+	
+	public void solicitudDeEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras, PuntoDeVenta puntoDeVenta) {
+		
+		estadoActual.registrarEstacionamientoCompraPuntual(this, patente, cantidadDeHoras, puntoDeVenta);
+		
 	}
- 	*/
+	
+	
 	
 	// CAMBIAR RECARGAS
 
@@ -289,6 +283,8 @@ public class SistemaEstacionamiento {
 				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, unEstacionamento));
 
 	}
+
+	
 
 	
 

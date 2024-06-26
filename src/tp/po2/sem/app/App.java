@@ -72,9 +72,9 @@ public class App implements MovementSensor
 	    	this.verificarValidacionesParaIniciarEstacionamiento();
 	        String celular = this.celularAsociado.getNroCelular();
 	        String patente = this.getPatente();
-	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
-	        this.SEM.registrarEstacionamientoApp( nuevoEstacionamiento );
-	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
+	        
+	        this.SEM.solicitudDeEstacionamientoApp(this, celular, patente );
+	      
 	        
 	    } 
 	    catch (Exception e)
@@ -87,7 +87,7 @@ public class App implements MovementSensor
 	public void verificarValidacionesParaIniciarEstacionamiento() throws Exception {
 		this.verificarSiPoseeEstacionamientoVigente();
 		this.verificarSaldoSuficiente();
-  //  	this.verificarHorarioPermitido(); en que contexto se encontraria dentro de un estacionamiento en horario no permitido?
+    	this.verificarHorarioPermitido(); 
 		this.verificarZonaEstacionamiento();
 	}
 	
@@ -132,7 +132,7 @@ public class App implements MovementSensor
 	    }
 	}
 	
-	/* VER ANOTACION EN VERIFICACIONES
+	
 	private void verificarHorarioPermitido() throws Exception 
 	{
 	    if ( this.seEncuentraEnFranjaHoraria() )
@@ -140,7 +140,7 @@ public class App implements MovementSensor
 	        throw new Exception("Horario no permitido");
 	    }
 	}
-	*/
+	
 	public void verificarZonaEstacionamiento() throws Exception 
 	{
 		if ( !this.estaDentroDeZonaEstacionamiento() )
