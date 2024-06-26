@@ -16,5 +16,7 @@ public interface EstadoSistema {
 
 	void registrarEstacionamientoApp(SistemaEstacionamiento sistemaEstacionamiento, App app, String nroCelular,
 			String patente);
+
+	void verificarTransicion(SistemaEstacionamiento sistemaEstacionamiento);
 	
 }

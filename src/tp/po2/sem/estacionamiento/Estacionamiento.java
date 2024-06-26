@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public abstract class Estacionamiento
 {
 	protected LocalDateTime inicioEstacionamiento;
-	protected LocalDateTime finEstacionamiento = null;
+	protected LocalDateTime finEstacionamiento = null; 
 	protected String patenteVehiculo;
 	protected String nombreZonaEstacionamiento;
 	protected Duration duracionEnHoras;

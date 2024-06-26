@@ -35,33 +35,24 @@ public class SistemaEstacionamiento {
 	private EstadoSistema estadoActual;
 	private Set<ZonaDeEstacionamiento> zonasDeEstacionamiento;
 
-	//Constructor sin parametros, pero CON EL ESTADO EN NULL
+	
 	public SistemaEstacionamiento() {
 		super();
 		this.estacionamientos = new HashSet<>();
 		this.usuarios = new HashSet<>();
 		this.setInfracciones(new ArrayList<>());
 		this.comprasPuntoDeVenta = new HashSet<>();
-		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
-		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
 		this.setSistemaAlertas(new Notificador());
 		this.relojSem = new RelojSem();
 		this.setZonasDeEstacionamiento(new HashSet<>());
-	}
-	
-	//Constructor con el parametro seteado
-	public SistemaEstacionamiento(EstadoSistema estado) {
-		super();
-		this.estacionamientos = new HashSet<>();
-		this.usuarios = new HashSet<>();
-		this.setInfracciones(new ArrayList<>());
-		this.comprasPuntoDeVenta = new HashSet<>();
+		
+		//RESPECTO AL ESTADO DEL SISTEMA, DE 7 A 20 ESTA ABIERTO
 		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
 		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
-		this.setSistemaAlertas(new Notificador());
-		this.relojSem = new RelojSem();
-		this.estadoActual = estado;
+		this.estadoActual = new EstadoSistemaCerrado();
+        this.estadoActual.verificarTransicion(this);
 	}
+	
 
 	// getters and setters
 
@@ -133,7 +124,7 @@ public class SistemaEstacionamiento {
 	public void setZonasDeEstacionamiento(Set<ZonaDeEstacionamiento> zonasDeEstacionamiento) {
 		this.zonasDeEstacionamiento = zonasDeEstacionamiento;
 	}
-	
+		
 	
 	// registraciones
 	public void registrarZonaEstacionamiento(ZonaDeEstacionamiento zona) {
@@ -150,7 +141,7 @@ public class SistemaEstacionamiento {
 		comprasPuntoDeVenta.add(compra);
 	}
 	
-	public void addEstacionamiento(Estacionamiento estacionamiento) {
+	public void registrarEstacionamiento(Estacionamiento estacionamiento) {
 		estacionamientos.add(estacionamiento);
 		this.notificarSistemaAlertasInicioEstacionamiento(estacionamiento);
 	}
@@ -282,6 +273,12 @@ public class SistemaEstacionamiento {
 		sistemaAlertas
 				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, unEstacionamento));
 
+	}
+
+
+	public LocalTime getHoraActual() {
+		
+		return this.relojSem.getHoraActual();
 	}
 
 	
