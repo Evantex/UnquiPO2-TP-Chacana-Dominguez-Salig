@@ -1,28 +1,31 @@
 package tp.po2.sem.puntoDeVenta;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class CompraPuntual extends Compra {
 
-	private Duration horasCompradas;
+	private int horasCompradas;
+	private LocalTime horaInicio;
+	private LocalTime horaFin;
 
-	// Constructor sin parámetros
-	public CompraPuntual() {
-		super();
-	}
 
 	// Constructor con parámetros
-	public CompraPuntual(PuntoDeVenta puntoDeVenta, Duration cantidadDeHorasCompradas) {
-		super(puntoDeVenta);
-		this.horasCompradas = cantidadDeHorasCompradas;
-	}
+	public CompraPuntual(PuntoDeVenta puntoDeVenta, int horasCompradas, LocalDate fechaCompra, LocalTime horaInicio, LocalTime horaFin) {
+		this.puntoDeVenta = puntoDeVenta;
+        this.horasCompradas = horasCompradas;
+        this.fechaCompra = fechaCompra;
+        this.setHoraInicio(horaInicio);
+        this.setHoraFin(horaFin);
+    }
 
 	// Getters y setters
-	public Duration getHorasCompradas() {
+	public int getHorasCompradas() {
 		return horasCompradas;
 	}
 
-	public void setHorasCompradas(Duration cantidadDeHorasCompradas) {
+	public void setHorasCompradas(int cantidadDeHorasCompradas) {
 		this.horasCompradas = cantidadDeHorasCompradas;
 	}
 	
@@ -34,6 +37,22 @@ public class CompraPuntual extends Compra {
 
 	public boolean esCompraRecargaCelular() {
 		return false;
+	}
+
+	public LocalTime getHoraInicio() {
+		return horaInicio;
+	}
+
+	public void setHoraInicio(LocalTime horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	public LocalTime getHoraFin() {
+		return horaFin;
+	}
+
+	public void setHoraFin(LocalTime horaFin) {
+		this.horaFin = horaFin;
 	}
 
 }

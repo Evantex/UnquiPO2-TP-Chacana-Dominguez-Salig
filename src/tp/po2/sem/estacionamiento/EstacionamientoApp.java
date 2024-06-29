@@ -3,6 +3,8 @@ package tp.po2.sem.estacionamiento;
 import java.awt.Point;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import tp.po2.sem.app.*;
 
 public class EstacionamientoApp extends Estacionamiento {
@@ -11,48 +13,30 @@ public class EstacionamientoApp extends Estacionamiento {
 
 	public EstacionamientoApp(App app, String celular, String dominioVehiculo) {
 		this.aplicacion = app;
-		this.inicioEstacionamiento = LocalDateTime.now();
+		this.inicioEstacionamiento = LocalTime.now();
 		// this.finEstacionamiento = app.
 		this.patenteVehiculo = dominioVehiculo;
 		this.nroCelularApp = celular;
+		this.vigenciaEstacionamiento = new EstacionamientoVigente();
 	}
-
-	@Override
-	public LocalDateTime getHoraMaximaFinEstacionamiento() {
-		LocalDateTime horaMáximaPermitidaSaldo = this.inicioEstacionamiento
-				.plusHours(aplicacion.getHorasMaximasPermitidasEstacionamiento());
-		LocalDateTime horaMáximaPermitidaDelDía = LocalDateTime.of(this.inicioEstacionamiento.getYear(),
-				this.inicioEstacionamiento.getMonth(), this.inicioEstacionamiento.getDayOfMonth(), 20, 00);
-		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo
-				: horaMáximaPermitidaDelDía;
-	}
-
-	@Override
-	public boolean estaVigente() {
-		try {
-			this.verificarSiFinalizo();
-			return false;
-		} catch (Exception e) {
-			return true;
-		}
-	}
-
+	
 	@Override
 	public String getIdentificadorEstacionamiento() {
 		return this.nroCelularApp;
 	}
-
+	
 	@Override
 	public int getDuracionEnHoras() throws Exception {
-		this.verificarSiFinalizo();
+		verificarSiFinalizo();
 		return super.getDuracionEnHoras();
 	}
 
 	@Override
 	public void finalizarEstacionamiento() {
-		this.finEstacionamiento = LocalDateTime.now();
-		Duration duracion = Duration.between(this.inicioEstacionamiento, this.finEstacionamiento);
+		this.finEstacionamiento = LocalTime.now();
+		int duracion = (int) (Duration.between(this.inicioEstacionamiento, this.finEstacionamiento)).toHours();
 		this.duracionEnHoras = duracion;
+		this.vigenciaEstacionamiento = new EstacionamientoNoVigente();
 	}
 
 	private void verificarSiFinalizo() throws Exception {
@@ -67,6 +51,10 @@ public class EstacionamientoApp extends Estacionamiento {
 
 	public boolean esEstacionamientoApp() {
 		return true;
+	}
+	
+	public String getNroCelular() {
+		return this.nroCelularApp;
 	}
 
 }

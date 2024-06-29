@@ -1,13 +1,9 @@
 package tp.po2.sem.puntoDeVenta;
 
-import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
-
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
-import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
-import tp.po2.sem.sistemaEstacionamiento.EstadoSistema;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
 public class PuntoDeVenta { // responsabilidad de generar objetos compras
@@ -47,15 +43,25 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 		this.sem = sem;
 	}
 
-	public void registrarEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras)  {
+	public void registrarEstacionamientoCompraPuntual
+		(String patente, int cantidadDeHoras, LocalDate fechaCompra, LocalTime horaInicio, LocalTime horaFin) throws Exception {
 		
-		sem.solicitudDeEstacionamientoCompraPuntual(patente, cantidadDeHoras, this);
+		sem.validarHorarioPermitido(horaInicio);
+		sem.validarHorarioPermitido(horaFin);
+		
+		 // Si no se lanza la excepción, continuar con la creación del estacionamiento
+		CompraPuntual compraEstacionamiento = new CompraPuntual(this, cantidadDeHoras, fechaCompra, horaInicio, horaFin);
+		
+		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(patente, compraEstacionamiento);
+		
+		sem.solicitudDeEstacionamientoCompraPuntual(estacionamiento, compraEstacionamiento);
 		
 	}
 		
 		
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
+		
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
 		sem.cargarCelular(numeroCelular, saldo);
 

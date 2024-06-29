@@ -57,23 +57,17 @@ public class App implements MovementSensor
 		return this.celularAsociado.estaDentroDeZonaEstacionamiento();
 	}
 	
-	public boolean seEncuentraEnFranjaHoraria()
-	{
-		LocalTime horaActual = LocalTime.now();
-		LocalTime horaMinima = LocalTime.of(7, 0);
-		LocalTime horaMaxima = LocalTime.of(20, 0);
-		return (horaActual.isAfter(horaMinima)) && (horaActual.isBefore(horaMaxima)); 
-	}
 	
 	public void iniciarEstacionamiento()
 	{
 	    try 
 	    {	
 	    	this.verificarValidacionesParaIniciarEstacionamiento();
-	        String celular = this.celularAsociado.getNroCelular();
-	        String patente = this.getPatente();
 	        
-	        this.SEM.solicitudDeEstacionamientoApp(this, celular, patente );
+	    	// Si no se lanza la excepción, continuar con la creación del estacionamiento
+	    	EstacionamientoApp estacionamiento = new EstacionamientoApp(this, celularAsociado.getNroCelular(), this.getPatente());
+	        this.SEM.solicitudDeEstacionamientoApp(estacionamiento);
+	        this.enviarDetallesInicioEstacionamiento(estacionamiento);
 	      
 	        
 	    } 
@@ -101,11 +95,11 @@ public class App implements MovementSensor
 	}
 	
 	// LOGICA DE Información al Usuario en Estacionamiento vía App
-	public void enviarDetallesInicioEstacionamiento( Estacionamiento estacionamiento )
+	public void enviarDetallesInicioEstacionamiento( EstacionamientoApp estacionamiento )
 	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
-		String fin = "Hora máxima fin del estacionamiento respecto al saldo: " + estacionamiento.getHoraMaximaFinEstacionamiento().format(formatter);
+		String fin = "Hora máxima fin del estacionamiento respecto al saldo: " + this.getHoraMaximaFinEstacionamiento(estacionamiento).format(formatter);
 		String msg = inicio + "\n" + fin;
 		this.notificarUsuario(msg);
 	}
@@ -135,10 +129,7 @@ public class App implements MovementSensor
 	
 	private void verificarHorarioPermitido() throws Exception 
 	{
-	    if ( this.seEncuentraEnFranjaHoraria() )
-	    {
-	        throw new Exception("Horario no permitido");
-	    }
+	    SEM.validarHorarioPermitido(LocalTime.now());
 	}
 	
 	public void verificarZonaEstacionamiento() throws Exception 
@@ -161,10 +152,21 @@ public class App implements MovementSensor
 		return SEM.poseeEstacionamientoVigente(patenteAsociada);
 	}
 	
+	public LocalTime getHoraMaximaFinEstacionamiento(EstacionamientoApp unEstacionamiento) {
+		
+		LocalTime horaMáximaPermitidaSaldo = unEstacionamiento.getInicioEstacionamiento().plusHours(this.getHorasMaximasPermitidasEstacionamiento());
+		
+		LocalTime horaMáximaPermitidaDelDía = SEM.getHoraLaboralFin();
+		
+		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo
+				: horaMáximaPermitidaDelDía;
+	}
+	
 	public int getHorasMaximasPermitidasEstacionamiento()
 	{
 		double saldoCelular = this.celularAsociado.getSaldo();
-		return (int) Math.round(saldoCelular / 40);
+		int precioPorHora   = SistemaEstacionamiento.getPrecioporhora();
+		return (int) Math.round(saldoCelular / precioPorHora);
 	}
 	
 	

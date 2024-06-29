@@ -11,34 +11,26 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
     private CompraPuntual compraAsociada;
 
     // Constructor que inicializa el estacionamiento con la duración comprada
-    public EstacionamientoCompraPuntual(Duration duracion, String patenteVehiculo, CompraPuntual compraAsociada) 
+    public EstacionamientoCompraPuntual(String patenteVehiculo, CompraPuntual compraAsociada) 
     {
-        this.inicioEstacionamiento = LocalDateTime.now();
-        this.finEstacionamiento = LocalDateTime.now().plus(duracion);
+    	this.compraAsociada = compraAsociada;
+        this.inicioEstacionamiento = compraAsociada.getHoraInicio();
+        this.finEstacionamiento = compraAsociada.getHoraFin();
         this.patenteVehiculo = patenteVehiculo;
-        this.compraAsociada = compraAsociada;
-        this.duracionEnHoras = duracion;
+        this.duracionEnHoras = compraAsociada.getHorasCompradas();
+        this.vigenciaEstacionamiento = new EstacionamientoVigente();
     }
-
     
+    @Override
+    public String getIdentificadorEstacionamiento() {
+        return this.patenteVehiculo;
+    }
     // Getter para la compra asociada
     public CompraPuntual getCompraAsociada() 
     {
         return compraAsociada;
     }
 
-    // Implementación del método abstracto para verificar si el estacionamiento está vigente
-    @Override
-    public boolean estaVigente() {
-        return LocalDateTime.now().isBefore(this.finEstacionamiento);
-    }
-
-    // Implementación del método abstracto para obtener el identificador del estacionamiento
-    @Override
-    public String getIdentificadorEstacionamiento() {
-        return "Puntual-" + this.patenteVehiculo + "-" + this.inicioEstacionamiento.toString();
-    }
-    
     
 	public boolean esEstacionamientoCompraPuntual() {
 		return true;
@@ -49,11 +41,6 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
 	}
 
 
-	@Override
-	public LocalDateTime getHoraMaximaFinEstacionamiento() { // para que es esto?
-		// TODO Auto-generated method stub
-		return null;
-	}
     
     
     

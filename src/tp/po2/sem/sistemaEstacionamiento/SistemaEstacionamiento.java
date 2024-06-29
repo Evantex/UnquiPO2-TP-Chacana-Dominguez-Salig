@@ -2,7 +2,6 @@ package tp.po2.sem.sistemaEstacionamiento;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,30 +10,28 @@ import java.util.List;
 import java.util.Optional;
 
 
-import tp.po2.sem.Reloj.RelojSem;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
-import tp.po2.sem.app.App;
 import tp.po2.sem.app.CelularDeUsuario;
 import tp.po2.sem.estacionamiento.Estacionamiento;
+import tp.po2.sem.estacionamiento.EstacionamientoApp;
 import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
 import tp.po2.sem.inspector.Infraccion;
 import tp.po2.sem.inspector.Inspector;
 import tp.po2.sem.puntoDeVenta.Compra;
 import tp.po2.sem.puntoDeVenta.CompraPuntual;
-import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
 public class SistemaEstacionamiento {
+	private static final int precioPorHora = 40;
+	private static final LocalTime horaLaboralInicio = LocalTime.of(7, 0);
+	private static final LocalTime horaLaboralFin = LocalTime.of(20, 0);
 	private Set<Estacionamiento> estacionamientos;
 	private Set<CelularDeUsuario> usuarios;
 	private List<Infraccion> infracciones;
 	private Set<Compra> comprasPuntoDeVenta;
-	private LocalTime horaLaboralInicio;
-	private LocalTime horaLaboralFin;
 	private Notificador sistemaAlertas;
-	private RelojSem relojSem;
-	private EstadoSistema estadoActual;
 	private Set<ZonaDeEstacionamiento> zonasDeEstacionamiento;
-
+	private ValidadorHorario verificadorHorario;
+	
 	
 	public SistemaEstacionamiento() {
 		super();
@@ -43,16 +40,10 @@ public class SistemaEstacionamiento {
 		this.setInfracciones(new ArrayList<>());
 		this.comprasPuntoDeVenta = new HashSet<>();
 		this.setSistemaAlertas(new Notificador());
-		this.relojSem = new RelojSem();
 		this.setZonasDeEstacionamiento(new HashSet<>());
+		this.verificadorHorario = new ValidadorHorario(horaLaboralInicio, horaLaboralFin);
 		
-		//RESPECTO AL ESTADO DEL SISTEMA, DE 7 A 20 ESTA ABIERTO
-		this.horaLaboralInicio = LocalTime.of(7, 0); // 7:00 AM
-		this.horaLaboralFin = LocalTime.of(20, 0); // 8:00 PM
-		this.estadoActual = new EstadoSistemaCerrado();
-        this.estadoActual.verificarTransicion(this);
 	}
-	
 
 	// getters and setters
 
@@ -60,17 +51,15 @@ public class SistemaEstacionamiento {
 		return horaLaboralInicio;
 	}
 
-	public void setHoraLaboralInicio(LocalTime horaLaboralInicio) {
-		this.horaLaboralInicio = horaLaboralInicio;
-	}
-
 	public LocalTime getHoraLaboralFin() {
 		return horaLaboralFin;
 	}
+	
 
-	public void setHoraLaboralFin(LocalTime horaLaboralFin) {
-		this.horaLaboralFin = horaLaboralFin;
+	public static int getPrecioporhora() {
+		return precioPorHora;
 	}
+
 
 	public Set<Estacionamiento> getEstacionamientos() {
 		return estacionamientos;
@@ -79,7 +68,6 @@ public class SistemaEstacionamiento {
 	public void setEstacionamientos(Set<Estacionamiento> estacionamientos) {
 		this.estacionamientos = estacionamientos;
 	}
-
 
 	public Set<Compra> getComprasPuntoDeVenta() {
 		return comprasPuntoDeVenta;
@@ -92,7 +80,7 @@ public class SistemaEstacionamiento {
 	public Integer getCantidadEstacionamientos() {
 		return estacionamientos.size();
 	}
-	
+
 	public List<Infraccion> getInfracciones() {
 		return infracciones;
 	}
@@ -100,7 +88,7 @@ public class SistemaEstacionamiento {
 	public void setInfracciones(List<Infraccion> infracciones) {
 		this.infracciones = infracciones;
 	}
-	
+
 	public Set<CelularDeUsuario> getUsuarios() {
 		return usuarios;
 	}
@@ -108,14 +96,7 @@ public class SistemaEstacionamiento {
 	public void setUsuarios(Set<CelularDeUsuario> usuarios) {
 		this.usuarios = usuarios;
 	}
-	
-	public void setEstadoSistema(EstadoSistema estado) {
-		this.estadoActual = estado;
-	}
-	
-	public EstadoSistema getEstadoSistema() {
-		return estadoActual;
-	}
+
 
 	public Set<ZonaDeEstacionamiento> getZonasDeEstacionamiento() {
 		return zonasDeEstacionamiento;
@@ -124,40 +105,42 @@ public class SistemaEstacionamiento {
 	public void setZonasDeEstacionamiento(Set<ZonaDeEstacionamiento> zonasDeEstacionamiento) {
 		this.zonasDeEstacionamiento = zonasDeEstacionamiento;
 	}
-		
-	
+
 	// registraciones
 	public void registrarZonaEstacionamiento(ZonaDeEstacionamiento zona) {
 		zonasDeEstacionamiento.add(zona);
 	}
-	
+
 	public void removerZonaEstacionamiento(ZonaDeEstacionamiento zona) {
 		zonasDeEstacionamiento.remove(zona);
 	}
-	
 
 	public void registrarCompra(Compra compra) {
 
 		comprasPuntoDeVenta.add(compra);
 	}
-	
+
 	public void registrarEstacionamiento(Estacionamiento estacionamiento) {
 		estacionamientos.add(estacionamiento);
-		this.notificarSistemaAlertasInicioEstacionamiento(estacionamiento);
-	}
-	
-	public void solicitudDeEstacionamientoApp(App app, String celular, String patente)  {
-		
-		estadoActual.registrarEstacionamientoApp(this, app, celular, patente);
 		
 	}
-	
-	public void solicitudDeEstacionamientoCompraPuntual(String patente, Duration cantidadDeHoras, PuntoDeVenta puntoDeVenta) {
-		
-		estadoActual.registrarEstacionamientoCompraPuntual(this, patente, cantidadDeHoras, puntoDeVenta);
-		
+
+	public void solicitudDeEstacionamientoApp(EstacionamientoApp unEstacionamiento) {
+
+		this.registrarEstacionamiento(unEstacionamiento);
+		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
+
+	}
+
+	public void solicitudDeEstacionamientoCompraPuntual(EstacionamientoCompraPuntual unEstacionamiento, CompraPuntual compraAsociada) {
+
+		this.registrarEstacionamiento(unEstacionamiento);
+		this.registrarCompra(compraAsociada);
 	}
 	
+	public void validarHorarioPermitido(LocalTime hora) throws Exception {
+		verificadorHorario.validarHora(hora);
+	}
 	
 	
 	// CAMBIAR RECARGAS
@@ -175,30 +158,15 @@ public class SistemaEstacionamiento {
 			usuarionuevo.recibirRecargaDeSaldo(saldo);
 		}
 	}
-	
+
 	public void agregarUsuario(CelularDeUsuario c) {
 		usuarios.add(c);
 	}
 
 	// Logica Inspector
 
-	// metodo que utiliza el Inspector, este debe consultar por patente
 	public boolean poseeEstacionamientoVigente(String patente) {
-
-		// dada la patente: filtro para que me retorne el identificador de
-		// estacionamiento asociada a esa patente
-		// de ese modo puedo utilizar el metodo estaVigente()
-		Optional<String> identificadorEstacionamientoOptional = estacionamientos.stream()
-				.filter(e -> e.getPatente().equals(patente))
-				.map(e -> String.valueOf(e.getIdentificadorEstacionamiento())).findFirst();
-
-		String identificadorEstacionamiento = identificadorEstacionamientoOptional.orElse(null);
-		return estaVigente(identificadorEstacionamiento);
-	}
-
-	public boolean estaVigente(String identificadorEstacionamiento) {
-		return this.estacionamientos.stream().anyMatch(
-				e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento));
+		return this.estacionamientos.stream().anyMatch(e -> e.estaVigente() && e.getPatente().equals(patente));
 	}
 
 	public void registrarInfraccion(String patente, Inspector inspector) {
@@ -212,20 +180,14 @@ public class SistemaEstacionamiento {
 
 	// Método para obtener las infracciones por patente
 	public List<Infraccion> buscarInfraccionesPorPatente(String patente) {
-        return infracciones.stream()
-                           .filter(infraccion -> infraccion.getPatente().equals(patente))
-                           .collect(Collectors.toList());
-    }
-
-
-	/*
-	 * public HashMap<String, Double> getSaldoCelular() { return saldoCelular; }
-	 */
+		return infracciones.stream().filter(infraccion -> infraccion.getPatente().equals(patente))
+				.collect(Collectors.toList());
+	}
 
 	public void finalizarEstacionamiento(String identificadorEstacionamiento) {
 		this.estacionamientos.stream().filter(
 				e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
-				.findAny().ifPresent(estacionamiento -> estacionamiento.setFinEstacionamiento());
+				.findAny().ifPresent(estacionamiento -> estacionamiento.finalizarEstacionamiento());
 	}
 
 	public Estacionamiento getEstacionamiento(String identificadorEstacionamiento) throws Exception {
@@ -233,15 +195,15 @@ public class SistemaEstacionamiento {
 				e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
 				.findAny().orElseThrow(() -> new Exception("El estacionamiento no existe o no está vigente"));
 	}
-	
-	// LOGICA DE "FIN DE FRANJA HORARIA, FINALIZAR TODOS LOS ESTACIONAMIENTOS VIGENTES"
+
+	// LOGICA DE "FIN DE FRANJA HORARIA, FINALIZAR TODOS LOS ESTACIONAMIENTOS
+	// VIGENTES"
 	public void finalizarTodosLosEstacionamientos() {
-		
-		LocalTime horaActual = relojSem.getHoraActual();
-		if (horaActual == this.horaLaboralFin) {
-	    this.estacionamientos.stream()
-	        .filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
-	        .forEach(e -> e.finalizarEstacionamiento()); // Finalizar solo los vigentes
+
+		LocalTime horaActual = LocalTime.now();
+		if (horaActual == horaLaboralFin) {
+			this.estacionamientos.stream().filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
+					.forEach(e -> e.finalizarEstacionamiento()); // Finalizar solo los vigentes
 		}
 	}
 
@@ -275,16 +237,5 @@ public class SistemaEstacionamiento {
 
 	}
 
-
-	public LocalTime getHoraActual() {
-		
-		return this.relojSem.getHoraActual();
-	}
-
 	
-
-	
-
-
-
 }
