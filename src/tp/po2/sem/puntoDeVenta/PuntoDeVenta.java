@@ -43,31 +43,39 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 		this.sem = sem;
 	}
 
-	public void registrarEstacionamientoCompraPuntual
-		(String patente, int cantidadDeHoras, LocalDate fechaCompra, LocalTime horaInicio, LocalTime horaFin) throws Exception {
-		
+	public void registrarEstacionamientoCompraPuntual(String patente, int cantidadDeHoras, LocalDate fechaCompra,
+			LocalTime horaInicio, LocalTime horaFin) throws Exception {
+
+		this.horarioCoherente(horaInicio, horaFin);
 		sem.validarHorarioPermitido(horaInicio);
 		sem.validarHorarioPermitido(horaFin);
-		
-		 // Si no se lanza la excepción, continuar con la creación del estacionamiento
-		CompraPuntual compraEstacionamiento = new CompraPuntual(this, cantidadDeHoras, fechaCompra, horaInicio, horaFin);
-		
+
+		// Si no se lanza la excepción, continuar con la creación del estacionamiento
+		CompraPuntual compraEstacionamiento = new CompraPuntual(this, cantidadDeHoras, fechaCompra, horaInicio,
+				horaFin);
+
 		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(patente, compraEstacionamiento);
-		
+
 		sem.solicitudDeEstacionamientoCompraPuntual(estacionamiento, compraEstacionamiento);
-		
+
 	}
-		
-		
+
+	public void horarioCoherente(LocalTime horaInicio, LocalTime horaFin) throws Exception {
+		if (horaInicio.isAfter(horaFin)) {
+			throw new Exception("La hora de inicio no puede ser mayor que la hora de fin");
+		}
+
+		if (horaFin.isBefore(horaInicio)) {
+			throw new Exception("La hora de fin no puede ser menor que la hora de inicio");
+		}
+	}
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
-		
+
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
 		sem.cargarCelular(numeroCelular, saldo);
 
 		sem.registrarCompra(CompraRecargaCelular);
 	}
-
-	
 
 }
