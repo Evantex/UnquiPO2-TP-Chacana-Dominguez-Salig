@@ -12,9 +12,9 @@ public class CompraPuntual extends Compra {
 
 
 	// Constructor con parámetros
-	public CompraPuntual(PuntoDeVenta puntoDeVenta, int horasCompradas, LocalDate fechaCompra, LocalTime horaInicio, LocalTime horaFin) {
+	public CompraPuntual(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra, LocalTime horaInicio, LocalTime horaFin) {
 		this.puntoDeVenta = puntoDeVenta;
-        this.horasCompradas = horasCompradas;
+        this.horasCompradas = (int) Duration.between(horaInicio, horaFin).toHoursPart();
         this.fechaCompra = fechaCompra;
         this.setHoraInicio(horaInicio);
         this.setHoraFin(horaFin);

@@ -129,7 +129,7 @@ public class App implements MovementSensor
 	
 	private void verificarHorarioPermitido() throws Exception 
 	{
-	    SEM.validarHorarioPermitido(LocalTime.now());
+	    SEM.verificarRangoHorarioPermitido(LocalTime.now());
 	}
 	
 	public void verificarZonaEstacionamiento() throws Exception 

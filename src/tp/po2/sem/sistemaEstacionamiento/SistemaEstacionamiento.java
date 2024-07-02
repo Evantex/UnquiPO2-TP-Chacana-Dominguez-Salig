@@ -30,7 +30,7 @@ public class SistemaEstacionamiento {
 	private Set<Compra> comprasPuntoDeVenta;
 	private Notificador sistemaAlertas;
 	private Set<ZonaDeEstacionamiento> zonasDeEstacionamiento;
-	private ValidadorHorario verificadorHorario;
+	private RangoHorario rangoHorario;
 	
 	
 	public SistemaEstacionamiento() {
@@ -41,7 +41,7 @@ public class SistemaEstacionamiento {
 		this.comprasPuntoDeVenta = new HashSet<>();
 		this.setSistemaAlertas(new Notificador());
 		this.setZonasDeEstacionamiento(new HashSet<>());
-		this.verificadorHorario = new ValidadorHorario(horaLaboralInicio, horaLaboralFin);
+		this.rangoHorario = new RangoHorario(horaLaboralInicio, horaLaboralFin);
 		
 	}
 
@@ -138,9 +138,11 @@ public class SistemaEstacionamiento {
 		this.registrarCompra(compraAsociada);
 	}
 	
-	public void validarHorarioPermitido(LocalTime hora) throws Exception {
-		verificadorHorario.validarHora(hora);
+	public void verificarHorasValidasParaEstacionamientoCompraPuntual(LocalTime horaInicio, LocalTime horaFin) throws Exception {
+		rangoHorario.validarHorasCompraPuntual(horaInicio, horaFin);
 	}
+	
+	
 	
 	
 	// CAMBIAR RECARGAS
