@@ -138,11 +138,25 @@ public class SistemaEstacionamiento {
 		this.registrarCompra(compraAsociada);
 	}
 	
-	public void verificarHorasValidasParaEstacionamientoCompraPuntual(LocalTime horaInicio, LocalTime horaFin) throws Exception {
-		rangoHorario.validarHorasCompraPuntual(horaInicio, horaFin);
+	public void puedeEstacionar(String patente, LocalTime horaInicio, LocalTime horaFin) throws Exception {
+		
+		this.verificarQueNoTengaYaUnEstacionamientoVigente(patente);
+		this.verificarHorasValidasParaEstacionamiento(horaInicio, horaFin);
+		
 	}
 	
+	public void verificarHorasValidasParaEstacionamiento(LocalTime horaInicio, LocalTime horaFin) throws Exception {
+		rangoHorario.validarHoras(horaInicio, horaFin);
+	}
 	
+	public void verificarQueNoTengaYaUnEstacionamientoVigente(String patente) throws Exception {
+		
+		if (poseeEstacionamientoVigente(patente)) {
+			
+			throw new Exception ("No puede inicar dos veces un estacionamiento");
+		}
+		
+	}
 	
 	
 	// CAMBIAR RECARGAS

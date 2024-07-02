@@ -12,7 +12,7 @@ public class RangoHorario {
 		this.horaLaboralFin = horaFin;
 	}
 
-	public void validarHorasCompraPuntual(LocalTime horaInicio, LocalTime horaFin) throws Exception {
+	public void validarHoras(LocalTime horaInicio, LocalTime horaFin) throws Exception {
 
 		this.assertHoraInicioNoMayorAHoraFin(horaInicio, horaFin);
 		this.assertHoraFinNoMenorAHoraInicio(horaInicio, horaFin);
