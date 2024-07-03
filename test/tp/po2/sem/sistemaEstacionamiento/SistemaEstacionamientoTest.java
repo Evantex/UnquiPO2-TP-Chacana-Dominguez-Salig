@@ -3,6 +3,7 @@ package tp.po2.sem.sistemaEstacionamiento;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ public class SistemaEstacionamientoTest {
 	private Observer callCenter;
     private Observer otroSistema;
     private App appUsuario;
-    CompraPuntual compraMock;
+    
 
 	@BeforeEach
 	public void setUp() {
@@ -48,7 +49,7 @@ public class SistemaEstacionamientoTest {
 		callCenter = mock(Observer.class);
         otroSistema = mock(Observer.class);
         
-        compraMock =mock(CompraPuntual.class);
+      
         
         
 	}
@@ -253,7 +254,14 @@ public class SistemaEstacionamientoTest {
 	 }
 
 	 
-
+	 @Test
+	 public void testCalculoDeHorasInicioEstacionamientoDe5AmA10Am() {
+		 
+		 double resultadoEsperado = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(5, 0), Duration.ofHours(5));
+		 
+		 assertEquals (resultadoEsperado, 120.0);
+		 
+	 }
 	 
 	
 }

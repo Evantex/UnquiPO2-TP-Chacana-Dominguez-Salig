@@ -252,29 +252,21 @@ public class SistemaEstacionamiento {
 
 	// calculo de horas compradas
 
-	public double calcularCuantoCobrar(Duration cantidadDeHora) {
-
-		// Definir las horas de inicio de estacionamiento y de inicio de cobro
-		LocalTime inicioEstacionamiento = LocalTime.of(5, 0); // 5:00 AM
-		LocalTime inicioDeCobroSem = LocalTime.of(7, 0); // 7:00 AM
-
-		// Calcular la duración entre las dos horas
-		Duration cantidadDeHorasQueNoSeCobran = Duration.between(inicioEstacionamiento, inicioDeCobroSem);
-
-		// Obtener la cantidad de horas de la duración
-		long horasARestar = cantidadDeHorasQueNoSeCobran.toHours(); // 2 horas
-
-		// Multiplicar la cantidad de horas por 40
-		double montoARestar = horasARestar * 40.0; // 2 * 40 = 80 pesos
-
-		// Obtener la cantidad de horas a cobrar y multiplicar por 40
-		double montoTotal = cantidadDeHora.toHours() * 40.0;
-
-		// Calcular el monto final restando el monto que no se cobra
-		double montoFinal = montoTotal - montoARestar;
+	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) {
+		
+		double montoFinal = cantidadDeHoras.toHours() * SistemaEstacionamiento.getPrecioporhora();
 
 		return montoFinal;
-
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		/*
 		 * if(horaActual.isBefore(this.getHoraLaboralInicio())) {
 		 * 

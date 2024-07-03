@@ -20,7 +20,7 @@ public class RangoHorario {
 		
 		this.assertHoraInicioNoMayorAHoraFin(horaInicioEstacionamiento,horaFinEstacionamiento ); // sigue por ahora
 		this.assertHoraFinNoMenorAHoraInicio(horaInicioEstacionamiento, horaInicioEstacionamiento); // sigue por ahora		
-		/*this.assertHorasDentroDeRangoHorario(horaInicio, horaFin); */
+		this.assertHorasDentroDeRangoHorario(horaInicio, horaFin); 
 
 	}
 
@@ -42,7 +42,7 @@ public class RangoHorario {
 
 	}
 
-	/*private void assertHorasDentroDeRangoHorario(LocalTime horaInicio, LocalTime horaFin) throws Exception {
+	private void assertHorasDentroDeRangoHorario(LocalTime horaInicio, LocalTime horaFin) throws Exception {
 
 		if (seEncuentraFueraDelRangoHorario(horaInicio, horaFin)) {
 
@@ -51,10 +51,36 @@ public class RangoHorario {
 
 	}
 
-	private boolean seEncuentraFueraDelRangoHorario(LocalTime horaInicio, LocalTime horaFin) {
+	public boolean seEncuentraFueraDelRangoHorario(LocalTime horaInicio, LocalTime horaFin) {
 
 		return (horaInicio.isBefore(horaLaboralInicio) || horaFin.isBefore(horaLaboralInicio)
 				|| horaInicio.isAfter(horaLaboralFin) || horaFin.isAfter(horaLaboralFin));
-	}*/
+	}
+
+	public boolean seEncuentraDentroDelRangoHorario(LocalTime horaInicio, LocalTime horaFin) {
+		
+        boolean inicioDentroDelHorario = laHoraInicioEstaDentroDelHorarioLaboral(horaInicio);
+
+        boolean finDentroDelHorario = laHoraFinEstaDentroDelHorarioLaboral(horaFin);
+
+        boolean cubreTodoElHorarioLaboral = laHoraCubreTodoElRangoLaboral(horaInicio, horaFin);
+
+        return inicioDentroDelHorario || finDentroDelHorario || cubreTodoElHorarioLaboral;
+	}
+
+	private boolean laHoraCubreTodoElRangoLaboral(LocalTime horaInicio, LocalTime horaFin) {
+		boolean cubreTodoElHorarioLaboral = horaInicio.isBefore(horaLaboralInicio) && horaFin.isAfter(horaLaboralFin);
+		return cubreTodoElHorarioLaboral;
+	}
+
+	private boolean laHoraFinEstaDentroDelHorarioLaboral(LocalTime horaFin) {
+		boolean finDentroDelHorario = horaFin.isAfter(horaLaboralInicio) && horaFin.isBefore(horaLaboralFin);
+		return finDentroDelHorario;
+	}
+
+	private boolean laHoraInicioEstaDentroDelHorarioLaboral(LocalTime horaInicio) {
+		boolean inicioDentroDelHorario = horaInicio.isAfter(horaLaboralInicio) && horaInicio.isBefore(horaLaboralFin);
+		return inicioDentroDelHorario;
+	}
 
 }
