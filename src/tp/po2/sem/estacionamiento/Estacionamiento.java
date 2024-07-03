@@ -4,17 +4,19 @@ import java.awt.Point;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.concurrent.Semaphore;
+
+import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
 public abstract class Estacionamiento {
 	protected LocalTime inicioEstacionamiento;
-	protected LocalTime finEstacionamiento = null;
 	protected String patenteVehiculo;
 	protected String nombreZonaEstacionamiento;
-	protected int duracionEnHoras;
+	protected Duration duracionEnHoras;
 	protected EstadoEstacionamiento vigenciaEstacionamiento;
-	
+
 	public abstract String getIdentificadorEstacionamiento();
-	
+
 	public boolean estaVigente() {
 		return vigenciaEstacionamiento.estaVigente();
 	}
@@ -27,20 +29,14 @@ public abstract class Estacionamiento {
 		return this.inicioEstacionamiento;
 	}
 
-	public LocalTime getFinEstacionamiento() {
-		return this.finEstacionamiento;
+	public double getCostoEstacionamiento() {
+		// Calcular las horas de duración en double y multiplicar por 40
+		long horas = duracionEnHoras.toHours();
+		return horas * (SistemaEstacionamiento.getPrecioporhora()); // clase tarifa para menejar montos si hay aumento?
 	}
 
-	public int getCostoEstacionamiento() {
-		return this.duracionEnHoras * 40;
-	}
-
-	public int getDuracionEnHoras() throws Exception  {
+	public Duration getDuracionEnHoras() throws Exception {
 		return this.duracionEnHoras;
-	}
-
-	public void setFinEstacionamiento(LocalTime horas) {
-		this.finEstacionamiento = horas;
 	}
 
 	public String getPatente() {

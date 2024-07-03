@@ -24,7 +24,7 @@ public class CompraPuntualTest {
 	public void setUp() {
 		horasCompradas = Duration.ofHours(2);
 		puntoDeVentaMock = mock(PuntoDeVenta.class);
-		compraPuntualConParametros = new CompraPuntual(puntoDeVentaMock, horasCompradas); 
+		compraPuntualConParametros = new CompraPuntual(puntoDeVentaMock); 
 		compraPuntualSinParametros = new CompraPuntual();
 	}
 	
@@ -62,4 +62,12 @@ public class CompraPuntualTest {
         assertTrue(compraPuntualSinParametros.esCompraPuntual());
         assertFalse(compraPuntualSinParametros.esCompraRecargaCelular());
     }
+    
+
+    
+    
+    
+    
+    
+    
 }

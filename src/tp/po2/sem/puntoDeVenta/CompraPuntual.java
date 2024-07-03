@@ -6,30 +6,31 @@ import java.time.LocalTime;
 
 public class CompraPuntual extends Compra {
 
-	private int horasCompradas;
-	private LocalTime horaInicio;
-	private LocalTime horaFin;
+	private Duration  horasCompradas;
+	private LocalTime horaInicioEstacionamiento;
+	private LocalTime horaFinEstacionamiento;
 
+	public CompraPuntual() {
+	}
 
 	// Constructor con parámetros
-	public CompraPuntual(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra, LocalTime horaInicio, LocalTime horaFin) {
+	public CompraPuntual(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra, Duration horasCompradas) {
 		this.puntoDeVenta = puntoDeVenta;
-        this.horasCompradas = (int) Duration.between(horaInicio, horaFin).toHoursPart();
-        this.fechaCompra = fechaCompra;
-        this.setHoraInicio(horaInicio);
-        this.setHoraFin(horaFin);
-    }
+		this.horasCompradas = horasCompradas;
+		this.fechaCompra = fechaCompra;
+		this.horaInicioEstacionamiento = LocalTime.now(); // clase reloj?
+		this.horaFinEstacionamiento = this.getHoraInicio().plus(horasCompradas); // chequear
 
-	// Getters y setters
-	public int getHorasCompradas() {
-		return horasCompradas;
 	}
 
-	public void setHorasCompradas(int cantidadDeHorasCompradas) {
-		this.horasCompradas = cantidadDeHorasCompradas;
+	public Duration getHorasCompradas() {
+		return this.horasCompradas;
 	}
-	
-	
+
+	public void setHorasCompradas(Duration horasCompradas) {
+		this.horasCompradas = horasCompradas;
+	}
+
 	// Distincion
 	public boolean esCompraPuntual() {
 		return true;
@@ -39,20 +40,14 @@ public class CompraPuntual extends Compra {
 		return false;
 	}
 
-	public LocalTime getHoraInicio() {
-		return horaInicio;
-	}
-
-	public void setHoraInicio(LocalTime horaInicio) {
-		this.horaInicio = horaInicio;
-	}
-
 	public LocalTime getHoraFin() {
-		return horaFin;
+
+		return this.horaFinEstacionamiento;
 	}
 
-	public void setHoraFin(LocalTime horaFin) {
-		this.horaFin = horaFin;
+	public LocalTime getHoraInicio() {
+
+		return this.horaInicioEstacionamiento;
 	}
 
 }

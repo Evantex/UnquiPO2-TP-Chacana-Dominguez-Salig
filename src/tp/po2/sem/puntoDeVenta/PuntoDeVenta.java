@@ -1,5 +1,6 @@
 package tp.po2.sem.puntoDeVenta;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
@@ -43,20 +44,17 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 		this.sem = sem;
 	}
 
-	public void registrarEstacionamientoCompraPuntual(String patente, LocalDate fechaCompra, LocalTime horaInicio, LocalTime horaFin) throws Exception {
+	public void registrarEstacionamientoCompraPuntual(String patente, LocalDate fechaCompra, Duration cantindadDeHoras) throws Exception {
 
-		sem.puedeEstacionar(patente, horaInicio, horaFin);
+		sem.puedeEstacionar(patente, cantindadDeHoras);
 
 		// Si no se lanza la excepción, continuar con la creación del estacionamiento
-		CompraPuntual compraEstacionamiento = new CompraPuntual(this, fechaCompra, horaInicio, horaFin);
+		CompraPuntual compraEstacionamiento = new CompraPuntual(this, fechaCompra, cantindadDeHoras);
 
-		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(patente, compraEstacionamiento);
 
-		sem.solicitudDeEstacionamientoCompraPuntual(estacionamiento, compraEstacionamiento);
+		sem.solicitudDeEstacionamientoCompraPuntual(patente, compraEstacionamiento);
 
 	}
-
-
 
 	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
 

@@ -28,6 +28,7 @@ public class SistemaEstacionamientoTest {
 	private Observer callCenter;
     private Observer otroSistema;
     private App appUsuario;
+    CompraPuntual compraMock;
 
 	@BeforeEach
 	public void setUp() {
@@ -46,6 +47,10 @@ public class SistemaEstacionamientoTest {
 		
 		callCenter = mock(Observer.class);
         otroSistema = mock(Observer.class);
+        
+        compraMock =mock(CompraPuntual.class);
+        
+        
 	}
 	
 	//TEST GETTERS Y SETTERS
@@ -139,7 +144,7 @@ public class SistemaEstacionamientoTest {
 	@Test
 	public void testRegistrarUnEstacionamiento() {
 		// Ejecutamos el método que queremos probar, pasando el mock de Estacionamiento
-		sistemaEstacionamiento.registrarEstacionamientoApp(estacionamientoMock);
+		sistemaEstacionamiento.solicitudDeEstacionamientoCompraPuntual(estacionamientoMock);
 
 		// Con el spy verifico que se le mandó correctamente el mensaje add a la
 		// colección dentro del mensaje getCantidadEstacionamientos().
@@ -153,6 +158,8 @@ public class SistemaEstacionamientoTest {
 		// obtener la cantidad de estacionamientos esperada.
 		verify(spyListaEstacionamientos).size();
 	}
+	
+
 	
 	@Test
 	public void testElSistemaAgregaUnUsuarioASuListaDeUsuarios() {

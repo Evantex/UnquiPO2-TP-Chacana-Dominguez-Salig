@@ -13,7 +13,14 @@ public abstract class Compra {
 	// Constructor sin parámetros
 	public Compra() {
 		this.numeroDeControl = generarNumeroDeControl();
-		
+
+	}
+
+	public Compra(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra) {
+		super();
+		this.puntoDeVenta = puntoDeVenta;
+		this.numeroDeControl = generarNumeroDeControl();
+		this.fechaCompra = fechaCompra;
 	}
 
 	// Método para generar el número de control incremental
@@ -37,7 +44,6 @@ public abstract class Compra {
 	public LocalDate getFechaCompra() {
 		return fechaCompra;
 	}
-
 
 	public abstract boolean esCompraPuntual();
 
