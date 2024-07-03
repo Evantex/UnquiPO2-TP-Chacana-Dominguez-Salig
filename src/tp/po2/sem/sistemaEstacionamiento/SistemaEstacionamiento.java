@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import tp.po2.sem.Estados.Estado;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.app.CelularDeUsuario;
 import tp.po2.sem.estacionamiento.Estacionamiento;
@@ -31,6 +32,7 @@ public class SistemaEstacionamiento {
 	private Notificador sistemaAlertas;
 	private Set<ZonaDeEstacionamiento> zonasDeEstacionamiento;
 	private RangoHorario rangoHorario;
+	private Estado estadoActual;
 
 	public SistemaEstacionamiento() {
 		super();
@@ -46,11 +48,11 @@ public class SistemaEstacionamiento {
 
 	// getters and setters
 
-	public LocalTime getHoraLaboralInicio() {
+	public static LocalTime getHoraLaboralInicio() {
 		return horaLaboralInicio;
 	}
 
-	public LocalTime getHoraLaboralFin() {
+	public static LocalTime getHoraLaboralFin() {
 		return horaLaboralFin;
 	}
 
@@ -123,15 +125,15 @@ public class SistemaEstacionamiento {
 
 	public void solicitudDeEstacionamientoApp(EstacionamientoApp unEstacionamiento) {
 
-		this.registrarEstacionamiento(unEstacionamiento);
+		this.estadoActual.registrarEstacionamientoEn(this, unEstacionamiento);
 		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
 
 	}
 
 	public void solicitudDeEstacionamientoCompraPuntual(String patente, CompraPuntual compraAsociada) {
-		
+
 		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(patente, compraAsociada);
-		
+
 		this.registrarEstacionamiento(estacionamiento);
 		this.registrarCompra(compraAsociada);
 	}
@@ -197,11 +199,18 @@ public class SistemaEstacionamiento {
 				.collect(Collectors.toList());
 	}
 
-	public void finalizarEstacionamiento(String identificadorEstacionamiento) {
+	public void finalizarEstacionamiento(String identificadorEstacionamiento) throws Exception {
 		this.estacionamientos.stream().filter(
 				e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
 				.findAny().ifPresent(estacionamiento -> estacionamiento.finalizarEstacionamiento());
+
 	}
+
+	public void cobrarPorEstacionamiento(EstacionamientoApp estacionamiento ,CelularDeUsuario celular) {
+		this.estadoActual.cobrarPorEstacionamiento(estacionamiento, celular);
+	}
+
+	
 
 	public Estacionamiento getEstacionamiento(String identificadorEstacionamiento) throws Exception {
 		return this.estacionamientos.stream().filter(
@@ -253,20 +262,11 @@ public class SistemaEstacionamiento {
 	// calculo de horas compradas
 
 	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) {
-		
+
 		double montoFinal = cantidadDeHoras.toHours() * SistemaEstacionamiento.getPrecioporhora();
 
 		return montoFinal;
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		/*
 		 * if(horaActual.isBefore(this.getHoraLaboralInicio())) {
 		 * 

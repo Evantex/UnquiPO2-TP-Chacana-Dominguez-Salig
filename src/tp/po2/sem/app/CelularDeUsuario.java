@@ -45,6 +45,11 @@ public class CelularDeUsuario {
 		saldo += saldoNuevo;
 	}
 
+	public void disminuirSaldo(double saldoDisminuir) {
+		saldo -=saldoDisminuir ;
+	}
+	
+	
 	public Point getUbicacion() {
 		
 		return this.ubicacion;

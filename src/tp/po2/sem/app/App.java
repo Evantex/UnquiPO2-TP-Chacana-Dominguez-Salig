@@ -92,9 +92,12 @@ public class App implements MovementSensor {
 	}
 	
 	public void finalizarEstacionamiento() throws Exception {
-		String celular = this.celularAsociado.getNroCelular();
-		Estacionamiento est = this.SEM.getEstacionamiento(celular);
-		this.SEM.finalizarEstacionamiento(celular);
+		String Numerocelular = this.celularAsociado.getNroCelular();
+		CelularDeUsuario celular = this.celularAsociado;
+		Estacionamiento est = this.SEM.getEstacionamiento(Numerocelular);
+		
+		this.SEM.finalizarEstacionamiento(Numerocelular);
+		this.SEM.cobrarPorEstacionamiento(est, celular);
 		this.enviarDetallesFinEstacionamiento(est);
 		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
 	}
@@ -110,15 +113,24 @@ public class App implements MovementSensor {
 		this.notificarUsuario(msg);
 	}
 
-	public void enviarDetallesFinEstacionamiento(Estacionamiento estacionamiento) throws Exception {
+	public void enviarDetallesFinEstacionamiento(EstacionamientoApp estacionamiento) throws Exception {
+		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
 		String inicio = "Hora de inicio del estacionamiento: "
+				
 				+ estacionamiento.getInicioEstacionamiento().format(formatter);
+		
 		String fin = "Hora máxima fin del estacionamiento: "
+				
 				+ estacionamiento.getFinEstacionamiento().format(formatter);
+		
 		String duracion = "La duración en horas del estacionamiento fué de " + estacionamiento.getDuracionEnHoras();
+		
 		String precio = "El costo del estacionamiento fué de: " + estacionamiento.getCostoEstacionamiento();
+		
 		String msg = inicio + "\n" + fin + "\n" + duracion + "\n" + precio;
+		
 		this.notificarUsuario(msg);
 	}
 
@@ -145,7 +157,9 @@ public class App implements MovementSensor {
 	 */
 
 
-
+	public void	
+	
+	
 	public void setModoEstacionamiento(ModoEstacionamiento modo) {
 		this.modoEstacionamiento = modo;
 	}
