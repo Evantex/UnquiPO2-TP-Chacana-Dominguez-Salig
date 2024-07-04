@@ -1,6 +1,5 @@
 package tp.po2.sem.sistemaEstacionamiento;
 
-import java.time.Duration;
 import java.time.LocalTime;
 
 public class RangoHorario {

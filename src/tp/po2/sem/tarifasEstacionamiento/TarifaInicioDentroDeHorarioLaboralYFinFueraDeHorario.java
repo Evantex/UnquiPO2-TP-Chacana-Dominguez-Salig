@@ -10,17 +10,10 @@ public class TarifaInicioDentroDeHorarioLaboralYFinFueraDeHorario implements Tar
 	@Override
 	public double calcularPara(RangoHorario rangoLaboral, RangoHorario rangoEstacionamiento, int precioPorHora) {
 		
-		Duration cantidadDeHorasEstacionadas = Duration.between(rangoEstacionamiento.getHoraInicioRango(),
-				rangoEstacionamiento.getHoraFinRango());
-
-		Duration cantidadDeHorasQueNoSeCobran = Duration.between(rangoEstacionamiento.getHoraFinRango(),
-				rangoLaboral.getHoraFinRango());
-
-		long horasACobrar = cantidadDeHorasEstacionadas.toHours() - cantidadDeHorasQueNoSeCobran.toHours();
-
-		double montoFinal = horasACobrar * precioPorHora;
-
-		return montoFinal;
+		LocalTime inicio = rangoEstacionamiento.getHoraInicioRango();
+		LocalTime fin = rangoLaboral.getHoraFinRango();
+		Duration duracion = Duration.between(inicio, fin);
+		return duracion.toHours() * precioPorHora;
 		
 	}
 
