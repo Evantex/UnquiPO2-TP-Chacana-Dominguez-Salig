@@ -263,5 +263,21 @@ public class SistemaEstacionamientoTest {
 		 
 	 }
 	 
-	
+	 @Test
+	 public void testCalculoDeHorasInicioEstacionamientoDe2amA10Am() {
+		 
+		 double resultadoEsperado = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(2, 0), Duration.ofHours(8));
+		 
+		 assertEquals (resultadoEsperado, 120.0);
+		 
+	 }
+	 
+	 @Test
+	 public void testCalculoDeHorasInicioEstacionamientoDe10amA12pm() {
+		 
+		 double resultadoEsperado = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(10, 0), Duration.ofHours(4));
+		 
+		 assertEquals (resultadoEsperado, 160.0);
+		 
+	 }
 }

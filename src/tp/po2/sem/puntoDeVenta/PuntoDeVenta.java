@@ -45,13 +45,14 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 	}
 
 	public void registrarEstacionamientoCompraPuntual(String patente, LocalDate fechaCompra, Duration cantidadDeHoras) throws Exception {
-
-		sem.puedeEstacionar(patente, cantidadDeHoras);
-
+		
+		LocalTime horaInicio = LocalTime.now();
+		
+		sem.puedeEstacionar(patente, horaInicio, horaInicio.plus(cantidadDeHoras));
+		
 		// Si no se lanza la excepción, continuar con la creación del estacionamiento
-		CompraPuntual compraEstacionamiento = new CompraPuntual(this, fechaCompra, cantidadDeHoras);
-
-
+		CompraPuntual compraEstacionamiento = new CompraPuntual(this, fechaCompra, horaInicio, cantidadDeHoras);
+		
 		sem.solicitudDeEstacionamientoCompraPuntual(patente, compraEstacionamiento);
 
 	}

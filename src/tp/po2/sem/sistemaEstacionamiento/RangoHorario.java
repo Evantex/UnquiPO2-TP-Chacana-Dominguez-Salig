@@ -5,23 +5,45 @@ import java.time.LocalTime;
 
 public class RangoHorario {
 
-	private LocalTime horaLaboralInicio;
-	private LocalTime horaLaboralFin;
+	private LocalTime horaInicioRango;
+	private LocalTime horaFinRango;
 
 	public RangoHorario(LocalTime horaInicio, LocalTime horaFin) {
-		this.horaLaboralInicio = horaInicio;
-		this.horaLaboralFin = horaFin;
+		this.horaInicioRango = horaInicio;
+		this.horaFinRango = horaFin;
+	}
+	
+	
+	
+	public LocalTime getHoraInicioRango() {
+		return horaInicioRango;
 	}
 
-	public void validarHoras(Duration cantidadDeHoras) throws Exception {
-		
-		LocalTime horaInicioEstacionamiento = LocalTime.now(); // esto deberia ser con la clase RELOJ
-		LocalTime horaFinEstacionamiento = horaInicioEstacionamiento.plus(cantidadDeHoras);
-		
-		this.assertHoraInicioNoMayorAHoraFin(horaInicioEstacionamiento,horaFinEstacionamiento ); // sigue por ahora
-		this.assertHoraFinNoMenorAHoraInicio(horaInicioEstacionamiento, horaInicioEstacionamiento); // sigue por ahora		
-		this.assertHorasDentroDeRangoHorario(horaInicio, horaFin); 
 
+
+	public void setHoraInicioRango(LocalTime horaInicioRango) {
+		this.horaInicioRango = horaInicioRango;
+	}
+
+
+
+	public LocalTime getHoraFinRango() {
+		return horaFinRango;
+	}
+
+
+
+	public void setHoraFinRango(LocalTime horaFinRango) {
+		this.horaFinRango = horaFinRango;
+	}
+
+
+
+	public void validarHoras(LocalTime horaInicioEstacionamiento, LocalTime horaFinEstacionamiento) throws Exception {
+		
+		this.assertHoraInicioNoMayorAHoraFin(horaInicioEstacionamiento, horaFinEstacionamiento ); 
+		this.assertHoraFinNoMenorAHoraInicio(horaInicioEstacionamiento, horaFinEstacionamiento); 	
+		
 	}
 
 	private void assertHoraInicioNoMayorAHoraFin(LocalTime horaInicio, LocalTime horaFin) throws Exception {
@@ -41,46 +63,18 @@ public class RangoHorario {
 		}
 
 	}
-
-	private void assertHorasDentroDeRangoHorario(LocalTime horaInicio, LocalTime horaFin) throws Exception {
-
-		if (seEncuentraFueraDelRangoHorario(horaInicio, horaFin)) {
-
-			throw new Exception("No se puede iniciar un estacionamiento fuera del horario laboral");
-		}
-
-	}
-
+	
 	public boolean seEncuentraFueraDelRangoHorario(LocalTime horaInicio, LocalTime horaFin) {
 
-		return (horaInicio.isBefore(horaLaboralInicio) || horaFin.isBefore(horaLaboralInicio)
-				|| horaInicio.isAfter(horaLaboralFin) || horaFin.isAfter(horaLaboralFin));
+		return (horaInicio.isBefore(horaInicioRango) || horaFin.isBefore(horaInicioRango)
+				|| horaInicio.isAfter(horaFinRango) || horaFin.isAfter(horaFinRango));
 	}
 
-	public boolean seEncuentraDentroDelRangoHorario(LocalTime horaInicio, LocalTime horaFin) {
+
+	 public boolean estaDentroDelRango(LocalTime hora) {
 		
-        boolean inicioDentroDelHorario = laHoraInicioEstaDentroDelHorarioLaboral(horaInicio);
-
-        boolean finDentroDelHorario = laHoraFinEstaDentroDelHorarioLaboral(horaFin);
-
-        boolean cubreTodoElHorarioLaboral = laHoraCubreTodoElRangoLaboral(horaInicio, horaFin);
-
-        return inicioDentroDelHorario || finDentroDelHorario || cubreTodoElHorarioLaboral;
-	}
-
-	private boolean laHoraCubreTodoElRangoLaboral(LocalTime horaInicio, LocalTime horaFin) {
-		boolean cubreTodoElHorarioLaboral = horaInicio.isBefore(horaLaboralInicio) && horaFin.isAfter(horaLaboralFin);
-		return cubreTodoElHorarioLaboral;
-	}
-
-	private boolean laHoraFinEstaDentroDelHorarioLaboral(LocalTime horaFin) {
-		boolean finDentroDelHorario = horaFin.isAfter(horaLaboralInicio) && horaFin.isBefore(horaLaboralFin);
-		return finDentroDelHorario;
-	}
-
-	private boolean laHoraInicioEstaDentroDelHorarioLaboral(LocalTime horaInicio) {
-		boolean inicioDentroDelHorario = horaInicio.isAfter(horaLaboralInicio) && horaInicio.isBefore(horaLaboralFin);
-		return inicioDentroDelHorario;
+		return hora.isAfter(horaInicioRango) && hora.isBefore(horaFinRango);
+		
 	}
 
 }

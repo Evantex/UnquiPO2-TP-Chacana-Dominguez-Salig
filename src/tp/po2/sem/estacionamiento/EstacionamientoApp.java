@@ -11,26 +11,22 @@ import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 public class EstacionamientoApp extends Estacionamiento {
 	private App aplicacion;
 	private String nroCelularApp;
-	private LocalTime finEstacionamiento;
-	private double costoFinal;
+	
 
 	public EstacionamientoApp(App app, String celular, String dominioVehiculo) {
 		this.aplicacion = app;
 		this.inicioEstacionamiento = LocalTime.now();
-		this.finEstacionamiento = null;
 		this.patenteVehiculo = dominioVehiculo;
 		this.nroCelularApp = celular;
 		this.vigenciaEstacionamiento = new EstacionamientoVigente();
 	}
-
-	public double getCostoFinal() throws Exception {
+	
+	@Override
+	public double getCostoEstacionamiento() throws Exception {
 		verificarSiFinalizo();
-		return costoFinal;
+		return super.getCostoEstacionamiento();
 	}
 
-	public void setCostoFinal(double costo) {
-		costoFinal = costo;
-	}
 
 	@Override
 	public String getIdentificadorEstacionamiento() {
@@ -73,9 +69,6 @@ public class EstacionamientoApp extends Estacionamiento {
 		this.nroCelularApp = nroCelularApp;
 	}
 
-	public LocalTime getFinEstacionamiento() {
-		return finEstacionamiento;
-	}
 
 	public void setFinEstacionamiento(LocalTime finEstacionamiento) {
 		this.finEstacionamiento = finEstacionamiento;
@@ -93,16 +86,6 @@ public class EstacionamientoApp extends Estacionamiento {
 		return this.nroCelularApp;
 	}
 
-	public double getCostoEstacionamiento() {
-		// Calcular la duración del estacionamiento
-		Duration duracion = Duration.between(this.getInicioEstacionamiento(), this.getFinEstacionamiento());
 
-		// Obtener la duración en horas
-		long horas = duracion.toHours();
-
-		// Multiplicar la duración por 40
-		long costoTotal = horas * SistemaEstacionamiento.getPrecioporhora();
-		return costoTotal;
-	}
 
 }

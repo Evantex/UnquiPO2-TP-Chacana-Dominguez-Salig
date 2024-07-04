@@ -74,7 +74,7 @@ public class App implements MovementSensor {
 
 		LocalTime horaMáximaPermitidaSaldo = LocalTime.of(this.getHorasMaximasPermitidasEstacionamiento(), 0);
 
-		LocalTime horaMáximaPermitidaDelDía = SEM.getHoraLaboralFin();
+		LocalTime horaMáximaPermitidaDelDía = SistemaEstacionamiento.getHoraLaboralFin();
 
 		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo
 				: horaMáximaPermitidaDelDía;
@@ -113,7 +113,7 @@ public class App implements MovementSensor {
 		this.notificarUsuario(msg);
 	}
 
-	public void enviarDetallesFinEstacionamiento(EstacionamientoApp estacionamiento) throws Exception {
+	public void enviarDetallesFinEstacionamiento(Estacionamiento estacionamiento) throws Exception {
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		
@@ -157,9 +157,6 @@ public class App implements MovementSensor {
 	 */
 
 
-	public void	
-	
-	
 	public void setModoEstacionamiento(ModoEstacionamiento modo) {
 		this.modoEstacionamiento = modo;
 	}

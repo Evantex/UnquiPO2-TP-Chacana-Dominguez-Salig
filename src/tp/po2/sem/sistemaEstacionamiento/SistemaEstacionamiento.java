@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import tp.po2.sem.Estados.Estado;
+
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.app.CelularDeUsuario;
 import tp.po2.sem.estacionamiento.Estacionamiento;
@@ -32,7 +32,7 @@ public class SistemaEstacionamiento {
 	private Notificador sistemaAlertas;
 	private Set<ZonaDeEstacionamiento> zonasDeEstacionamiento;
 	private RangoHorario rangoHorario;
-	private Estado estadoActual;
+	private CalculadorDeTarifa calculador;
 
 	public SistemaEstacionamiento() {
 		super();
@@ -43,6 +43,7 @@ public class SistemaEstacionamiento {
 		this.setSistemaAlertas(new Notificador());
 		this.setZonasDeEstacionamiento(new HashSet<>());
 		this.rangoHorario = new RangoHorario(horaLaboralInicio, horaLaboralFin);
+		this.calculador = new CalculadorDeTarifa();
 
 	}
 
@@ -104,6 +105,14 @@ public class SistemaEstacionamiento {
 		this.zonasDeEstacionamiento = zonasDeEstacionamiento;
 	}
 
+	public RangoHorario getRangoHorario() {
+		return rangoHorario;
+	}
+
+	public void setRangoHorario(RangoHorario rangoHorario) {
+		this.rangoHorario = rangoHorario;
+	}
+
 	// registraciones
 	public void registrarZonaEstacionamiento(ZonaDeEstacionamiento zona) {
 		zonasDeEstacionamiento.add(zona);
@@ -125,7 +134,7 @@ public class SistemaEstacionamiento {
 
 	public void solicitudDeEstacionamientoApp(EstacionamientoApp unEstacionamiento) {
 
-		this.estadoActual.registrarEstacionamientoEn(this, unEstacionamiento);
+		this.registrarEstacionamiento(unEstacionamiento);
 		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
 
 	}
@@ -133,20 +142,21 @@ public class SistemaEstacionamiento {
 	public void solicitudDeEstacionamientoCompraPuntual(String patente, CompraPuntual compraAsociada) {
 
 		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(patente, compraAsociada);
-
+		double costoEstacionamiento = this.calcularCuantoCobrar(compraAsociada.getHoraInicio(), compraAsociada.getHorasCompradas());
+		estacionamiento.setCostoEstacionamiento(costoEstacionamiento);
 		this.registrarEstacionamiento(estacionamiento);
 		this.registrarCompra(compraAsociada);
 	}
 
-	public void puedeEstacionar(String patente, Duration cantidadDeHoras) throws Exception {
+	public void puedeEstacionar(String patente, LocalTime horaInicio, LocalTime horaFin) throws Exception {
 
 		this.verificarQueNoTengaYaUnEstacionamientoVigente(patente);
-		this.verificarHorasValidasParaEstacionamiento(cantidadDeHoras);
+		this.verificarHorasValidasParaEstacionamiento(horaInicio, horaFin);
 
 	}
 
-	public void verificarHorasValidasParaEstacionamiento(Duration cantidadDeHoras) throws Exception {
-		rangoHorario.validarHoras(cantidadDeHoras);
+	public void verificarHorasValidasParaEstacionamiento(LocalTime horaInicio, LocalTime horaFin) throws Exception {
+		rangoHorario.validarHoras(horaInicio, horaFin);
 	}
 
 	public void verificarQueNoTengaYaUnEstacionamientoVigente(String patente) throws Exception {
@@ -206,10 +216,25 @@ public class SistemaEstacionamiento {
 
 	}
 
-	public void cobrarPorEstacionamiento(EstacionamientoApp estacionamiento ,CelularDeUsuario celular) {
-		this.estadoActual.cobrarPorEstacionamiento(estacionamiento, celular);
+	public void cobrarPorEstacionamiento(Estacionamiento estacionamiento ,CelularDeUsuario celular) throws Exception {
+		
+		double montoADisminuir = this.calcularCuantoCobrar(estacionamiento.getInicioEstacionamiento(), estacionamiento.getDuracionEnHoras());
+		estacionamiento.setCostoEstacionamiento(montoADisminuir);
+		celular.disminuirSaldo(montoADisminuir);
+		
 	}
+	
+	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) {
+		
+		RangoHorario rangoHorarioLaboral = this.getRangoHorario();
+		RangoHorario rangoHorarioEstacionamiento = new RangoHorario(inicioEstacionamiento, inicioEstacionamiento.plus(cantidadDeHoras));
+		
+		double montoFinal = calculador.determinarCobroPara(rangoHorarioLaboral, rangoHorarioEstacionamiento, precioPorHora);
+		
+		return montoFinal;
 
+	
+	}
 	
 
 	public Estacionamiento getEstacionamiento(String identificadorEstacionamiento) throws Exception {
@@ -259,22 +284,6 @@ public class SistemaEstacionamiento {
 
 	}
 
-	// calculo de horas compradas
-
-	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) {
-
-		double montoFinal = cantidadDeHoras.toHours() * SistemaEstacionamiento.getPrecioporhora();
-
-		return montoFinal;
-
-		/*
-		 * if(horaActual.isBefore(this.getHoraLaboralInicio())) {
-		 * 
-		 * }
-		 * 
-		 * 
-		 * return 10.00;
-		 */
-	}
+	
 
 }
