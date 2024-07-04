@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +20,23 @@ public class CompraPuntualTest {
 	private CompraPuntual compraPuntualConParametros;
 	private CompraPuntual compraPuntualSinParametros;
 	private PuntoDeVenta puntoDeVentaMock;
-	private Duration horasCompradas;
+	private Duration horasCompradasMock;
+	private LocalDate fechaInicioCompraMock;
+	private LocalDate fechaFinCompraMock;
+	private LocalTime horaInicioEstacionamientoMock;
 	
 	@BeforeEach
 	public void setUp() {
-		horasCompradas = Duration.ofHours(2);
+		horasCompradasMock = Duration.ofHours(2);
 		puntoDeVentaMock = mock(PuntoDeVenta.class);
-		compraPuntualConParametros = new CompraPuntual(puntoDeVentaMock); 
+		fechaInicioCompraMock = mock(LocalDate.class);
+		fechaFinCompraMock = mock(LocalDate.class);
+		horaInicioEstacionamientoMock = mock(LocalTime.class);
+		
+		compraPuntualConParametros = new CompraPuntual(	puntoDeVentaMock,
+														fechaInicioCompraMock, 
+														horaInicioEstacionamientoMock, 
+														horasCompradasMock); 
 		compraPuntualSinParametros = new CompraPuntual();
 	}
 	
@@ -32,7 +44,7 @@ public class CompraPuntualTest {
     public void testConstructorSinParametros() {
         
         assertNotNull(compraPuntualSinParametros.getNumeroDeControl());
-        assertNotNull(compraPuntualSinParametros.getFechaHoraCompra());
+        assertNotNull(compraPuntualSinParametros.getFechaCompra());
         assertNull(compraPuntualSinParametros.getHorasCompradas());
     }
 
@@ -40,12 +52,12 @@ public class CompraPuntualTest {
     public void testConstructorConParametros() {
        
         assertEquals(puntoDeVentaMock, compraPuntualConParametros.getPuntoDeVenta());
-        assertEquals(horasCompradas, compraPuntualConParametros.getHorasCompradas());
+        assertEquals(horasCompradasMock, compraPuntualConParametros.getHorasCompradas());
     }
     
     @Test
     public void testGetHorasCompradas() {
-    	assertEquals(horasCompradas, compraPuntualConParametros.getHorasCompradas());
+    	assertEquals(horasCompradasMock, compraPuntualConParametros.getHorasCompradas());
     }
     
     @Test

@@ -24,6 +24,22 @@ public class CompraPuntual extends Compra {
 
 	}
 
+	public LocalTime getHoraInicioEstacionamiento() {
+		return horaInicioEstacionamiento;
+	}
+
+	public void setHoraInicioEstacionamiento(LocalTime horaInicioEstacionamiento) {
+		this.horaInicioEstacionamiento = horaInicioEstacionamiento;
+	}
+
+	public LocalTime getHoraFinEstacionamiento() {
+		return horaFinEstacionamiento;
+	}
+
+	public void setHoraFinEstacionamiento(LocalTime horaFinEstacionamiento) {
+		this.horaFinEstacionamiento = horaFinEstacionamiento;
+	}
+
 	public Duration getHorasCompradas() {
 		return this.horasCompradas;
 	}
@@ -51,4 +67,7 @@ public class CompraPuntual extends Compra {
 		return this.horaInicioEstacionamiento;
 	}
 
+	public LocalDate getFechaCompra() {
+		return this.fechaCompra;
+	}
 }
