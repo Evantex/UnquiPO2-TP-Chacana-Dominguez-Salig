@@ -4,7 +4,7 @@ public class Automatico implements ModoEstacionamiento
 {
 
 	@Override
-	public void iniciarEstacionamiento(App aplicacion, String patente) 
+	public void iniciarEstacionamiento(App aplicacion, String patente) throws Exception
 	{
 		aplicacion.iniciarEstacionamiento();
 		if( aplicacion.tieneEstacionamientoVigente() )

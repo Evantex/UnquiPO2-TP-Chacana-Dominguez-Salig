@@ -9,7 +9,7 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	{
 		try
 		{
-			aplicacion.verificarSiPoseeEstacionamientoVigente();
+			aplicacion.tieneEstacionamientoVigente();
 			aplicacion.verificarZonaEstacionamiento();
 			aplicacion.getModoNotificacion().notificarInicioEstacionamiento(aplicacion);
 			aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion, patente);
