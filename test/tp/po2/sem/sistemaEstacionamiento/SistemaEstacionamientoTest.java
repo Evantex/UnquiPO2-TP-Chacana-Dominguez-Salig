@@ -255,29 +255,59 @@ public class SistemaEstacionamientoTest {
 
 	 
 	 @Test
-	 public void testCalculoDeHorasInicioEstacionamientoDe5AmA10Am() {
+	 public void testCalculoDeHorasInicioEstacionamientoDe5AmA10Am() throws Exception {
+	     double resultadoEsperado = 120.0;  
+	     double resultadoObtenido = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(5, 0), Duration.ofHours(5));
+	     assertEquals(resultadoEsperado, resultadoObtenido);
+	 }
+	 
+	 @Test
+	 public void testCalculoDeHorasInicioEstacionamientoDe2amA10Am() throws Exception {
+		 double resultadoEsperado = 120.0;
+		 double resultadoObtenido = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(2, 0), Duration.ofHours(8));
 		 
-		 double resultadoEsperado = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(5, 0), Duration.ofHours(5));
-		 
-		 assertEquals (resultadoEsperado, 120.0);
+		 assertEquals (resultadoEsperado, resultadoObtenido);
 		 
 	 }
 	 
 	 @Test
-	 public void testCalculoDeHorasInicioEstacionamientoDe2amA10Am() {
+	 public void testCalculoDeHorasInicioEstacionamientoDe10amA12pm() throws Exception {
 		 
-		 double resultadoEsperado = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(2, 0), Duration.ofHours(8));
+		 double resultadoEsperado = 160.0;
+		 double resultadoObtenido = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(10, 0), Duration.ofHours(4));
 		 
-		 assertEquals (resultadoEsperado, 120.0);
+		 assertEquals (resultadoEsperado, resultadoObtenido);
 		 
 	 }
 	 
 	 @Test
-	 public void testCalculoDeHorasInicioEstacionamientoDe10amA12pm() {
+	 public void testCalculoDeHorasInicioEstacionamientoDe4amA6am() throws Exception {
 		 
-		 double resultadoEsperado = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(10, 0), Duration.ofHours(4));
+		 double resultadoEsperado = 0.0;
+		 double resultadoObtenido = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(4, 0), Duration.ofHours(2));
 		 
-		 assertEquals (resultadoEsperado, 160.0);
+		 assertEquals (resultadoEsperado, resultadoObtenido);
 		 
 	 }
+	 
+	 @Test
+	 public void testCalculoDeHorasInicioEstacionamientoDe9pmA11pm() throws Exception {
+		 
+		 double resultadoEsperado = 0.0;
+		 double resultadoObtenido = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(21, 0), Duration.ofHours(2));
+		 
+		 assertEquals (resultadoEsperado, resultadoObtenido);
+		 
+	 }
+	 
+	 @Test
+	 public void testCalculoDeHorasInicioEstacionamientoDe9pmA9am() throws Exception {
+		 
+		 double resultadoEsperado = 80.0;
+		 double resultadoObtenido = sistemaEstacionamiento.calcularCuantoCobrar(LocalTime.of(21, 0), Duration.ofHours(12));
+		 
+		 assertEquals (resultadoEsperado, resultadoObtenido);
+		 
+	 }
+	 
 }

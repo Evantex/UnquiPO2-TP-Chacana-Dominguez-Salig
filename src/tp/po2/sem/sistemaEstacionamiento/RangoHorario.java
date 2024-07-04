@@ -63,13 +63,6 @@ public class RangoHorario {
 		}
 
 	}
-	
-	public boolean seEncuentraFueraDelRangoHorario(LocalTime horaInicio, LocalTime horaFin) {
-
-		return (horaInicio.isBefore(horaInicioRango) || horaFin.isBefore(horaInicioRango)
-				|| horaInicio.isAfter(horaFinRango) || horaFin.isAfter(horaFinRango));
-	}
-
 
 	 public boolean estaDentroDelRango(LocalTime hora) {
 		

@@ -20,6 +20,7 @@ import tp.po2.sem.inspector.Infraccion;
 import tp.po2.sem.inspector.Inspector;
 import tp.po2.sem.puntoDeVenta.Compra;
 import tp.po2.sem.puntoDeVenta.CompraPuntual;
+import tp.po2.sem.tarifasEstacionamiento.CalculadorDeTarifa;
 
 public class SistemaEstacionamiento {
 	private static final int precioPorHora = 40;
@@ -139,7 +140,7 @@ public class SistemaEstacionamiento {
 
 	}
 
-	public void solicitudDeEstacionamientoCompraPuntual(String patente, CompraPuntual compraAsociada) {
+	public void solicitudDeEstacionamientoCompraPuntual(String patente, CompraPuntual compraAsociada) throws Exception {
 
 		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(patente, compraAsociada);
 		double costoEstacionamiento = this.calcularCuantoCobrar(compraAsociada.getHoraInicio(), compraAsociada.getHorasCompradas());
@@ -209,7 +210,7 @@ public class SistemaEstacionamiento {
 				.collect(Collectors.toList());
 	}
 
-	public void finalizarEstacionamiento(String identificadorEstacionamiento) throws Exception {
+	public void finalizarEstacionamiento(String identificadorEstacionamiento)  {
 		this.estacionamientos.stream().filter(
 				e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
 				.findAny().ifPresent(estacionamiento -> estacionamiento.finalizarEstacionamiento());
@@ -224,7 +225,7 @@ public class SistemaEstacionamiento {
 		
 	}
 	
-	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) {
+	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) throws Exception {
 		
 		RangoHorario rangoHorarioLaboral = this.getRangoHorario();
 		RangoHorario rangoHorarioEstacionamiento = new RangoHorario(inicioEstacionamiento, inicioEstacionamiento.plus(cantidadDeHoras));
