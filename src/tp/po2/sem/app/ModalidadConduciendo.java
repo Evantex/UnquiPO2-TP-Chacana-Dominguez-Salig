@@ -14,14 +14,13 @@ public class ModalidadConduciendo implements ModoDesplazamiento {
 	}
 
 	@Override
-	public void conduciendo(App aplicacion) {
-	}
-
-	@Override
 	public void update(App aplicacion) {
 
 		aplicacion.setModoDeDesplazamiento(new ModalidadCaminando());
-
+		aplicacion.setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
 	}
+	
+	@Override
+	public void conduciendo(App aplicacion) {}
 
 }

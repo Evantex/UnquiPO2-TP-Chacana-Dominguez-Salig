@@ -1,6 +1,6 @@
 package tp.po2.sem.app;
 
-public class Manual implements ModoEstacionamiento {
+public class Manual implements ModoApp {
 
 	@Override
 	public void iniciarEstacionamiento(App aplicacion) {

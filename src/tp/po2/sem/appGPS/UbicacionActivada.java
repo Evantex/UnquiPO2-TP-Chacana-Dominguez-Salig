@@ -5,12 +5,12 @@ import tp.po2.sem.app.App;
 public class UbicacionActivada implements EstadoGPS {
 
 	@Override
-	public void activarUbicacion(App app) {}
+	public void activar(App app) {}
 
 	@Override
-	public void desactivarUbicacion(App app) {
+	public void desactivar(App app) {
 		
-		app.setUbicacionGps(new UbicacionDesactivada());
+		app.setEstadoGps(new UbicacionDesactivada());
 		
 	}
 

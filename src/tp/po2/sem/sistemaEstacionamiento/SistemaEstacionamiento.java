@@ -12,7 +12,7 @@ import java.util.Optional;
 
 
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
-import tp.po2.sem.app.CelularDeUsuario;
+import tp.po2.sem.app.Celular;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.estacionamiento.EstacionamientoApp;
 import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
@@ -27,7 +27,7 @@ public class SistemaEstacionamiento {
 	private static final LocalTime horaLaboralInicio = LocalTime.of(7, 0);
 	private static final LocalTime horaLaboralFin = LocalTime.of(20, 0);
 	private Set<Estacionamiento> estacionamientos;
-	private Set<CelularDeUsuario> usuarios;
+	private Set<Celular> usuarios;
 	private List<Infraccion> infracciones;
 	private Set<Compra> comprasPuntoDeVenta;
 	private Notificador sistemaAlertas;
@@ -90,11 +90,11 @@ public class SistemaEstacionamiento {
 		this.infracciones = infracciones;
 	}
 
-	public Set<CelularDeUsuario> getUsuarios() {
+	public Set<Celular> getUsuarios() {
 		return usuarios;
 	}
 
-	public void setUsuarios(Set<CelularDeUsuario> usuarios) {
+	public void setUsuarios(Set<Celular> usuarios) {
 		this.usuarios = usuarios;
 	}
 
@@ -134,7 +134,7 @@ public class SistemaEstacionamiento {
 	}
 
 	public void solicitudDeEstacionamientoApp(EstacionamientoApp unEstacionamiento) {
-
+		
 		this.registrarEstacionamiento(unEstacionamiento);
 		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
 
@@ -164,7 +164,7 @@ public class SistemaEstacionamiento {
 
 		if (poseeEstacionamientoVigente(patente)) {
 
-			throw new Exception("No puede inicar dos veces un estacionamiento");
+			throw new Exception("Ya tiene un estacionamiento valido en curso");
 		}
 
 	}
@@ -172,20 +172,20 @@ public class SistemaEstacionamiento {
 	// CAMBIAR RECARGAS
 
 	public void cargarCelular(String nroCelular, double saldo) {
-		Optional<CelularDeUsuario> usuarioEncontrado = usuarios.stream()
+		Optional<Celular> usuarioEncontrado = usuarios.stream()
 				.filter(usuario -> usuario.getNroCelular().equals(nroCelular)).findFirst();
 
 		if (usuarioEncontrado.isPresent()) {
-			CelularDeUsuario usuario = usuarioEncontrado.get();
+			Celular usuario = usuarioEncontrado.get();
 			usuario.recibirRecargaDeSaldo(saldo);
 		} else {
-			CelularDeUsuario usuarionuevo = new CelularDeUsuario(nroCelular, saldo);
+			Celular usuarionuevo = new Celular(nroCelular, saldo);
 			agregarUsuario(usuarionuevo); // Añadir el nuevo usuario a la lista
 			usuarionuevo.recibirRecargaDeSaldo(saldo);
 		}
 	}
 
-	public void agregarUsuario(CelularDeUsuario c) {
+	public void agregarUsuario(Celular c) {
 		usuarios.add(c);
 	}
 
@@ -217,7 +217,7 @@ public class SistemaEstacionamiento {
 
 	}
 
-	public void cobrarPorEstacionamiento(Estacionamiento estacionamiento ,CelularDeUsuario celular) throws Exception {
+	public void cobrarPorEstacionamiento(Estacionamiento estacionamiento ,Celular celular) throws Exception {
 		
 		double montoADisminuir = this.calcularCuantoCobrar(estacionamiento.getInicioEstacionamiento(), estacionamiento.getDuracionEnHoras());
 		estacionamiento.setCostoEstacionamiento(montoADisminuir);

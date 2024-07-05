@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 import tp.po2.sem.app.App;
-import tp.po2.sem.app.CelularDeUsuario;
+import tp.po2.sem.app.Celular;
 import tp.po2.sem.estacionamiento.Estacionamiento;
 import tp.po2.sem.inspector.Infraccion;
 import tp.po2.sem.puntoDeVenta.Compra;
@@ -25,7 +25,7 @@ public class SistemaEstacionamientoTest {
 	SistemaEstacionamiento sistemaEstacionamiento;
 	Estacionamiento estacionamientoMock;
 	Set<Estacionamiento> spyListaEstacionamientos;
-	private CelularDeUsuario celular;
+	private Celular celular;
 	private Observer callCenter;
     private Observer otroSistema;
     private App appUsuario;
@@ -42,7 +42,7 @@ public class SistemaEstacionamientoTest {
 		// Creamos el SistemaEstacionamiento con el spy de la lista de estacionamientos
 		sistemaEstacionamiento = new SistemaEstacionamiento();
 		
-		celular = mock (CelularDeUsuario.class);
+		celular = mock (Celular.class);
 		
 		appUsuario = mock (App.class);
 		
@@ -131,13 +131,13 @@ public class SistemaEstacionamientoTest {
 
 	@Test
 	void testGetUsuarios() {
-		Set<CelularDeUsuario> usuarios = new HashSet<>();
+		Set<Celular> usuarios = new HashSet<>();
 		assertEquals(usuarios, sistemaEstacionamiento.getUsuarios());
 	}
 	
 	@Test 
 	void testSetUsuarios() {
-		Set<CelularDeUsuario> nuevosUsuarios = new HashSet<>();
+		Set<Celular> nuevosUsuarios = new HashSet<>();
 		sistemaEstacionamiento.setUsuarios(nuevosUsuarios);
 		assertEquals(nuevosUsuarios, sistemaEstacionamiento.getUsuarios());
 	}
@@ -166,7 +166,7 @@ public class SistemaEstacionamientoTest {
 	public void testElSistemaAgregaUnUsuarioASuListaDeUsuarios() {
 		
 		sistemaEstacionamiento.agregarUsuario(celular);
-		Set<CelularDeUsuario> usuarios = sistemaEstacionamiento.getUsuarios();
+		Set<Celular> usuarios = sistemaEstacionamiento.getUsuarios();
 		
 		assertEquals(1, usuarios);
 		assertTrue(usuarios.contains(celular));
@@ -176,7 +176,7 @@ public class SistemaEstacionamientoTest {
 	public void testCuandoElSistemaCargaUnCelularNuevoLoAgregaASuListaDeUsuarios() {
 		String nroCelular = "1234567890";
 		double saldo = 100.0;
-		Set<CelularDeUsuario> usuarios = sistemaEstacionamiento.getUsuarios();
+		Set<Celular> usuarios = sistemaEstacionamiento.getUsuarios();
 		
 		// Cargar saldo por primera vez
 		sistemaEstacionamiento.cargarCelular(nroCelular, saldo);

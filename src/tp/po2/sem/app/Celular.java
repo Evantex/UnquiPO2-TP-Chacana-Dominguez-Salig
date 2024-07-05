@@ -2,12 +2,12 @@ package tp.po2.sem.app;
 
 import java.awt.Point;
 
-public class CelularDeUsuario {
+public class Celular {
 	private String nroCelular;
 	private Point ubicacion;
 	private double saldo;
 
-	public CelularDeUsuario(String nroCelular, double saldo) {
+	public Celular(String nroCelular, double saldo) {
 		super();
 		this.nroCelular = nroCelular;
 		this.saldo = saldo;

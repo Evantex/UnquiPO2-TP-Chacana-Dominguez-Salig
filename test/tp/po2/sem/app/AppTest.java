@@ -1,5 +1,7 @@
 package tp.po2.sem.app;
 import tp.po2.sem.sistemaEstacionamiento.*;
+import tp.po2.sem.appModoNotificaciones.NotificacionActivada;
+import tp.po2.sem.appModoNotificaciones.NotificacionDesactivada;
 import tp.po2.sem.estacionamiento.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class AppTest 
 {
 	App aplicacion;
-	CelularDeUsuario cel;
+	Celular cel;
 	SistemaEstacionamiento sem;
 	ModoDesplazamiento modalidadCaminando;
 	ModoDesplazamiento modalidadConduciendo;
@@ -30,7 +32,7 @@ public class AppTest
 	@BeforeEach
 	void setUp() throws Exception 
 	{
-		cel = mock( CelularDeUsuario.class );
+		cel = mock( Celular.class );
 		sem = mock( SistemaEstacionamiento.class );
 		modalidadCaminando = spy( ModalidadCaminando.class );
 		modalidadConduciendo = spy( ModalidadConduciendo.class );

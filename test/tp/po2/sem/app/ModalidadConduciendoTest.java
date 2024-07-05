@@ -2,6 +2,9 @@
 package tp.po2.sem.app;
 import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.BeforeEach;
+
+import tp.po2.sem.appModoNotificaciones.NotificacionActivada;
+import tp.po2.sem.appModoNotificaciones.NotificacionDesactivada;
 import tp.po2.sem.sistemaEstacionamiento.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +33,7 @@ public class ModalidadConduciendoTest
 	ModalidadConduciendo modo;
 	App aplicacion;
 	SistemaEstacionamiento sem;
-	CelularDeUsuario cel;
+	Celular cel;
 	NotificacionActivada modoNotificacionActivada;
 	NotificacionDesactivada modoNotificacionDesactivada;
 	Manual modoEstacionamientoManual;
@@ -44,7 +47,7 @@ public class ModalidadConduciendoTest
 	{
 		modo = new ModalidadConduciendo();
 		
-		cel = mock( CelularDeUsuario.class );
+		cel = mock( Celular.class );
 		when( cel.getNroCelular() ).thenReturn("1145241966");
 		when( cel.getUbicacion() ).thenReturn(new Point(1,2));
 		// when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);

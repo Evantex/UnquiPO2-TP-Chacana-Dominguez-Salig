@@ -4,9 +4,9 @@ import tp.po2.sem.app.App;
 
 public interface EstadoGPS {
 
-	void activarUbicacion(App app);
+	void activar(App app);
 
-	void desactivarUbicacion(App app);
+	void desactivar(App app);
 
 	boolean seEncuentraActivada();
 
