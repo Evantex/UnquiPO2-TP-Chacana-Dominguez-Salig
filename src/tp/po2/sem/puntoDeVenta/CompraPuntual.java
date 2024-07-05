@@ -6,21 +6,21 @@ import java.time.LocalTime;
 
 public class CompraPuntual extends Compra {
 
-	private Duration  horasCompradas;
+	private Duration horasCompradas;
 	private LocalTime horaInicioEstacionamiento;
 	private LocalTime horaFinEstacionamiento;
-	
-	
+
 	public CompraPuntual() {
 	}
 
 	// Constructor con parámetros
-	public CompraPuntual(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra, LocalTime horaInicio, Duration horasCompradas) {
+	public CompraPuntual(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra, LocalTime horaInicio,
+			Duration horasCompradas) {
 		this.puntoDeVenta = puntoDeVenta;
 		this.horasCompradas = horasCompradas;
 		this.fechaCompra = fechaCompra;
 		this.horaInicioEstacionamiento = horaInicio;
-		this.horaFinEstacionamiento = this.getHoraInicio().plus(horasCompradas); 
+		this.horaFinEstacionamiento = this.getHoraInicio().plus(horasCompradas);
 
 	}
 
@@ -70,4 +70,14 @@ public class CompraPuntual extends Compra {
 	public LocalDate getFechaCompra() {
 		return this.fechaCompra;
 	}
+
+	public void setFechaCompra(LocalDate nuevaFechaCompra) {
+		this.fechaCompra = nuevaFechaCompra;
+		
+	}
+
+	/*public void setNumeroDeControl(String nuevoNumeroDeControl) {
+		CompraPuntual.proximoNumeroDeControl = proximoNumeroDeControl;
+		
+	}*/
 }
