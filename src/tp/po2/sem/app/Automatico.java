@@ -1,21 +1,17 @@
 package tp.po2.sem.app;
 
-public class Automatico implements ModoEstacionamiento
-{
+public class Automatico implements ModoEstacionamiento {
 
 	@Override
-	public void iniciarEstacionamiento(App aplicacion, String patente) throws Exception
-	{
+	public void iniciarEstacionamiento(App aplicacion) throws Exception {
+
 		aplicacion.iniciarEstacionamiento();
-		if( aplicacion.tieneEstacionamientoVigente() )
-		{
-			aplicacion.notificarUsuario("Inicio de estacionamiento realizado de forma automática");
-		}
+
 	}
 
 	@Override
-	public void finalizarEstacionamiento(App aplicacion) throws Exception
-	{
+	public void finalizarEstacionamiento(App aplicacion) throws Exception {
+
 		aplicacion.finalizarEstacionamiento();
 	}
 

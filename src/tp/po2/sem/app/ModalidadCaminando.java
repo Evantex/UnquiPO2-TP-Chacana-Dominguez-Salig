@@ -1,40 +1,27 @@
 package tp.po2.sem.app;
 
-public class ModalidadCaminando implements ModoDesplazamiento
-{
-	
+public class ModalidadCaminando implements ModoDesplazamiento {
 
 	@Override
-	public void caminando(App aplicacion, String patente) {}
+	public void caminando(App aplicacion) {
+	}
 
 	@Override
-	public void conduciendo(App aplicacion, String patente) throws Exception 
-	{
-		if( this.validarFinEstacionamiento(aplicacion) )
-		{
-			aplicacion.getModoNotificacion().notificarFinEstacionamiento(aplicacion);
+	public void conduciendo(App aplicacion) throws Exception {
+
+		if (aplicacion.tieneEstacionamientoVigente() && aplicacion.validarMismoPuntoGeografico()) {
+			aplicacion.notificarUsuario("Alerta Fin estacionamiento");
 			aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
+			this.update(aplicacion);
+
 		}
-
-		// getModoEstacionamiento... manual/automático
 	}
 
-	private boolean validarFinEstacionamiento(App aplicacion)
-	{
-		return aplicacion.tieneEstacionamientoVigente()
-				&& this.validarMismoPuntoGeografico(aplicacion);
-	}
-
-	
-	private boolean validarMismoPuntoGeografico(App aplicacion)
-	{
-		return aplicacion.getUbicacionActual() == aplicacion.getUbicacionEstacionamiento();
-	}
-
-	
 	@Override
-	public void update(App aplicacion)
-	{
-		aplicacion.setModoDesplazamiento(new ModalidadConduciendo());
+	public void update(App aplicacion) {
+
+		aplicacion.setModoDeDesplazamiento(new ModalidadConduciendo());
+
 	}
+
 }

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import tp.po2.sem.sistemaEstacionamiento.*;
+import tp.po2.sem.appGPS.EstadoGPS;
+import tp.po2.sem.appGPS.UbicacionDesactivada;
 import tp.po2.sem.estacionamiento.*;
 
 public class App implements MovementSensor {
@@ -13,13 +15,7 @@ public class App implements MovementSensor {
 	private SistemaEstacionamiento SEM;
 	private ModoEstacionamiento modoEstacionamiento; // Strategy
 	private ModoDesplazamiento modoDeDesplazamiento; // State
-	/*
-	 * Patrón State: Ésta interfaz 'ModoDesplazamiento' cumple el rol de estado
-	 * dentro de la jerarquía de state. A su vez la clase App cumple el rol de
-	 * contexto. Además, los estados concretos son las clases: 'ModalidadCaminando'
-	 * y 'MolidadConduciendo'.
-	 */
-
+	private EstadoGPS deteccionDeDesplazamiento;
 	private ModoNotificaciones modoNotificacion; // Strategy
 	private CelularDeUsuario celularAsociado;
 	private Point ubicacionUltimoEstacionamiento;
@@ -29,6 +25,19 @@ public class App implements MovementSensor {
 		this.celularAsociado = cel;
 		this.SEM = sistema;
 		this.patenteAsociada = patenteAsociada;
+		this.deteccionDeDesplazamiento = new UbicacionDesactivada();
+	}
+
+	public void activarGPS() {
+		this.deteccionDeDesplazamiento.activarUbicacion(this);
+	}
+
+	public void desactivarGPS() {
+		this.deteccionDeDesplazamiento.desactivarUbicacion(this);
+	}
+
+	public void setUbicacionGps(EstadoGPS estado) {
+		this.deteccionDeDesplazamiento = estado;
 	}
 
 	public ModoNotificaciones getModoNotificacion() {
@@ -37,37 +46,62 @@ public class App implements MovementSensor {
 
 	@Override
 	public void driving() throws Exception {
-		this.modoDeDesplazamiento.conduciendo(this, this.patenteAsociada);
+		if (estaActivadaLaUbicacion()) {
+			modoDeDesplazamiento.conduciendo(this);
+		}
 	}
 
 	@Override
 	public void walking() throws Exception {
-		this.modoDeDesplazamiento.caminando(this, this.patenteAsociada);
+		if (estaActivadaLaUbicacion()) {
+			modoDeDesplazamiento.caminando(this);
+		}
+	}
+
+	public boolean estaActivadaLaUbicacion() {
+		return deteccionDeDesplazamiento.seEncuentraActivada();
 	}
 
 	public boolean estaDentroDeZonaEstacionamiento() {
 		return this.celularAsociado.estaDentroDeZonaEstacionamiento();
 	}
 
+	public ModoDesplazamiento getModoDeDesplazamiento() {
+		return modoDeDesplazamiento;
+	}
+
+	public void setModoDeDesplazamiento(ModoDesplazamiento modoDeDesplazamiento) {
+		this.modoDeDesplazamiento = modoDeDesplazamiento;
+	}
+
+	public String getPatenteAsociada() {
+		return patenteAsociada;
+	}
+
+	public void setPatenteAsociada(String patenteAsociada) {
+		this.patenteAsociada = patenteAsociada;
+	}
+
 	public void iniciarEstacionamiento() throws Exception {
-	    
-	    try {
-	    	
-	    	verificarSaldoSuficiente();
-	    	verificarZonaEstacionamiento();
-	    	SEM.puedeEstacionar(this.getPatente(), LocalTime.now(), this.getHoraMaximaFinEstacionamiento());	
-	    		
-	    	// Si no se lanza la excepción, continuar con la creación del estacionamiento
-	    	EstacionamientoApp estacionamiento = new EstacionamientoApp(this, celularAsociado.getNroCelular(), this.getPatente());
-	        this.SEM.solicitudDeEstacionamientoApp(estacionamiento);
-	        this.enviarDetallesInicioEstacionamiento(estacionamiento);
-	      
-	        
-	    } catch (Exception e) {
-	    	
-	        this.notificarUsuario( e.getMessage() );
-	       
-	    }
+
+		try {
+
+			verificarZonaEstacionamiento();
+			verificarSaldoSuficiente();
+
+			SEM.puedeEstacionar(this.getPatente(), LocalTime.now(), this.getHoraMaximaFinEstacionamiento());
+
+			// Si no se lanza la excepción, continuar con la creación del estacionamiento
+			EstacionamientoApp estacionamiento = new EstacionamientoApp(this, celularAsociado.getNroCelular(),
+					this.getPatente());
+			this.SEM.solicitudDeEstacionamientoApp(estacionamiento);
+			this.enviarDetallesInicioEstacionamiento(estacionamiento);
+
+		} catch (Exception e) {
+
+			this.notificarUsuario(e.getMessage());
+
+		}
 	}
 
 	public LocalTime getHoraMaximaFinEstacionamiento() {
@@ -86,16 +120,15 @@ public class App implements MovementSensor {
 		return (int) Math.round(saldoCelular / precioPorHora);
 	}
 
-	
 	public void notificarUsuario(String msg) {
-		this.celularAsociado.recibirMensaje(msg);
+		this.modoNotificacion.notificar(this.celularAsociado, msg);
 	}
-	
+
 	public void finalizarEstacionamiento() throws Exception {
 		String Numerocelular = this.celularAsociado.getNroCelular();
 		CelularDeUsuario celular = this.celularAsociado;
 		Estacionamiento est = this.SEM.getEstacionamiento(Numerocelular);
-		
+
 		this.SEM.finalizarEstacionamiento(Numerocelular);
 		this.SEM.cobrarPorEstacionamiento(est, celular);
 		this.enviarDetallesFinEstacionamiento(est);
@@ -114,23 +147,23 @@ public class App implements MovementSensor {
 	}
 
 	public void enviarDetallesFinEstacionamiento(Estacionamiento estacionamiento) throws Exception {
-		
+
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		
+
 		String inicio = "Hora de inicio del estacionamiento: "
-				
+
 				+ estacionamiento.getInicioEstacionamiento().format(formatter);
-		
+
 		String fin = "Hora máxima fin del estacionamiento: "
-				
+
 				+ estacionamiento.getFinEstacionamiento().format(formatter);
-		
+
 		String duracion = "La duración en horas del estacionamiento fué de " + estacionamiento.getDuracionEnHoras();
-		
+
 		String precio = "El costo del estacionamiento fué de: " + estacionamiento.getCostoEstacionamiento();
-		
+
 		String msg = inicio + "\n" + fin + "\n" + duracion + "\n" + precio;
-		
+
 		this.notificarUsuario(msg);
 	}
 
@@ -156,13 +189,8 @@ public class App implements MovementSensor {
 	 * this.seEncuentraEnFranjaHoraria(); }
 	 */
 
-
 	public void setModoEstacionamiento(ModoEstacionamiento modo) {
 		this.modoEstacionamiento = modo;
-	}
-
-	public void setModoDesplazamiento(ModoDesplazamiento modo) {
-		this.modoDeDesplazamiento = modo;
 	}
 
 	public void setModoNotificacion(ModoNotificaciones modo) {
@@ -187,6 +215,11 @@ public class App implements MovementSensor {
 
 	public String getPatente() {
 		return this.patenteAsociada;
+	}
+
+	public boolean validarMismoPuntoGeografico() {
+
+		return this.getUbicacionActual() == this.getUbicacionEstacionamiento();
 	}
 
 	/*

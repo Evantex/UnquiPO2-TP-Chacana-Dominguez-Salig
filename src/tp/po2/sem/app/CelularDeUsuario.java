@@ -41,18 +41,17 @@ public class CelularDeUsuario {
 	}
 
 	public void recibirRecargaDeSaldo(double saldoNuevo) {
-		
+
 		saldo += saldoNuevo;
 	}
 
 	public void disminuirSaldo(double saldoDisminuir) {
-		saldo -=saldoDisminuir ;
+		saldo -= saldoDisminuir;
 	}
-	
-	
+
 	public Point getUbicacion() {
-		
+
 		return this.ubicacion;
 	}
-	
+
 }
