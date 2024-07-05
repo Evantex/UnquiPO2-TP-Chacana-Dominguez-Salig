@@ -1,130 +1,93 @@
-
 package tp.po2.sem.ZonaDeEstacionamiento;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-import java.util.LinkedHashSet;
-
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import tp.po2.sem.inspector.Inspector;
-
 import tp.po2.sem.puntoDeVenta.PuntoDeVenta;
 
-class ZonaDeEstacionamientoTest {
+public class ZonaDeEstacionamientoTest {
 
-	ZonaDeEstacionamiento zonaEstacionamientoSUT;
-	PuntoDeVenta puntoDeVentaMock;
-	Inspector inspectorMock;
-	Set<PuntoDeVenta> spySetDePuntosMock;
+    private ZonaDeEstacionamiento zonaDeEstacionamiento;
+    private Inspector inspectorMock;
+    private Set<PuntoDeVenta> puntosDeVenta;
 
-	@BeforeEach
-	public void setUp() {
-		puntoDeVentaMock = mock(PuntoDeVenta.class);
-		inspectorMock = mock(Inspector.class);
-		spySetDePuntosMock = spy(new LinkedHashSet<PuntoDeVenta>());
-		zonaEstacionamientoSUT = new ZonaDeEstacionamiento("identificador", inspectorMock, spySetDePuntosMock);
+    @BeforeEach
+    public void setUp() {
+        inspectorMock = mock(Inspector.class);
+        puntosDeVenta = new HashSet<>();
 
-	}
+        zonaDeEstacionamiento = new ZonaDeEstacionamiento("Zona 1", inspectorMock, puntosDeVenta);
+    }
 
-	@Test
-	public void testConstructor() {
+    @Test
+    public void testConstructor() {
+        assertNotNull(zonaDeEstacionamiento);
+        assertEquals("Zona 1", zonaDeEstacionamiento.getIdentificardorDeZona());
+        assertEquals(inspectorMock, zonaDeEstacionamiento.getInspectorAsignado());
+        assertEquals(puntosDeVenta, zonaDeEstacionamiento.getPuntosDeVenta());
+    }
 
-		ZonaDeEstacionamiento zona = new ZonaDeEstacionamiento("Zona1", inspectorMock, spySetDePuntosMock);
+    @Test
+    public void testSetIdentificardorDeZona() {
+        zonaDeEstacionamiento.setIdentificardorDeZona("Nueva Zona");
+        assertEquals("Nueva Zona", zonaDeEstacionamiento.getIdentificardorDeZona());
+    }
 
-		assertEquals("Zona1", zona.getIdentificardorDeZona());
-		assertEquals(inspectorMock, zona.getInspectorAsignado());
-		assertEquals(spySetDePuntosMock, zona.getPuntosDeVenta());
-	}
-	
-	@Test
-	public void testGetIdentificardorDeZona() {
-		assertEquals("identificador", zonaEstacionamientoSUT.getIdentificardorDeZona());
-	}
-	
-	@Test
-	public void testSetIdentificardorDeZona() {
-		
-		String nuevoIdentificador = "identificardorDeZona";
-		zonaEstacionamientoSUT.setIdentificardorDeZona(nuevoIdentificador);
-		assertEquals("identificardorDeZona", zonaEstacionamientoSUT.getIdentificardorDeZona());
-		
-	}
-	
-	@Test
-	public void testGetInspectorAsignado() {
-		assertEquals(inspectorMock, zonaEstacionamientoSUT.getInspectorAsignado());
-	}
-	
-	@Test
-	public void testSetInspectorAsignado() {
-		Inspector nuevoInspector = mock(Inspector.class);
-		zonaEstacionamientoSUT.setInspectorAsignado(nuevoInspector);
-		assertEquals(nuevoInspector, zonaEstacionamientoSUT.getInspectorAsignado());
-	}
-	
-	@Test
-	public void testGetPuntosDeVenta() {
-		assertEquals(spySetDePuntosMock, zonaEstacionamientoSUT.getPuntosDeVenta());
-	}
+    @Test
+    public void testSetInspectorAsignado() {
+        Inspector nuevoInspectorMock = mock(Inspector.class);
+        zonaDeEstacionamiento.setInspectorAsignado(nuevoInspectorMock);
+        assertEquals(nuevoInspectorMock, zonaDeEstacionamiento.getInspectorAsignado());
+    }
 
-	public void setPuntosDeVenta(Set<PuntoDeVenta> puntosDeVenta) {
-		LinkedHashSet<PuntoDeVenta> nuevosPuntosDeVenta = spy(new LinkedHashSet<PuntoDeVenta>());
-		zonaEstacionamientoSUT.setPuntosDeVenta(nuevosPuntosDeVenta);
-		assertEquals(nuevosPuntosDeVenta, zonaEstacionamientoSUT.getPuntosDeVenta());
-	}
+    @Test
+    public void testSetPuntosDeVenta() {
+        Set<PuntoDeVenta> nuevosPuntosDeVenta = new HashSet<>();
+        PuntoDeVenta puntoDeVentaMock1 = mock(PuntoDeVenta.class);
+        PuntoDeVenta puntoDeVentaMock2 = mock(PuntoDeVenta.class);
+        nuevosPuntosDeVenta.add(puntoDeVentaMock1);
+        nuevosPuntosDeVenta.add(puntoDeVentaMock2);
 
-	@Test
-	public void testCuandoUnaZonaDeEstacionamientoAgregaUnPuntoDeVentaSeAniadeUnPuntoDeVenta() {
-		
-		PuntoDeVenta nuevoPuntoDeVenta = mock(PuntoDeVenta.class);
-		// Ejecutamos el método que queremos probar
-		zonaEstacionamientoSUT.agregarPuntoDeVenta(nuevoPuntoDeVenta);
+        zonaDeEstacionamiento.setPuntosDeVenta(nuevosPuntosDeVenta);
+        assertEquals(nuevosPuntosDeVenta, zonaDeEstacionamiento.getPuntosDeVenta());
+    }
 
-		// Usamos ArgumentCaptor para capturar el argumento pasado al método add del
-		// conjunto
-		ArgumentCaptor<PuntoDeVenta> captor = ArgumentCaptor.forClass(PuntoDeVenta.class);
+    @Test
+    public void testAgregarPuntoDeVenta() {
+        PuntoDeVenta puntoDeVentaMock = mock(PuntoDeVenta.class);
+        zonaDeEstacionamiento.agregarPuntoDeVenta(puntoDeVentaMock);
 
-		// Verificamos que se haya llamado al método add del conjunto y capturamos el
-		// argumento
-		verify(spySetDePuntosMock).add(captor.capture());
+        assertTrue(zonaDeEstacionamiento.getPuntosDeVenta().contains(puntoDeVentaMock));
+    }
 
-		// Obtenemos el argumento capturado
-		PuntoDeVenta capturedPuntoDeVenta = captor.getValue();
+    @Test
+    public void testCantidadDePuntosDeVenta() {
+        assertEquals(0, zonaDeEstacionamiento.cantidadDePuntosDeVenta());
 
-		// Verificamos que el argumento capturado es una instancia de CompraPuntual
-		assertTrue(capturedPuntoDeVenta instanceof PuntoDeVenta);
+        PuntoDeVenta puntoDeVentaMock1 = mock(PuntoDeVenta.class);
+        PuntoDeVenta puntoDeVentaMock2 = mock(PuntoDeVenta.class);
+        zonaDeEstacionamiento.agregarPuntoDeVenta(puntoDeVentaMock1);
+        zonaDeEstacionamiento.agregarPuntoDeVenta(puntoDeVentaMock2);
 
-	}
-	
-	@Test
-	public void testCuandoUnaZonaDeEstacionamientoAgregaUnPuntoDeVentaLaCantidadDePuntosDeVentaEsDe1() {
-		
-		PuntoDeVenta nuevoPuntoDeVenta = mock(PuntoDeVenta.class);
-		
-		zonaEstacionamientoSUT.agregarPuntoDeVenta(nuevoPuntoDeVenta);
-		
-		int cantidadDePuntosDeVenta = zonaEstacionamientoSUT.cantidadDePuntosDeVenta();
-		
-		assertEquals(cantidadDePuntosDeVenta, 1);
-	}
+        assertEquals(2, zonaDeEstacionamiento.cantidadDePuntosDeVenta());
+    }
 
-	@Test
-	void testCuandoUnaZonaDeEstacionamientoNuevaRemueveUnPuntoDeVentaLaCantidadEs0() {
-		zonaEstacionamientoSUT.agregarPuntoDeVenta(puntoDeVentaMock);
+    @Test
+    public void testRemoverPuntoDeVenta() {
+        PuntoDeVenta puntoDeVentaMock = mock(PuntoDeVenta.class);
+        zonaDeEstacionamiento.agregarPuntoDeVenta(puntoDeVentaMock);
 
-		zonaEstacionamientoSUT.removerPuntoDeVenta(puntoDeVentaMock);
-		
-		int cantidadDePuntosDeVenta = zonaEstacionamientoSUT.cantidadDePuntosDeVenta();
-		
-		assertEquals(cantidadDePuntosDeVenta, 0);
-	}
-
+        zonaDeEstacionamiento.removerPuntoDeVenta(puntoDeVentaMock);
+        assertTrue(zonaDeEstacionamiento.getPuntosDeVenta().isEmpty());
+    }
 }
