@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public abstract class Compra {
-	private static int proximoNumeroDeControl = 1; // Variable estática para el número de control incremental
+	protected static int proximoNumeroDeControl = 1; // Variable estática para el número de control incremental
 
 	protected PuntoDeVenta puntoDeVenta;
 	protected String numeroDeControl;
@@ -43,6 +43,22 @@ public abstract class Compra {
 
 	public LocalDate getFechaCompra() {
 		return fechaCompra;
+	}
+
+	public static int getProximoNumeroDeControl() {
+		return proximoNumeroDeControl;
+	}
+
+	public static void setProximoNumeroDeControl(int proximoNumeroDeControl) {
+		Compra.proximoNumeroDeControl = proximoNumeroDeControl;
+	}
+
+	public void setNumeroDeControl(String numeroDeControl) {
+		this.numeroDeControl = numeroDeControl;
+	}
+
+	public void setFechaCompra(LocalDate fechaCompra) {
+		this.fechaCompra = fechaCompra;
 	}
 
 	public abstract boolean esCompraPuntual();
