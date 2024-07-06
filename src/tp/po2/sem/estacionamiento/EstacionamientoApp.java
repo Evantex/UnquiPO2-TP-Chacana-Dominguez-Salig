@@ -11,16 +11,19 @@ import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 public class EstacionamientoApp extends Estacionamiento {
 	private App aplicacion;
 	private String nroCelularApp;
-	
 
-	public EstacionamientoApp(App app, String celular, String dominioVehiculo) {
+	public EstacionamientoApp(App app, LocalTime horaInicioEstacionamiento, LocalTime posibleHoraFinal,
+			double posiblePrecio) {
 		this.aplicacion = app;
-		this.inicioEstacionamiento = LocalTime.now();
-		this.patenteVehiculo = dominioVehiculo;
-		this.nroCelularApp = celular;
+		this.inicioEstacionamiento = horaInicioEstacionamiento;
+		this.finEstacionamiento = posibleHoraFinal;
+		this.duracionEnHoras = Duration.between(horaInicioEstacionamiento, posibleHoraFinal);
+		this.costoEstacionamiento = posiblePrecio;
+		this.patenteVehiculo = app.getPatente();
+		this.nroCelularApp = app.getNroCelularAsociado();
 		this.vigenciaEstacionamiento = new EstacionamientoVigente();
 	}
-	
+
 	@Override
 	public double getCostoEstacionamiento() throws Exception {
 		verificarSiFinalizo();
@@ -31,12 +34,6 @@ public class EstacionamientoApp extends Estacionamiento {
 	@Override
 	public String getIdentificadorEstacionamiento() {
 		return this.nroCelularApp;
-	}
-
-	@Override
-	public Duration getDuracionEnHoras() throws Exception {
-		verificarSiFinalizo();
-		return super.getDuracionEnHoras();
 	}
 
 	@Override

@@ -11,9 +11,8 @@ import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
 public abstract class Estacionamiento {
 	protected LocalTime inicioEstacionamiento;
-	protected LocalTime finEstacionamiento = null;
+	protected LocalTime finEstacionamiento;
 	protected String patenteVehiculo;
-	protected String nombreZonaEstacionamiento;
 	protected EstadoEstacionamiento vigenciaEstacionamiento;
 	protected Duration duracionEnHoras;
 	protected double costoEstacionamiento;

@@ -1,6 +1,7 @@
 package tp.po2.sem.app;
 
 import java.awt.Point;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import tp.po2.sem.sistemaEstacionamiento.*;
@@ -95,6 +96,10 @@ public class App implements MovementSensor {
 		this.patenteAsociada = patenteAsociada;
 	}
 	
+	public String getNroCelularAsociado() {
+		return this.celularAsociado.getNroCelular();
+	}
+	
 	// LA APP INICIALIZA CON EL GPS DESACTIVADO, LO PUEDE ACTIVAR. 
 	// NECESITA ESTAR ACTIVADO PARA UTILIZAR LAS FUNCIONES DE MOVEMENT SENSOR
 	
@@ -158,11 +163,15 @@ public class App implements MovementSensor {
 
 			verificarZonaEstacionamiento();
 			verificarSaldoSuficiente();
-			SEM.puedeEstacionar(this.getPatente(), LocalTime.now(), this.getHoraMaximaFinEstacionamiento());
-
+			LocalTime horaInicioEstacionamiento = LocalTime.now();
+			LocalTime posibleHoraFinal = this.getHoraMaximaFinEstacionamiento();
+			
+			SEM.puedeEstacionar(this.getPatente(), horaInicioEstacionamiento, posibleHoraFinal);
+			
+			double posiblePrecio = this.calcularPosibleMontoSegunSaldo(horaInicioEstacionamiento, posibleHoraFinal);
+			
 			// Si no se lanza la excepción, continuar con la creación del estacionamiento
-			EstacionamientoApp estacionamiento = new EstacionamientoApp(this, celularAsociado.getNroCelular(),
-					this.getPatente());
+			EstacionamientoApp estacionamiento = new EstacionamientoApp(this, horaInicioEstacionamiento, posibleHoraFinal, posiblePrecio);
 			this.SEM.solicitudDeEstacionamientoApp(estacionamiento);
 			this.enviarDetallesInicioEstacionamiento(estacionamiento);
 
@@ -173,6 +182,15 @@ public class App implements MovementSensor {
 		}
 	}
 	
+	private double calcularPosibleMontoSegunSaldo(LocalTime horaInicioEstacionamiento,
+			LocalTime horaMaximaFinEstacionamiento) throws Exception {
+		
+		Duration duracionEnHoras = Duration.between(horaInicioEstacionamiento, horaMaximaFinEstacionamiento);
+		
+		return SEM.calcularCuantoCobrar(horaInicioEstacionamiento, duracionEnHoras);
+		
+	}
+
 	public void notificarUsuario(String msg) {
 		this.modoNotificacion.notificar(this.celularAsociado, msg);
 	}
@@ -184,9 +202,14 @@ public class App implements MovementSensor {
 		Estacionamiento est = this.SEM.getEstacionamiento(Numerocelular);
 
 		this.SEM.finalizarEstacionamiento(Numerocelular);
-		this.SEM.cobrarPorEstacionamiento(est, celular);
+		solicitarCostoEstacionamiento(celular, est);
 		this.enviarDetallesFinEstacionamiento(est);
 		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
+	}
+
+	public void solicitarCostoEstacionamiento(Celular celular, Estacionamiento est) throws Exception {
+		
+		this.SEM.cobrarPorEstacionamiento(est, celular);
 	}
 	
 	public LocalTime getHoraMaximaFinEstacionamiento() {
