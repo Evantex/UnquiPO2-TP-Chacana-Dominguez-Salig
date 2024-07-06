@@ -17,7 +17,11 @@ public class Notificador {
     public void eliminarObservador(Observer observador) {
         observadores.remove(observador);
     }
-
+    
+    public List<Observer> getObservadores() {
+    	return observadores;
+    }
+    
     public void notificarObservadores(EventoEstacionamiento evento) {
         for (Observer observador : observadores) {
             observador.actualizar(evento);
