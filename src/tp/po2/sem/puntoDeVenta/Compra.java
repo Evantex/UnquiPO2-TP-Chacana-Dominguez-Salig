@@ -16,12 +16,6 @@ public abstract class Compra {
 
 	}
 
-	public Compra(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra) {
-		super();
-		this.puntoDeVenta = puntoDeVenta;
-		this.numeroDeControl = generarNumeroDeControl();
-		this.fechaCompra = fechaCompra;
-	}
 
 	// Método para generar el número de control incremental
 	private synchronized String generarNumeroDeControl() {
