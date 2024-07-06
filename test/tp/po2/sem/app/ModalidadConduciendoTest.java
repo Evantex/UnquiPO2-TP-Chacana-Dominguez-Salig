@@ -2,96 +2,79 @@ package tp.po2.sem.app;
 
 import static org.mockito.Mockito.*;
 
-import java.awt.Point;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import tp.po2.sem.appModoNotificaciones.NotificacionActivada;
-import tp.po2.sem.appModoNotificaciones.NotificacionDesactivada;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class ModalidadConduciendoTest {
 
-    private ModalidadConduciendo modo;
+    @Mock
     private App aplicacion;
-    private NotificacionActivada modoNotificacionActivada;
-    private NotificacionDesactivada modoNotificacionDesactivada;
-    private Manual modoEstacionamientoManual;
-    private Automatico modoEstacionamientoAutomatico;
-    private Celular celularDeUsuario;
+
+    @Mock
+    ModoApp modoEstacionamiento;
+
+    @InjectMocks
+    private ModalidadConduciendo modalidadConduciendo;
 
     @BeforeEach
-    void setUp() throws Exception {
-        modo = new ModalidadConduciendo();
-        aplicacion = mock(App.class);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
+    @Test
+    void testCaminandoConEstacionamientoVigenteNoHaceNada() throws Exception {
+        when(aplicacion.tieneEstacionamientoVigente()).thenReturn(true);
+
+        modalidadConduciendo.caminando(aplicacion);
+
+        verify(aplicacion, never()).estaDentroDeZonaEstacionamiento();
+        verify(aplicacion, never()).notificarUsuario(anyString());
+        verify(modoEstacionamiento, never()).iniciarEstacionamiento(any());
+        verify(aplicacion, never()).setModoDeDesplazamiento(any(ModalidadCaminando.class));
+        verify(aplicacion, never()).setUbicacionEstacionamiento(any());
+    }
+
+    @Test
+    void testCaminandoFueraDeZonaEstacionamientoNoHaceNada() throws Exception {
+        when(aplicacion.tieneEstacionamientoVigente()).thenReturn(false);
+        when(aplicacion.estaDentroDeZonaEstacionamiento()).thenReturn(false);
+
+        modalidadConduciendo.caminando(aplicacion);
+
+        verify(aplicacion, never()).notificarUsuario(anyString());
+        verify(modoEstacionamiento, never()).iniciarEstacionamiento(any());
+        verify(aplicacion, never()).setModoDeDesplazamiento(any(ModalidadCaminando.class));
+        verify(aplicacion, never()).setUbicacionEstacionamiento(any());
+    }
+
+    @Test
+    void testCaminandoSinEstacionamientoYDentroDeZonaEstacionamiento() throws Exception {
         when(aplicacion.tieneEstacionamientoVigente()).thenReturn(false);
         when(aplicacion.estaDentroDeZonaEstacionamiento()).thenReturn(true);
-        when(aplicacion.getUbicacionActual()).thenReturn(new Point(1, 2));
+        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamiento);
 
-        modoNotificacionDesactivada = mock(NotificacionDesactivada.class);
-        modoNotificacionActivada = mock(NotificacionActivada.class);
-        modoEstacionamientoManual = mock(Manual.class);
-        modoEstacionamientoAutomatico = mock(Automatico.class);
-        celularDeUsuario = mock (Celular.class);
-    }
+        modalidadConduciendo.caminando(aplicacion);
 
-    @Test
-    void testCaminandoConNotificacionDesactivadaNoEnvíaMensajes() throws Exception {
-    	
-        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionDesactivada);
-        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoManual);
-        when(aplicacion.getCelularAsociado()).thenReturn(celularDeUsuario);
-        
-        modo.caminando(aplicacion);
-
-        verify(celularDeUsuario, never()).recibirMensaje(anyString());
-    }
-
-    @Test
-    void testCaminandoConNotificacionActivadaEnvíaMensajes() throws Exception {
-        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionActivada);
-        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoAutomatico);
-        when(aplicacion.getCelularAsociado()).thenReturn(celularDeUsuario);
-        
-        modo.caminando(aplicacion);
-        
-        verify(aplicacion, times(1)).notificarUsuario("Alerta inicio estacionamiento");
-    }
-
-    @Test
-    void testCaminandoEnModoManualNoIniciaEstacionamiento() throws Exception {
-        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionActivada);
-        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoManual);
-
-        modo.caminando(aplicacion);
-
-        verify(aplicacion, never()).iniciarEstacionamiento();
-    }
-
-    @Test
-    void testCaminandoEnModoAutomaticoIniciaEstacionamiento() throws Exception {
-        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionActivada);
-        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoAutomatico);
-
-        modo.caminando(aplicacion);
-
-        verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion);
-        verify(aplicacion, times(1)).setModoDeDesplazamiento(any(ModalidadCaminando.class));
-        verify(aplicacion, times(1)).setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
+        verify(aplicacion).notificarUsuario("Alerta inicio estacionamiento");
+        verify(modoEstacionamiento).iniciarEstacionamiento(aplicacion);
+        verify(aplicacion).setModoDeDesplazamiento(any(ModalidadCaminando.class));
+        verify(aplicacion).setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
     }
 
     @Test
     void testUpdate() {
-        modo.update(aplicacion);
+        modalidadConduciendo.update(aplicacion);
 
-        verify(aplicacion, times(1)).setModoDeDesplazamiento(any(ModalidadCaminando.class));
-        verify(aplicacion, times(1)).setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
+        verify(aplicacion).setModoDeDesplazamiento(any(ModalidadCaminando.class));
+        verify(aplicacion).setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
     }
 
     @Test
     void testConduciendoNoHaceNada() {
-        modo.conduciendo(aplicacion);
+        modalidadConduciendo.conduciendo(aplicacion);
 
         verifyNoInteractions(aplicacion);
     }
