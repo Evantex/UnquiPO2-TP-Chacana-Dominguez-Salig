@@ -40,8 +40,7 @@ public class RangoHorario {
 
 	public void validarHoras(LocalTime horaInicioEstacionamiento, LocalTime horaFinEstacionamiento) throws Exception {
 		
-		this.assertHoraInicioNoMayorAHoraFin(horaInicioEstacionamiento, horaFinEstacionamiento ); 
-		this.assertHoraFinNoMenorAHoraInicio(horaInicioEstacionamiento, horaFinEstacionamiento); 	
+		this.assertHoraInicioNoMayorAHoraFin(horaInicioEstacionamiento, horaFinEstacionamiento );  	
 		
 	}
 
@@ -49,16 +48,6 @@ public class RangoHorario {
 
 		if (horaInicio.isAfter(horaFin)) {
 			throw new Exception("La hora de inicio no puede ser mayor que la hora de fin");
-		}
-
-	}
-
-	private void assertHoraFinNoMenorAHoraInicio(LocalTime horaInicio, LocalTime horaFin) throws Exception {
-
-		if (horaFin.isBefore(horaInicio)) {
-
-			throw new Exception("La hora de fin no puede ser menor que la hora de inicio");
-
 		}
 
 	}
