@@ -50,12 +50,9 @@ public class ModalidadConduciendoTest
 		cel = mock( Celular.class );
 		when( cel.getNroCelular() ).thenReturn("1145241966");
 		when( cel.getUbicacion() ).thenReturn(new Point(1,2));
-		// when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);
+		when( cel.getSaldo()).thenReturn(100.0);
 		
-		
-		// El SEM lo seteo como objeto real por problemas con el manejo de listas
-		sem = new SistemaEstacionamiento();
-		sem.cargarCelular("1145241966", 100.0);
+		sem = mock (SistemaEstacionamiento.class);
 
 		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
 	
@@ -64,13 +61,15 @@ public class ModalidadConduciendoTest
 		modoNotificacionActivada = spy( NotificacionActivada.class );
 		modoEstacionamientoManual = spy( Manual.class);
 		modoEstacionamientoAutomatico = spy( Automatico.class );
-		aplicacion.setModoDesplazamiento(modo);
+		aplicacion.activarGPS();
+		aplicacion.setModoDeDesplazamiento(modo);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
 		// when( aplicacion.getPatente() ).thenReturn("GIO 002");
 
 		// Set condiciones para poder estacionar
 		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
-		when( aplicacion.seEncuentraEnFranjaHoraria() ).thenReturn(true);
+		
+		
 	
 	}
 
@@ -84,7 +83,7 @@ public class ModalidadConduciendoTest
 	void verificoQueNoSeEnvíenMensajesConNotificaciónDesactivada() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionDesactivada);
-		modo.caminando(aplicacion, "GIO 002");
+		modo.caminando(aplicacion);
 		verify(aplicacion, never()).notificarUsuario("Posible inicio de estacionamiento");
 	}
 	
@@ -93,7 +92,7 @@ public class ModalidadConduciendoTest
 	void verificoQueEfectivamenteSeEnvíenMensajesConNotificaciónActivada() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion, aplicacion.getPatente());
+		modo.caminando(aplicacion);
 		verify(aplicacion, times(1)).notificarUsuario("Posible inicio de estacionamiento");	
 	}
 	
@@ -102,15 +101,15 @@ public class ModalidadConduciendoTest
 	void verificoQueNoSeEjecuteEstacionamientoEnModoManual() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion, "GIO 002");
-		verify(aplicacion, never()).iniciarEstacionamiento("GIO 002");
+		modo.caminando(aplicacion);
+		verify(aplicacion, never()).iniciarEstacionamiento();
 	}
 	
 	
 	@Test
 	void verificoQueAppTengaEstacionamientoVigente()
 	{
-		aplicacion.iniciarEstacionamiento( aplicacion.getPatente() );
+		aplicacion.iniciarEstacionamiento();
 		assertEquals( 1,  sem.getEstacionamientos().size() );
 		assertTrue( aplicacion.tieneEstacionamientoVigente() );
 	}
@@ -121,11 +120,11 @@ public class ModalidadConduciendoTest
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
-		modo.caminando(aplicacion, "GIO 002");
-		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion, "GIO 002");
-		verify(aplicacion, times(1)).iniciarEstacionamiento( aplicacion.getPatente() );
+		modo.caminando(aplicacion);
+		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion);
+		verify(aplicacion, times(1)).iniciarEstacionamiento();
 		verify(aplicacion, times(1)).notificarUsuario("Inicio de estacionamiento realizado de forma automática");
-		verify(aplicacion, times(1)).setModoDesplazamiento( any(ModalidadCaminando.class) );
+		verify(aplicacion, times(1)).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
 		verify(aplicacion, times(1)).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
 	}
 	
@@ -135,8 +134,8 @@ public class ModalidadConduciendoTest
 	{
 		assertFalse( aplicacion.tieneEstacionamientoVigente() );
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion, "GIO 002");
-		verify(aplicacion, never()).setModoDesplazamiento( any(ModalidadCaminando.class) );
+		modo.caminando(aplicacion);
+		verify(aplicacion, never()).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
 		verify(aplicacion, never()).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
 		Exception error = assertThrows(Exception.class, () ->
 		{
@@ -148,14 +147,14 @@ public class ModalidadConduciendoTest
 	void verificoQueNoSeEjecuteNadaSiYaTengoEstacionamientoVigente() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		aplicacion.iniciarEstacionamiento(aplicacion.getPatente());
-		modo.caminando(aplicacion, aplicacion.getPatente());
+		aplicacion.iniciarEstacionamiento();
+		modo.caminando(aplicacion);
 		Exception error = assertThrows(Exception.class, () ->
 		{
 	       aplicacion.verificarSiPoseeEstacionamientoVigente();
 	    });
 	}
 	
-
+	
 	
 }
