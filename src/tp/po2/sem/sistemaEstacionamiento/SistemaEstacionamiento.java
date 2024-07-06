@@ -256,13 +256,6 @@ public class SistemaEstacionamiento {
 	}
 
 	// LOGICA DE OBSERVER
-	public void agregarObservador(Observer observador) {
-		getSistemaAlertas().agregarObservador(observador);
-	}
-
-	public void eliminarObservador(Observer observador) {
-		getSistemaAlertas().eliminarObservador(observador);
-	}
 
 	public Notificador getSistemaAlertas() {
 		return sistemaAlertas;
