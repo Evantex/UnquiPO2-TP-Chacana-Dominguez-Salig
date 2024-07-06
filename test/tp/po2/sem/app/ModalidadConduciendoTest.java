@@ -14,6 +14,11 @@ public class ModalidadConduciendoTest {
 
     private ModalidadConduciendo modo;
     private App aplicacion;
+    private NotificacionActivada modoNotificacionActivada;
+    private NotificacionDesactivada modoNotificacionDesactivada;
+    private Manual modoEstacionamientoManual;
+    private Automatico modoEstacionamientoAutomatico;
+    private Celular celularDeUsuario;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -23,34 +28,40 @@ public class ModalidadConduciendoTest {
         when(aplicacion.tieneEstacionamientoVigente()).thenReturn(false);
         when(aplicacion.estaDentroDeZonaEstacionamiento()).thenReturn(true);
         when(aplicacion.getUbicacionActual()).thenReturn(new Point(1, 2));
+
+        modoNotificacionDesactivada = mock(NotificacionDesactivada.class);
+        modoNotificacionActivada = mock(NotificacionActivada.class);
+        modoEstacionamientoManual = mock(Manual.class);
+        modoEstacionamientoAutomatico = mock(Automatico.class);
+        celularDeUsuario = mock (Celular.class);
     }
 
     @Test
     void testCaminandoConNotificacionDesactivadaNoEnvíaMensajes() throws Exception {
     	
-        NotificacionDesactivada modoNotificacionDesactivada = mock(NotificacionDesactivada.class);
         when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionDesactivada);
-
+        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoManual);
+        when(aplicacion.getCelularAsociado()).thenReturn(celularDeUsuario);
+        
         modo.caminando(aplicacion);
 
-        verify(aplicacion, never()).notificarUsuario(anyString());
+        verify(celularDeUsuario, never()).recibirMensaje(anyString());
     }
 
     @Test
     void testCaminandoConNotificacionActivadaEnvíaMensajes() throws Exception {
-        
-    	NotificacionActivada modoNotificacionActivada = mock (NotificacionActivada.class);
         when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionActivada);
-
+        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoAutomatico);
+        when(aplicacion.getCelularAsociado()).thenReturn(celularDeUsuario);
+        
         modo.caminando(aplicacion);
-
+        
         verify(aplicacion, times(1)).notificarUsuario("Alerta inicio estacionamiento");
     }
 
     @Test
     void testCaminandoEnModoManualNoIniciaEstacionamiento() throws Exception {
-    	
-        Manual modoEstacionamientoManual = mock(Manual.class);
+        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionActivada);
         when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoManual);
 
         modo.caminando(aplicacion);
@@ -60,8 +71,7 @@ public class ModalidadConduciendoTest {
 
     @Test
     void testCaminandoEnModoAutomaticoIniciaEstacionamiento() throws Exception {
-    	
-        Automatico modoEstacionamientoAutomatico = mock(Automatico.class);
+        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionActivada);
         when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoAutomatico);
 
         modo.caminando(aplicacion);

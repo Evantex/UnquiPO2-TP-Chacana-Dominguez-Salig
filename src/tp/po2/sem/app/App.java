@@ -29,8 +29,18 @@ public class App implements MovementSensor {
 	
 	//GETTERS Y SETTERS
 	
+	
+	
 	public void setModoEstacionamiento(ModoApp modo) {
 		this.modoApp = modo;
+	}
+
+	public Celular getCelularAsociado() {
+		return celularAsociado;
+	}
+
+	public void setCelularAsociado(Celular celularAsociado) {
+		this.celularAsociado = celularAsociado;
 	}
 
 	public void setModoNotificacion(ModoNotificaciones modo) {
@@ -59,6 +69,10 @@ public class App implements MovementSensor {
 	
 	public void setEstadoGps(EstadoGPS estado) {
 		this.deteccionDeDesplazamiento = estado;
+	}
+	
+	public EstadoGPS getEstadoGps() {
+		return deteccionDeDesplazamiento;
 	}
 	
 	public ModoNotificaciones getModoNotificacion() {
