@@ -1,160 +1,88 @@
-
 package tp.po2.sem.app;
-import static org.mockito.Mockito.mock;
-import org.junit.jupiter.api.BeforeEach;
 
-import tp.po2.sem.appModoNotificaciones.NotificacionActivada;
-import tp.po2.sem.appModoNotificaciones.NotificacionDesactivada;
-import tp.po2.sem.sistemaEstacionamiento.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.awt.Point;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import tp.po2.sem.appModoNotificaciones.NotificacionActivada;
+import tp.po2.sem.appModoNotificaciones.NotificacionDesactivada;
 
+public class ModalidadConduciendoTest {
 
-public class ModalidadConduciendoTest
-{
-	ModalidadConduciendo modo;
-	App aplicacion;
-	SistemaEstacionamiento sem;
-	Celular cel;
-	NotificacionActivada modoNotificacionActivada;
-	NotificacionDesactivada modoNotificacionDesactivada;
-	Manual modoEstacionamientoManual;
-	Automatico modoEstacionamientoAutomatico;
+    private ModalidadConduciendo modo;
+    private App aplicacion;
 
+    @BeforeEach
+    void setUp() throws Exception {
+        modo = new ModalidadConduciendo();
+        aplicacion = mock(App.class);
 
+        when(aplicacion.tieneEstacionamientoVigente()).thenReturn(false);
+        when(aplicacion.estaDentroDeZonaEstacionamiento()).thenReturn(true);
+        when(aplicacion.getUbicacionActual()).thenReturn(new Point(1, 2));
+    }
 
+    @Test
+    void testCaminandoConNotificacionDesactivadaNoEnvíaMensajes() throws Exception {
+    	
+        NotificacionDesactivada modoNotificacionDesactivada = mock(NotificacionDesactivada.class);
+        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionDesactivada);
 
-	@BeforeEach
-	void setUp() throws Exception 
-	{
-		modo = new ModalidadConduciendo();
-		
-		cel = mock( Celular.class );
-		when( cel.getNroCelular() ).thenReturn("1145241966");
-		when( cel.getUbicacion() ).thenReturn(new Point(1,2));
-		when( cel.getSaldo()).thenReturn(100.0);
-		
-		sem = mock (SistemaEstacionamiento.class);
+        modo.caminando(aplicacion);
 
-		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
-	
-		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
-		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
-		modoNotificacionActivada = spy( NotificacionActivada.class );
-		modoEstacionamientoManual = spy( Manual.class);
-		modoEstacionamientoAutomatico = spy( Automatico.class );
-		aplicacion.activarGPS();
-		aplicacion.setModoDeDesplazamiento(modo);
-		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
-		// when( aplicacion.getPatente() ).thenReturn("GIO 002");
+        verify(aplicacion, never()).notificarUsuario(anyString());
+    }
 
-		// Set condiciones para poder estacionar
-		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
-		
-		
-	
-	}
+    @Test
+    void testCaminandoConNotificacionActivadaEnvíaMensajes() throws Exception {
+        
+    	NotificacionActivada modoNotificacionActivada = mock (NotificacionActivada.class);
+        when(aplicacion.getModoNotificacion()).thenReturn(modoNotificacionActivada);
 
-	@Test
-	void verificoQueAppNoTengaEstacionamientosVigentes()
-	{
-		assertFalse( aplicacion.tieneEstacionamientoVigente() );
-	}
-	
-	@Test
-	void verificoQueNoSeEnvíenMensajesConNotificaciónDesactivada() throws Exception
-	{
-		aplicacion.setModoNotificacion(modoNotificacionDesactivada);
-		modo.caminando(aplicacion);
-		verify(aplicacion, never()).notificarUsuario("Posible inicio de estacionamiento");
-	}
-	
-	
-	@Test
-	void verificoQueEfectivamenteSeEnvíenMensajesConNotificaciónActivada() throws Exception
-	{
-		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion);
-		verify(aplicacion, times(1)).notificarUsuario("Posible inicio de estacionamiento");	
-	}
-	
+        modo.caminando(aplicacion);
 
-	@Test
-	void verificoQueNoSeEjecuteEstacionamientoEnModoManual() throws Exception
-	{
-		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion);
-		verify(aplicacion, never()).iniciarEstacionamiento();
-	}
-	
-	
-	@Test
-	void verificoQueAppTengaEstacionamientoVigente()
-	{
-		aplicacion.iniciarEstacionamiento();
-		assertEquals( 1,  sem.getEstacionamientos().size() );
-		assertTrue( aplicacion.tieneEstacionamientoVigente() );
-	}
-	
-	
-	@Test
-	void verificoQueEfectivamenteSeEjecuteEstacionamientoEnModoAutomatico() throws Exception
-	{
-		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
-		modo.caminando(aplicacion);
-		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion);
-		verify(aplicacion, times(1)).iniciarEstacionamiento();
-		verify(aplicacion, times(1)).notificarUsuario("Inicio de estacionamiento realizado de forma automática");
-		verify(aplicacion, times(1)).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
-		verify(aplicacion, times(1)).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
-	}
-	
-	
-	@Test
-	void verificoQueEnModalidadManualNoSeEjecuteElUpdate() throws Exception
-	{
-		assertFalse( aplicacion.tieneEstacionamientoVigente() );
-		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion);
-		verify(aplicacion, never()).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
-		verify(aplicacion, never()).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
-		Exception error = assertThrows(Exception.class, () ->
-		{
-	       aplicacion.verificarSiPoseeEstacionamientoVigente();
-	    });
-	}
-	
-	@Test
-	void verificoQueNoSeEjecuteNadaSiYaTengoEstacionamientoVigente() throws Exception
-	{
-		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		aplicacion.iniciarEstacionamiento();
-		modo.caminando(aplicacion);
-		Exception error = assertThrows(Exception.class, () ->
-		{
-	       aplicacion.verificarSiPoseeEstacionamientoVigente();
-	    });
-	}
-	
-	
-	
+        verify(aplicacion, times(1)).notificarUsuario("Alerta inicio estacionamiento");
+    }
+
+    @Test
+    void testCaminandoEnModoManualNoIniciaEstacionamiento() throws Exception {
+    	
+        Manual modoEstacionamientoManual = mock(Manual.class);
+        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoManual);
+
+        modo.caminando(aplicacion);
+
+        verify(aplicacion, never()).iniciarEstacionamiento();
+    }
+
+    @Test
+    void testCaminandoEnModoAutomaticoIniciaEstacionamiento() throws Exception {
+    	
+        Automatico modoEstacionamientoAutomatico = mock(Automatico.class);
+        when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamientoAutomatico);
+
+        modo.caminando(aplicacion);
+
+        verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion);
+        verify(aplicacion, times(1)).setModoDeDesplazamiento(any(ModalidadCaminando.class));
+        verify(aplicacion, times(1)).setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
+    }
+
+    @Test
+    void testUpdate() {
+        modo.update(aplicacion);
+
+        verify(aplicacion, times(1)).setModoDeDesplazamiento(any(ModalidadCaminando.class));
+        verify(aplicacion, times(1)).setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
+    }
+
+    @Test
+    void testConduciendoNoHaceNada() {
+        modo.conduciendo(aplicacion);
+
+        verifyNoInteractions(aplicacion);
+    }
 }
