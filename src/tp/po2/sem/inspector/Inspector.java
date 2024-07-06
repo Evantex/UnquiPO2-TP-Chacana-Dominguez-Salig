@@ -8,8 +8,7 @@ public class Inspector {
 	private SistemaEstacionamiento sem;
 	private ZonaDeEstacionamiento zonaAsignada;
 
-	public Inspector() {
-	};
+
 
 	public Inspector(String nombreInspector, SistemaEstacionamiento sem, ZonaDeEstacionamiento zona) {
 		super();
