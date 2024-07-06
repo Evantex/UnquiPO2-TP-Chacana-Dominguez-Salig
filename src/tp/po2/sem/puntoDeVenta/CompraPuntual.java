@@ -67,18 +67,7 @@ public class CompraPuntual extends Compra {
 
 		return this.horaInicioEstacionamiento;
 	}
+	
 
-	public LocalDate getFechaCompra() {
-		return this.fechaCompra;
-	}
-
-	public void setFechaCompra(LocalDate nuevaFechaCompra) {
-		this.fechaCompra = nuevaFechaCompra;
-		
-	}
-
-	/*public void setNumeroDeControl(String nuevoNumeroDeControl) {
-		CompraPuntual.proximoNumeroDeControl = proximoNumeroDeControl;
-		
-	}*/
+	
 }

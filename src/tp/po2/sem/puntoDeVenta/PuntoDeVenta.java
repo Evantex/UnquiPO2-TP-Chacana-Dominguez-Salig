@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
-import tp.po2.sem.estacionamiento.EstacionamientoCompraPuntual;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
 public class PuntoDeVenta { // responsabilidad de generar objetos compras

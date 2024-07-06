@@ -1,13 +1,13 @@
 package tp.po2.sem.puntoDeVenta;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 public abstract class Compra {
-	protected static int proximoNumeroDeControl = 1; // Variable estática para el número de control incremental
+	protected static int proximoNumeroDeControl = 0; // Variable estática para el número de control incremental
 
 	protected PuntoDeVenta puntoDeVenta;
-	protected String numeroDeControl;
+	protected int numeroDeControl;
 	protected LocalDate fechaCompra;
 
 	// Constructor sin parámetros
@@ -18,8 +18,8 @@ public abstract class Compra {
 
 
 	// Método para generar el número de control incremental
-	private synchronized String generarNumeroDeControl() {
-		return String.valueOf(proximoNumeroDeControl++);
+	private synchronized int generarNumeroDeControl() {
+		return proximoNumeroDeControl++;
 	}
 
 	// Getters y Setters
@@ -31,7 +31,7 @@ public abstract class Compra {
 		this.puntoDeVenta = puntoDeVenta;
 	}
 
-	public String getNumeroDeControl() {
+	public int getNumeroDeControl() {
 		return numeroDeControl;
 	}
 
@@ -45,10 +45,6 @@ public abstract class Compra {
 
 	public static void setProximoNumeroDeControl(int proximoNumeroDeControl) {
 		Compra.proximoNumeroDeControl = proximoNumeroDeControl;
-	}
-
-	public void setNumeroDeControl(String numeroDeControl) {
-		this.numeroDeControl = numeroDeControl;
 	}
 
 	public void setFechaCompra(LocalDate fechaCompra) {

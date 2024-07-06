@@ -27,17 +27,16 @@ public class CompraTest {
 		LocalTime horaInicioMock = LocalTime.of(10, 0); // Simular cualquier hora de inicio aquí
 		compraConParametros = new CompraPuntual(puntoDeVentaMock, fechaCompraMock, horaInicioMock, Duration.ofHours(2));
 		compraSinParametros = new CompraPuntual();
-		Compra.setProximoNumeroDeControl(1);
+
 	}
 
-	/*@AfterEach
+	@AfterEach
 	public void tearDown() {
-		// Reiniciar estado después de cada prueba si es necesario
-		Compra.setProximoNumeroDeControl(1);
-		/*System.out.println("proximoNumeroDeControl reset to 1");
-	}*/
 
-	
+		Compra.setProximoNumeroDeControl(0);
+
+	}
+
 	@Test
 	public void testGetProximoNumeroDeControl() {
 		Compra.setProximoNumeroDeControl(1);
@@ -45,23 +44,16 @@ public class CompraTest {
 	}
 	
 	@Test
-	public void test() {
-		
-		assertEquals(2, Compra.getProximoNumeroDeControl());
+	public void testGetNumeroDeControl() {
+		assertNotNull(compraConParametros.getNumeroDeControl());
+		assertNotNull(compraSinParametros.getNumeroDeControl());
 	}
-
-	
 	
 	@Test
-	public void testSeCreanTresComprasYElProximoNumeroDeControlEsCorrelativo() {
-		CompraPuntual c1 = new CompraPuntual();
-		CompraPuntual c2 = new CompraPuntual();
-		CompraRecargaCelular c3 = new CompraRecargaCelular();
-		assertEquals(1, CompraPuntual.getProximoNumeroDeControl());
-		assertEquals(3, CompraRecargaCelular.getProximoNumeroDeControl());
+	public void testElNumeroDeControlEsIncrementalRespectoALasComprasCreadas() {
+		//Como se crean 2 en el setup, esta seteado en 2
+		assertEquals(2, Compra.getProximoNumeroDeControl());
 	}
-	
-	
 
 	@Test
 	public void testConstructorSinParametros() {
@@ -84,18 +76,6 @@ public class CompraTest {
 	}
 
 	@Test
-	public void testSetProximoNumeroDeControl() {
-		Compra.setProximoNumeroDeControl(10);
-		assertEquals(10, Compra.getProximoNumeroDeControl());
-	}
-
-	@Test
-	public void testGetNumeroDeControl() {
-		assertNotNull(compraConParametros.getNumeroDeControl());
-		assertNotNull(compraSinParametros.getNumeroDeControl());
-	}
-
-	@Test
 	public void testGetFechaCompra() {
 		assertEquals(fechaCompraMock, compraConParametros.getFechaCompra());
 		assertNull(compraSinParametros.getFechaCompra());
@@ -114,13 +94,11 @@ public class CompraTest {
 		assertEquals(nuevoPuntoDeVentaMock, compraSinParametros.getPuntoDeVenta());
 	}
 
-	/*
-	 * @Test public void testGetHorasCompradas() {
-	 * assertNull(compraConParametros.getHorasCompradas());
-	 * 
-	 * compraConParametros.setHorasCompradas(null);
-	 * assertNull(compraConParametros.getHorasCompradas()); }
-	 */
+	@Test
+	public void testGetHorasCompradas() {
+		assertEquals(Duration.ofHours(2), compraConParametros.getHorasCompradas());
+
+	}
 
 	@Test
 	public void testSetHorasCompradas() {
@@ -161,15 +139,6 @@ public class CompraTest {
 		assertTrue(compraConParametros.esCompraPuntual());
 		assertFalse(compraConParametros.esCompraRecargaCelular());
 	}
-
-
-	
-	/*
-	 * @Test public void testSetNumeroDeControl() { String nuevoNumeroDeControl =
-	 * "ABC123"; compraSinParametros.setNumeroDeControl(nuevoNumeroDeControl);
-	 * assertEquals(nuevoNumeroDeControl, compraSinParametros.getNumeroDeControl());
-	 * }
-	 */
 
 	@Test
 	public void testSetFechaCompra() {

@@ -5,7 +5,6 @@ public class CompraRecargaCelular extends Compra {
 	private String numeroDecelular;
 	private double montoSaldo;
 
-	public CompraRecargaCelular() {}
 	public CompraRecargaCelular(PuntoDeVenta puntoDeVenta, String numeroDecelular, double montoSaldo) {
 		super();
 		this.puntoDeVenta = puntoDeVenta;
