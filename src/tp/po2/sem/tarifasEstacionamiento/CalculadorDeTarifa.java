@@ -22,7 +22,12 @@ public class CalculadorDeTarifa {
 		tiposDeTarifa.add(new TarifaInicioDentroDeHorarioLaboralYFinFueraDeHorario());
 
 	}
-
+	
+    // Constructor para inyectar tarifas (para test)
+    public CalculadorDeTarifa(List<Tarifa> tiposDeTarifa) {
+        this.tiposDeTarifa = tiposDeTarifa;
+    }
+	
 	public double determinarCobroPara(RangoHorario rangoLaboral, RangoHorario rangoEstacionamiento, int precioPorHora) throws Exception{
 
 		return this.tiposDeTarifa.stream()
