@@ -53,10 +53,10 @@ public class AppTest
 	void asignoNotificacionDesactivadaYChequeoQueNoSeEnvíeElMensajeAlUsuario() throws Exception
 	{
 		aplicacion.setModoNotificacion(new NotificacionDesactivada() );
-		aplicacion.setModoDesplazamiento(modalidadConduciendo);
+		aplicacion.setModoDeDesplazamiento(modalidadConduciendo);
 		aplicacion.setModoEstacionamiento( new Manual() );
 		aplicacion.walking();
-		verify( modalidadConduciendo ).caminando(aplicacion, aplicacion.getPatente() );
+		verify( modalidadConduciendo ).caminando(aplicacion);
 		verify(cel, never()).recibirMensaje("Posible inicio de estacionamiento");
 	}
 	
@@ -64,7 +64,7 @@ public class AppTest
 	void asignoNotificacionActivadaYChequeoQueEfectivamenteSeEnvíeElMensajeAlUsuario() throws Exception
 	{
 		aplicacion.setModoNotificacion(new NotificacionActivada() );
-		aplicacion.setModoDesplazamiento(modalidadConduciendo);
+		aplicacion.setModoDeDesplazamiento(modalidadConduciendo);
 		aplicacion.setModoEstacionamiento( new Manual() );
 		aplicacion.walking();
 		// verify( modalidadConduciendo ).caminando(aplicacion, aplicacion.getPatente() );
@@ -104,7 +104,7 @@ public class AppTest
 		when( sem.poseeEstacionamientoVigente( "GIO 002") ).thenReturn(true);
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-	        aplicacion.verificarSiPoseeEstacionamientoVigente();
+	        aplicacion.tieneEstacionamientoVigente();
 	    });
 		
 		assertEquals("Ya tienes un estacionamiento vigente", exception.getMessage());

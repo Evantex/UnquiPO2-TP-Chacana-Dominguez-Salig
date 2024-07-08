@@ -22,7 +22,8 @@ import tp.po2.sem.puntoDeVenta.Compra;
 import tp.po2.sem.puntoDeVenta.CompraPuntual;
 import tp.po2.sem.tarifasEstacionamiento.CalculadorDeTarifa;
 
-public class SistemaEstacionamiento {
+public class SistemaEstacionamiento
+{
 	private static final int precioPorHora = 40;
 	private static final LocalTime horaLaboralInicio = LocalTime.of(7, 0);
 	private static final LocalTime horaLaboralFin = LocalTime.of(20, 0);
@@ -148,12 +149,12 @@ public class SistemaEstacionamiento {
 		this.registrarEstacionamiento(estacionamiento);
 		this.registrarCompra(compraAsociada);
 	}
-
-	public void puedeEstacionar(String patente, LocalTime horaInicio, LocalTime horaFin) throws Exception {
-
+ 
+	
+	public void puedeEstacionar(String patente, LocalTime horaInicio, LocalTime horaFin) throws Exception
+	{
 		this.verificarQueNoTengaYaUnEstacionamientoVigente(patente);
 		this.verificarHorasValidasParaEstacionamiento(horaInicio, horaFin);
-
 	}
 
 	public void verificarHorasValidasParaEstacionamiento(LocalTime horaInicio, LocalTime horaFin) throws Exception {
@@ -162,8 +163,8 @@ public class SistemaEstacionamiento {
 
 	public void verificarQueNoTengaYaUnEstacionamientoVigente(String patente) throws Exception {
 
-		if (poseeEstacionamientoVigente(patente)) {
-
+		if (poseeEstacionamientoVigente(patente))
+		{
 			throw new Exception("Ya tiene un estacionamiento valido en curso");
 		}
 
@@ -238,16 +239,18 @@ public class SistemaEstacionamiento {
 	}
 	
 
-	public Estacionamiento getEstacionamiento(String identificadorEstacionamiento) throws Exception {
+	public Estacionamiento getEstacionamiento(String identificadorEstacionamiento) throws Exception
+	{
 		return this.estacionamientos.stream().filter(
 				e -> e.estaVigente() && e.getIdentificadorEstacionamiento().equals(identificadorEstacionamiento))
 				.findAny().orElseThrow(() -> new Exception("El estacionamiento no existe o no está vigente"));
 	}
+	
 
 	// LOGICA DE "FIN DE FRANJA HORARIA, FINALIZAR TODOS LOS ESTACIONAMIENTOS
 	// VIGENTES"
-	public void finalizarTodosLosEstacionamientos() {
-
+	public void finalizarTodosLosEstacionamientos()
+	{
 		LocalTime horaActual = LocalTime.now();
 		if (horaActual == horaLaboralFin) {
 			this.estacionamientos.stream().filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
@@ -272,10 +275,10 @@ public class SistemaEstacionamiento {
 
 	}
 
-	public void notificarSistemaAlertasInicioEstacionamiento(Estacionamiento unEstacionamento) {
+	public void notificarSistemaAlertasInicioEstacionamiento(Estacionamiento unEstacionamento)
+	{
 		sistemaAlertas
 				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, unEstacionamento));
-
 	}
 
 	
