@@ -1,6 +1,7 @@
 package tp.po2.sem.puntoDeVenta;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 public abstract class Compra {
@@ -8,7 +9,7 @@ public abstract class Compra {
 
 	protected PuntoDeVenta puntoDeVenta;
 	protected int numeroDeControl;
-	protected LocalDate fechaCompra;
+	protected LocalDateTime fechaCompra;
 
 	// Constructor sin parámetros
 	public Compra() {
@@ -35,7 +36,7 @@ public abstract class Compra {
 		return numeroDeControl;
 	}
 
-	public LocalDate getFechaCompra() {
+	public LocalDateTime getFechaCompra() {
 		return fechaCompra;
 	}
 
@@ -47,7 +48,8 @@ public abstract class Compra {
 		Compra.proximoNumeroDeControl = proximoNumeroDeControl;
 	}
 
-	public void setFechaCompra(LocalDate fechaCompra) {
+	public void setFechaCompra(LocalDateTime fechaCompra) 
+	{
 		this.fechaCompra = fechaCompra;
 	}
 

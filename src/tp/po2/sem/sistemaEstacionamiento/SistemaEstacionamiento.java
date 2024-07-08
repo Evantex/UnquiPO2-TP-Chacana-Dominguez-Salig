@@ -36,7 +36,8 @@ public class SistemaEstacionamiento
 	private RangoHorario rangoHorario;
 	private CalculadorDeTarifa calculador;
 
-	public SistemaEstacionamiento() {
+	public SistemaEstacionamiento() 
+	{
 		super();
 		this.estacionamientos = new HashSet<>();
 		this.usuarios = new HashSet<>();
@@ -46,7 +47,6 @@ public class SistemaEstacionamiento
 		this.setZonasDeEstacionamiento(new HashSet<>());
 		this.rangoHorario = new RangoHorario(horaLaboralInicio, horaLaboralFin);
 		this.calculador = new CalculadorDeTarifa();
-
 	}
 
 	// getters and setters
@@ -150,13 +150,14 @@ public class SistemaEstacionamiento
 	}
  
 	
-	public void puedeEstacionar(String patente, LocalTime horaInicio, LocalTime horaFin) throws Exception
+	public void puedeEstacionar(String patente, LocalDateTime horaInicio, LocalDateTime horaFin) throws Exception
 	{
 		this.verificarQueNoTengaYaUnEstacionamientoVigente(patente);
 		this.verificarHorasValidasParaEstacionamiento(horaInicio, horaFin);
 	}
 
-	public void verificarHorasValidasParaEstacionamiento(LocalTime horaInicio, LocalTime horaFin) throws Exception {
+	public void verificarHorasValidasParaEstacionamiento(LocalDateTime horaInicio, LocalDateTime horaFin) throws Exception 
+	{
 		rangoHorario.validarHoras(horaInicio, horaFin);
 	}
 
@@ -218,24 +219,21 @@ public class SistemaEstacionamiento
 
 	}
 
-	public void cobrarPorEstacionamiento(Estacionamiento estacionamiento ,Celular celular) throws Exception {
-		
+	public void cobrarPorEstacionamiento(Estacionamiento estacionamiento ,Celular celular) throws Exception 
+	{
 		double montoADisminuir = this.calcularCuantoCobrar(estacionamiento.getInicioEstacionamiento(), estacionamiento.getDuracionEnHoras());
 		estacionamiento.setCostoEstacionamiento(montoADisminuir);
 		celular.disminuirSaldo(montoADisminuir);
-		
 	}
 	
-	public double calcularCuantoCobrar(LocalDateTime inicioEstacionamiento, Duration cantidadDeHoras) throws Exception {
-		
+	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) throws Exception
+	{
 		RangoHorario rangoHorarioLaboral = this.getRangoHorario();
 		RangoHorario rangoHorarioEstacionamiento = new RangoHorario(inicioEstacionamiento, inicioEstacionamiento.plus(cantidadDeHoras));
 		
 		double montoFinal = calculador.determinarCobroPara(rangoHorarioLaboral, rangoHorarioEstacionamiento, precioPorHora);
 		
 		return montoFinal;
-
-	
 	}
 	
 
@@ -252,7 +250,8 @@ public class SistemaEstacionamiento
 	public void finalizarTodosLosEstacionamientos()
 	{
 		LocalTime horaActual = LocalTime.now();
-		if (horaActual == horaLaboralFin) {
+		if (horaActual == horaLaboralFin) 
+		{
 			this.estacionamientos.stream().filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
 					.forEach(e -> e.finalizarEstacionamiento()); // Finalizar solo los vigentes
 		}

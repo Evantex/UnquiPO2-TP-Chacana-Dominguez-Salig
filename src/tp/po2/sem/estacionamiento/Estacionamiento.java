@@ -11,8 +11,8 @@ import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
 public abstract class Estacionamiento
 {
-	protected LocalDateTime inicioEstacionamiento;
-	protected LocalDateTime  finEstacionamiento = null;
+	protected LocalTime inicioEstacionamiento;
+	protected LocalTime  finEstacionamiento = null;
 	protected String patenteVehiculo;
 	protected Duration duracionEnHoras;
 	protected double costoEstacionamiento;
@@ -23,17 +23,17 @@ public abstract class Estacionamiento
 
 	public void finalizarEstacionamiento() 
 	{ 
-		this.finEstacionamiento = LocalDateTime.now();
+		this.finEstacionamiento = LocalTime.now();
 	}
 
-	public LocalDateTime getInicioEstacionamiento() 
+	public LocalTime getInicioEstacionamiento() 
 	{
 		return this.inicioEstacionamiento;
 	}
 
-	public int getDuracionEnHoras() throws Exception 
+	public Duration getDuracionEnHoras() throws Exception 
 	{
-		return this.duracionEnHoras.toHoursPart();
+		return this.duracionEnHoras;
 	}
 
 	public String getPatente()
@@ -54,7 +54,7 @@ public abstract class Estacionamiento
 	public abstract boolean esEstacionamientoCompraPuntual();
 	public abstract boolean esEstacionamientoApp();
 
-	public LocalDateTime getFinEstacionamiento() 
+	public LocalTime getFinEstacionamiento() 
 	{	
 		return this.finEstacionamiento;
 	}

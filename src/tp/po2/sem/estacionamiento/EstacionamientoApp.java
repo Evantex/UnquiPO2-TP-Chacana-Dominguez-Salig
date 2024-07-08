@@ -32,7 +32,7 @@ public class EstacionamientoApp extends Estacionamiento
 	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
 	{
 		this.aplicacion = app;
-		this.inicioEstacionamiento = LocalDateTime.now();
+		this.inicioEstacionamiento = LocalTime.now();
 		this.patenteVehiculo = dominioVehiculo;
 		this.nroCelularApp = celular;
 	}
@@ -49,14 +49,6 @@ public class EstacionamientoApp extends Estacionamiento
 	public String getIdentificadorEstacionamiento() 
 	{
 		return this.nroCelularApp;
-	}
-
-
-
-	private void verificarSiFinalizo() throws Exception {
-		if (this.finEstacionamiento == null) {
-			throw new Exception("Aún no ha finalizado el estacionamiento.");
-		}
 	}
 
 	public App getAplicacion() {
@@ -79,11 +71,11 @@ public class EstacionamientoApp extends Estacionamiento
 	@Override
 	public void finalizarEstacionamiento() 
 	{
-		this.finEstacionamiento = LocalDateTime.now();
+		this.finEstacionamiento = LocalTime.now();
 		Duration duracion = Duration.between(this.inicioEstacionamiento, this.finEstacionamiento);
 		this.duracionEnHoras = duracion;
 	}
-	
+
 
 
 	public boolean esEstacionamientoCompraPuntual()
@@ -102,5 +94,26 @@ public class EstacionamientoApp extends Estacionamiento
 	}
 
 
+	@Override
+	public boolean estaVigente() 
+	{
+		try 
+		{
+			this.verificarSiFinalizo();
+			return false;
+		} 
+		catch (Exception e) 
+		{
+			return true;
+		}
+	}
+	
+	private void verificarSiFinalizo() throws Exception 
+	{
+		if (this.finEstacionamiento == null)
+		{
+			throw new Exception("Aún no ha finalizado el estacionamiento.");
+		}
+	}
 
 }

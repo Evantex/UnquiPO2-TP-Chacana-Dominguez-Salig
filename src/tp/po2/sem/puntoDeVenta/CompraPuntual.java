@@ -2,6 +2,7 @@ package tp.po2.sem.puntoDeVenta;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class CompraPuntual extends Compra {
@@ -14,7 +15,7 @@ public class CompraPuntual extends Compra {
 	}
 
 	// Constructor con parámetros
-	public CompraPuntual(PuntoDeVenta puntoDeVenta, LocalDate fechaCompra, LocalTime horaInicio,
+	public CompraPuntual(PuntoDeVenta puntoDeVenta, LocalDateTime fechaCompra, LocalTime horaInicio,
 			Duration horasCompradas) {
 		super();
 		this.puntoDeVenta = puntoDeVenta;

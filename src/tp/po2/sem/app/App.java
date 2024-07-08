@@ -2,6 +2,7 @@ package tp.po2.sem.app;
 
 import java.awt.Point;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import tp.po2.sem.sistemaEstacionamiento.*;
@@ -199,37 +200,7 @@ public class App implements MovementSensor
 	{
 		return deteccionDeDesplazamiento.seEncuentraActivada();
 	}
-
-
 	
-	/*
-	public void iniciarEstacionamiento() throws Exception
-	{
-		try
-		{
-			this.verificarEstacionamientoVigente();
-			this.verificarZonaEstacionamiento();
-			this.verificarSaldoSuficiente();
-			LocalTime horaInicioEstacionamiento = LocalTime.now();
-			LocalTime posibleHoraFinal = this.getHoraMaximaFinEstacionamiento();
-			
-			SEM.puedeEstacionar(this.getPatente(), horaInicioEstacionamiento, posibleHoraFinal);
-			
-			double posiblePrecio = this.calcularPosibleMontoSegunSaldo(horaInicioEstacionamiento, posibleHoraFinal);
-			 
-			// Si no se lanza la excepción, continuar con la creación del estacionamiento
-			EstacionamientoApp estacionamiento = new EstacionamientoApp(this, horaInicioEstacionamiento, posibleHoraFinal, posiblePrecio);
-			this.SEM.solicitudDeEstacionamientoApp(estacionamiento);
-			this.enviarDetallesInicioEstacionamiento(estacionamiento);
-		} 
-		catch (Exception e) 
-		{
-			this.notificarUsuario(e.getMessage());
-		}
-	}
-	*/
-	
-		
 		
 	public void iniciarEstacionamiento()
 	{
@@ -238,7 +209,7 @@ public class App implements MovementSensor
 	    	this.verificarValidacionesParaIniciarEstacionamiento();
 	        String celular = this.celularAsociado.getNroCelular();
 	        String patente = this.getPatente();
-	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
+	        EstacionamientoApp nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
 	        this.SEM.solicitudDeEstacionamientoApp( nuevoEstacionamiento );
 	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento ); 
 	    } 
@@ -258,12 +229,10 @@ public class App implements MovementSensor
 	
 	
 	private double calcularPosibleMontoSegunSaldo(LocalTime horaInicioEstacionamiento,
-		LocalTime horaMaximaFinEstacionamiento) throws Exception {
-		
-		Duration duracionEnHoras = Duration.between(horaInicioEstacionamiento, horaMaximaFinEstacionamiento);
-		
-		return SEM.calcularCuantoCobrar(horaInicioEstacionamiento, duracionEnHoras);
-		
+			LocalDateTime horaMaximaFinEstacionamiento) throws Exception 
+	{	
+		Duration duracionEnHoras = Duration.between(horaInicioEstacionamiento, horaMaximaFinEstacionamiento);	
+		return SEM.calcularCuantoCobrar(horaInicioEstacionamiento, duracionEnHoras);	
 	}
 
 	
@@ -284,16 +253,16 @@ public class App implements MovementSensor
 		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
 	}
 
+	
+	
 	public void solicitarCostoEstacionamiento(Celular celular, Estacionamiento est) throws Exception 
 	{
 		this.SEM.cobrarPorEstacionamiento(est, celular);
 	}
-
 	
 
 	// LOGICA DE Información al Usuario en Estacionamiento vía App
 
-	
 	public LocalTime getHoraMaximaFinEstacionamiento() 
 	{
 		LocalTime horaMáximaPermitidaSaldo = LocalTime.now().plusHours(this.getHorasMaximasPermitidasEstacionamiento());
@@ -302,8 +271,8 @@ public class App implements MovementSensor
 		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo
 				: horaMáximaPermitidaDelDía;
 	}
-
 	
+
 	public int getHorasMaximasPermitidasEstacionamiento()
 	{
 		double saldoCelular = this.celularAsociado.getSaldo();

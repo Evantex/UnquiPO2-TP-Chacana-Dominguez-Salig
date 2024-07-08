@@ -6,35 +6,37 @@ import java.time.LocalTime;
 public class RangoHorario 
 {
 
-	private LocalDateTime horaInicioRango;
-	private LocalDateTime horaFinRango;
+	private LocalTime horaInicioRango;
+	private LocalTime horaFinRango;
 
-	public RangoHorario(LocalDateTime horaInicio, LocalDateTime horaFin) {
+	public RangoHorario(LocalTime horaInicio, LocalTime horaFin)
+	{
 		this.horaInicioRango = horaInicio;
 		this.horaFinRango = horaFin;
 	}
 	
 	
 	
-	public LocalDateTime getHoraInicioRango() {
+	public LocalTime getHoraInicioRango() {
 		return horaInicioRango;
 	}
 
 
 
-	public void setHoraInicioRango(LocalDateTime horaInicioRango) {
+	public void setHoraInicioRango(LocalTime horaInicioRango) 
+	{
 		this.horaInicioRango = horaInicioRango;
 	}
 
 
 
-	public LocalDateTime getHoraFinRango() {
+	public LocalTime getHoraFinRango() {
 		return horaFinRango;
 	}
 
 
 
-	public void setHoraFinRango(LocalDateTime horaFinRango) {
+	public void setHoraFinRango(LocalTime horaFinRango) {
 		this.horaFinRango = horaFinRango;
 	}
 
@@ -54,10 +56,9 @@ public class RangoHorario
 
 	}
 
-	 public boolean estaDentroDelRango(LocalDateTime hora) {
-		
-		return hora.isAfter(horaInicioRango) && hora.isBefore(horaFinRango);
-		
+	 public boolean estaDentroDelRango(LocalTime hora) 
+	 {	
+		return hora.isAfter(horaInicioRango) && hora.isBefore(horaFinRango);		
 	}
 
 }
