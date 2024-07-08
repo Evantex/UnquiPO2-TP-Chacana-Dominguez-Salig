@@ -10,7 +10,7 @@ public class ModalidadCaminando implements ModoDesplazamiento {
 	{
 		if (aplicacion.tieneEstacionamientoVigente() && aplicacion.validarMismoPuntoGeografico())
 		{
-			aplicacion.notificarUsuario("Alerta Fin estacionamiento");
+			aplicacion.notificarUsuario("Posible fin de estacionamiento.");
 			aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
 			this.update(aplicacion);
 		}

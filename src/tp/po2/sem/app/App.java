@@ -141,16 +141,14 @@ public class App implements MovementSensor
 		modoDeDesplazamiento.conduciendo(this);
 	}
 	
+	
 	@Override
 	public void walking() throws Exception
 	{
 		modoDeDesplazamiento.caminando(this);
 	}
 	
-	
-	
-	
-	
+
 	// VALIDACIONES
 	public void verificarSaldoSuficiente() throws Exception
 	{
@@ -203,6 +201,8 @@ public class App implements MovementSensor
 	}
 
 
+	
+	/*
 	public void iniciarEstacionamiento() throws Exception
 	{
 		try
@@ -227,6 +227,34 @@ public class App implements MovementSensor
 			this.notificarUsuario(e.getMessage());
 		}
 	}
+	*/
+	
+		
+		
+	public void iniciarEstacionamiento()
+	{
+	    try 
+	    {	
+	    	this.verificarValidacionesParaIniciarEstacionamiento();
+	        String celular = this.celularAsociado.getNroCelular();
+	        String patente = this.getPatente();
+	        Estacionamiento nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
+	        this.SEM.solicitudDeEstacionamientoApp( nuevoEstacionamiento );
+	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento ); 
+	    } 
+	    catch (Exception e)
+	    {
+	        this.notificarUsuario( e.getMessage() );
+	    }
+	}
+	
+	
+	public void verificarValidacionesParaIniciarEstacionamiento() throws Exception
+{
+		this.verificarEstacionamientoVigente();
+		this.verificarSaldoSuficiente();
+		this.verificarZonaEstacionamiento();
+	}
 	
 	
 	private double calcularPosibleMontoSegunSaldo(LocalTime horaInicioEstacionamiento,
@@ -238,9 +266,10 @@ public class App implements MovementSensor
 		
 	}
 
+	
 	public void notificarUsuario(String msg) 
 	{
-		this.modoNotificacion.notificar(this.celularAsociado, msg);
+		this.getModoNotificacion().notificar(this, msg);
 	}
 	
 
@@ -249,87 +278,60 @@ public class App implements MovementSensor
 		String Numerocelular = this.celularAsociado.getNroCelular();
 		Celular celular = this.celularAsociado;
 		Estacionamiento est = this.SEM.getEstacionamiento(Numerocelular);
-
 		this.SEM.finalizarEstacionamiento(Numerocelular);
 		solicitarCostoEstacionamiento(celular, est);
 		this.enviarDetallesFinEstacionamiento(est);
 		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
 	}
 
-	public void solicitarCostoEstacionamiento(Celular celular, Estacionamiento est) throws Exception {
-		
+	public void solicitarCostoEstacionamiento(Celular celular, Estacionamiento est) throws Exception 
+	{
 		this.SEM.cobrarPorEstacionamiento(est, celular);
 	}
-	
-	public LocalTime getHoraMaximaFinEstacionamiento() {
 
+	
+
+	// LOGICA DE Información al Usuario en Estacionamiento vía App
+
+	
+	public LocalTime getHoraMaximaFinEstacionamiento() 
+	{
 		LocalTime horaMáximaPermitidaSaldo = LocalTime.now().plusHours(this.getHorasMaximasPermitidasEstacionamiento());
-		
-		LocalTime horaMáximaPermitidaDelDía = SistemaEstacionamiento.getHoraLaboralFin();
+				LocalTime horaMáximaPermitidaDelDía = SistemaEstacionamiento.getHoraLaboralFin();
 
 		return horaMáximaPermitidaSaldo.isBefore(horaMáximaPermitidaDelDía) ? horaMáximaPermitidaSaldo
 				: horaMáximaPermitidaDelDía;
 	}
 
-	public int getHorasMaximasPermitidasEstacionamiento() {
+	
+	public int getHorasMaximasPermitidasEstacionamiento()
+	{
 		double saldoCelular = this.celularAsociado.getSaldo();
 		int precioPorHora = SistemaEstacionamiento.getPrecioporhora();
 		return (int) Math.floor(saldoCelular / precioPorHora); // Usamos floor para redondear hacia abajo
 	}
 	
-	// LOGICA DE Información al Usuario en Estacionamiento vía App
 	
-	public void enviarDetallesInicioEstacionamiento(EstacionamientoApp estacionamiento) {
-		
+	public void enviarDetallesInicioEstacionamiento( Estacionamiento estacionamiento )
+	{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		
-		String inicio = "Hora de inicio del estacionamiento: "
-				+ estacionamiento.getInicioEstacionamiento().format(formatter);
-		
-		String fin = "Hora máxima fin del estacionamiento respecto al saldo: "
-				+ this.getHoraMaximaFinEstacionamiento().format(formatter);
-		
+		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
+		String fin = "Hora máxima fin del estacionamiento respecto al saldo: " + this.getHoraMaximaFinEstacionamiento().format(formatter);
 		String msg = inicio + "\n" + fin;
-		
-		this.notificarUsuario(msg);
-	}
-
-	public void enviarDetallesFinEstacionamiento(Estacionamiento estacionamiento) throws Exception {
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-		String inicio = "Hora de inicio del estacionamiento: "
-
-				+ estacionamiento.getInicioEstacionamiento().format(formatter);
-
-		String fin = "Hora fin del estacionamiento: "
-
-				+ estacionamiento.getFinEstacionamiento().format(formatter);
-
-		String duracion = "La duración en horas del estacionamiento fué de " + estacionamiento.getDuracionEnHoras();
-
-		String precio = "El costo del estacionamiento fué de: " + estacionamiento.getCostoEstacionamiento();
-
-		String msg = inicio + "\n" + fin + "\n" + duracion + "\n" + precio;
-
 		this.notificarUsuario(msg);
 	}
 
 	
-	/*
-	 * public void setNombreUltimaZonaEstacionamiento() {
-	 * this.modoDeDesplazamiento.setNombreZonaEstacionamientoActual(
-	 * this.getNombreEstacionamientoVigenteActual() ); }
-	 * 
-	 * 
-	 * public String getNombreUltimaZonaEstacionamiento() { return
-	 * this.modoDeDesplazamiento.getNombreZonaEstacionamientoActual(); }
-	 * 
-	 * 
-	 * public String getNombreEstacionamientoVigenteActual() { // Colocar excepción
-	 * en el caso de que la respuesta de. getEstacionamiento de SEM sea un
-	 * NullPointerExcepcion... return this.SEM.getEstacionamiento(
-	 * this.celularAsociado.getNroCelular() ).getIdentificadorEstacionamiento(); }
-	 */
+	public void enviarDetallesFinEstacionamiento( Estacionamiento estacionamiento ) throws Exception
+	{
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
+		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
+		String duracion = "La duración en horas del estacionamiento fué de " + estacionamiento.getDuracionEnHoras();
+		String precio = "El costo del estacionamiento fué de: " + estacionamiento.getCostoEstacionamiento();
+		String msg = inicio + "\n" + fin + "\n" + duracion + "\n" + precio;
+		this.notificarUsuario(msg);
+	}
+	
 
 }

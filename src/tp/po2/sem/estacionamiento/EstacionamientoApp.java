@@ -8,12 +8,16 @@ import java.time.LocalTime;
 import tp.po2.sem.app.*;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
-public class EstacionamientoApp extends Estacionamiento {
+public class EstacionamientoApp extends Estacionamiento 
+{
 	private App aplicacion;
 	private String nroCelularApp;
 
+	
+	/*
 	public EstacionamientoApp(App app, LocalTime horaInicioEstacionamiento, LocalTime posibleHoraFinal,
-			double posiblePrecio) {
+			double posiblePrecio) 
+	{
 		this.aplicacion = app;
 		this.inicioEstacionamiento = horaInicioEstacionamiento;
 		this.finEstacionamiento = posibleHoraFinal;
@@ -23,6 +27,16 @@ public class EstacionamientoApp extends Estacionamiento {
 		this.nroCelularApp = app.getNroCelularAsociado();
 		this.vigenciaEstacionamiento = new EstacionamientoVigente();
 	}
+	*/
+	
+	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
+	{
+		this.aplicacion = app;
+		this.inicioEstacionamiento = LocalDateTime.now();
+		this.patenteVehiculo = dominioVehiculo;
+		this.nroCelularApp = celular;
+	}
+	
 
 	@Override
 	public double getCostoEstacionamiento() throws Exception {
@@ -32,17 +46,12 @@ public class EstacionamientoApp extends Estacionamiento {
 
 
 	@Override
-	public String getIdentificadorEstacionamiento() {
+	public String getIdentificadorEstacionamiento() 
+	{
 		return this.nroCelularApp;
 	}
 
-	@Override
-	public void finalizarEstacionamiento() {
-		this.finEstacionamiento = LocalTime.now();
-		Duration duracion = (Duration.between(this.inicioEstacionamiento, this.finEstacionamiento));
-		this.duracionEnHoras = duracion;
-		this.vigenciaEstacionamiento = new EstacionamientoNoVigente();
-	}
+
 
 	private void verificarSiFinalizo() throws Exception {
 		if (this.finEstacionamiento == null) {
@@ -67,19 +76,28 @@ public class EstacionamientoApp extends Estacionamiento {
 	}
 
 
-	public void setFinEstacionamiento(LocalTime finEstacionamiento) {
-		this.finEstacionamiento = finEstacionamiento;
+	@Override
+	public void finalizarEstacionamiento() 
+	{
+		this.finEstacionamiento = LocalDateTime.now();
+		Duration duracion = Duration.between(this.inicioEstacionamiento, this.finEstacionamiento);
+		this.duracionEnHoras = duracion;
 	}
+	
 
-	public boolean esEstacionamientoCompraPuntual() {
+
+	public boolean esEstacionamientoCompraPuntual()
+	{
 		return false;
 	}
 
-	public boolean esEstacionamientoApp() {
+	public boolean esEstacionamientoApp()
+{
 		return true;
 	}
 
-	public String getNroCelular() {
+	public String getNroCelular() 
+	{
 		return this.nroCelularApp;
 	}
 

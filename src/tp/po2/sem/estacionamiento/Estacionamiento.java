@@ -9,52 +9,56 @@ import java.util.concurrent.Semaphore;
 
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
 
-public abstract class Estacionamiento {
-	protected LocalTime inicioEstacionamiento;
-	protected LocalTime finEstacionamiento;
+public abstract class Estacionamiento
+{
+	protected LocalDateTime inicioEstacionamiento;
+	protected LocalDateTime  finEstacionamiento = null;
 	protected String patenteVehiculo;
-	protected EstadoEstacionamiento vigenciaEstacionamiento;
 	protected Duration duracionEnHoras;
 	protected double costoEstacionamiento;
 
-	public abstract String getIdentificadorEstacionamiento();
+	// public abstract String getIdentificadorEstacionamiento();
 
-	public boolean estaVigente() {
-		return vigenciaEstacionamiento.estaVigente();
+	public abstract boolean estaVigente();
+
+	public void finalizarEstacionamiento() 
+	{ 
+		this.finEstacionamiento = LocalDateTime.now();
 	}
 
-	public void finalizarEstacionamiento() {
-		this.vigenciaEstacionamiento = new EstacionamientoNoVigente();
-	}
-
-	public LocalTime getInicioEstacionamiento() {
+	public LocalDateTime getInicioEstacionamiento() 
+	{
 		return this.inicioEstacionamiento;
 	}
 
-	public Duration getDuracionEnHoras() throws Exception {
-		return this.duracionEnHoras;
+	public int getDuracionEnHoras() throws Exception 
+	{
+		return this.duracionEnHoras.toHoursPart();
 	}
 
-	public String getPatente() {
-
+	public String getPatente()
+	{
 		return this.patenteVehiculo;
 	}
 	
-	public double getCostoEstacionamiento() throws Exception {
+	public double getCostoEstacionamiento() throws Exception 
+	{
 		return this.costoEstacionamiento;
 	}
 	
-	public void setCostoEstacionamiento(double costo) {
+	public void setCostoEstacionamiento(double costo) 
+	{
 		this.costoEstacionamiento = costo;
 	}
 	
 	public abstract boolean esEstacionamientoCompraPuntual();
-
 	public abstract boolean esEstacionamientoApp();
 
-	public LocalTime getFinEstacionamiento() {
-		
+	public LocalDateTime getFinEstacionamiento() 
+	{	
 		return this.finEstacionamiento;
 	}
+
+	public abstract String getIdentificadorEstacionamiento();
 
 }

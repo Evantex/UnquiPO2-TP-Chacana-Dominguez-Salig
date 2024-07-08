@@ -20,12 +20,11 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
         this.finEstacionamiento = compraAsociada.getHoraFin();
         this.patenteVehiculo = patenteVehiculo;
         this.duracionEnHoras = compraAsociada.getHorasCompradas();
-        this.vigenciaEstacionamiento = new EstacionamientoVigente();
-        
     }
     
     @Override
-    public String getIdentificadorEstacionamiento() {
+    public String getIdentificadorEstacionamiento() 
+    {
         return this.patenteVehiculo;
     }
     
@@ -34,7 +33,8 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
         return compraAsociada;
     }
     
-	public boolean esEstacionamientoCompraPuntual() {
+	public boolean esEstacionamientoCompraPuntual()
+	{
 		return true;
 	}
 

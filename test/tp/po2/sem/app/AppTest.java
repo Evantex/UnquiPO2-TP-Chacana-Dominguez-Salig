@@ -108,7 +108,6 @@ public class AppTest
 	    });
 		
 		assertEquals("Ya tienes un estacionamiento vigente", exception.getMessage());
-		
 	}
 	
 	@Test

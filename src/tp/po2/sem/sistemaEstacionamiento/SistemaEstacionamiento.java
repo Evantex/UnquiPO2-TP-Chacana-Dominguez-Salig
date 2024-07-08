@@ -134,15 +134,14 @@ public class SistemaEstacionamiento
 
 	}
 
-	public void solicitudDeEstacionamientoApp(EstacionamientoApp unEstacionamiento) {
-		
+	public void solicitudDeEstacionamientoApp(EstacionamientoApp unEstacionamiento)
+	{
 		this.registrarEstacionamiento(unEstacionamiento);
 		this.notificarSistemaAlertasInicioEstacionamiento(unEstacionamiento);
-
 	}
 
-	public void solicitudDeEstacionamientoCompraPuntual(String patente, CompraPuntual compraAsociada) throws Exception {
-
+	public void solicitudDeEstacionamientoCompraPuntual(String patente, CompraPuntual compraAsociada) throws Exception
+	{
 		EstacionamientoCompraPuntual estacionamiento = new EstacionamientoCompraPuntual(patente, compraAsociada);
 		double costoEstacionamiento = this.calcularCuantoCobrar(compraAsociada.getHoraInicio(), compraAsociada.getHorasCompradas());
 		estacionamiento.setCostoEstacionamiento(costoEstacionamiento);
@@ -192,7 +191,8 @@ public class SistemaEstacionamiento
 
 	// Logica Inspector
 
-	public boolean poseeEstacionamientoVigente(String patente) {
+	public boolean poseeEstacionamientoVigente(String patente)
+	{
 		return this.estacionamientos.stream().anyMatch(e -> e.estaVigente() && e.getPatente().equals(patente));
 	}
 
@@ -226,7 +226,7 @@ public class SistemaEstacionamiento
 		
 	}
 	
-	public double calcularCuantoCobrar(LocalTime inicioEstacionamiento, Duration cantidadDeHoras) throws Exception {
+	public double calcularCuantoCobrar(LocalDateTime inicioEstacionamiento, Duration cantidadDeHoras) throws Exception {
 		
 		RangoHorario rangoHorarioLaboral = this.getRangoHorario();
 		RangoHorario rangoHorarioEstacionamiento = new RangoHorario(inicioEstacionamiento, inicioEstacionamiento.plus(cantidadDeHoras));

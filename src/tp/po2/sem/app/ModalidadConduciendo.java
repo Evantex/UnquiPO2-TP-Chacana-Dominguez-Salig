@@ -8,7 +8,7 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	{
 		if ( !aplicacion.tieneEstacionamientoVigente() && aplicacion.estaDentroDeZonaEstacionamiento() )
 		{			
-			aplicacion.getModoNotificacion().notificar(aplicacion, "Posible inicio de estacionamiento");
+			aplicacion.notificarUsuario("Posible inicio de estacionamiento");
 			aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion);
 			this.update(aplicacion);
 		}
