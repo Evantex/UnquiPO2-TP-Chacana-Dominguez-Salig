@@ -16,14 +16,22 @@ public abstract class Estacionamiento
 	protected String patenteVehiculo;
 	protected Duration duracionEnHoras;
 	protected double costoEstacionamiento;
+	protected boolean vigenciaEstacionamiento;
 
 	// public abstract String getIdentificadorEstacionamiento();
-
-	public abstract boolean estaVigente();
+	
+	public Estacionamiento () {
+		vigenciaEstacionamiento = true;
+	}
+	
+	public boolean estaVigente(){
+		return vigenciaEstacionamiento;
+	}
 
 	public void finalizarEstacionamiento() 
 	{ 
 		this.finEstacionamiento = LocalTime.now();
+		this.vigenciaEstacionamiento = false;
 	}
 
 	public LocalTime getInicioEstacionamiento() 

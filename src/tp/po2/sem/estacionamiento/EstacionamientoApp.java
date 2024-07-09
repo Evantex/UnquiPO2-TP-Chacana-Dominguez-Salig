@@ -31,6 +31,7 @@ public class EstacionamientoApp extends Estacionamiento
 	
 	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
 	{
+		super();
 		this.aplicacion = app;
 		this.inicioEstacionamiento = LocalTime.now();
 		this.patenteVehiculo = dominioVehiculo;
@@ -72,11 +73,11 @@ public class EstacionamientoApp extends Estacionamiento
 	@Override
 	public void finalizarEstacionamiento() 
 	{
-		this.finEstacionamiento = LocalTime.now();
+		super.finalizarEstacionamiento();
 		Duration duracion = Duration.between(this.inicioEstacionamiento, this.finEstacionamiento);
 		this.duracionEnHoras = duracion;
+		
 	}
-
 
 
 	public boolean esEstacionamientoCompraPuntual()
@@ -94,20 +95,6 @@ public class EstacionamientoApp extends Estacionamiento
 		return this.nroCelularApp;
 	}
 
-
-	@Override
-	public boolean estaVigente() 
-	{
-		try 
-		{
-			this.verificarSiFinalizo();
-			return false;
-		} 
-		catch (Exception e) 
-		{
-			return true;
-		}
-	}
 	
 	private void verificarSiFinalizo() throws Exception 
 	{

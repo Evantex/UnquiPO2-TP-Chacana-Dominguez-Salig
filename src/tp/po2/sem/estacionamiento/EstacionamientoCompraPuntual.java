@@ -15,6 +15,7 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
     // Constructor que inicializa el estacionamiento con la duración comprada
     public EstacionamientoCompraPuntual(String patenteVehiculo, CompraPuntual compraAsociada) 
     {
+    	super();
     	this.compraAsociada = compraAsociada;
         this.inicioEstacionamiento = compraAsociada.getHoraInicio();
         this.finEstacionamiento = compraAsociada.getHoraFin();
