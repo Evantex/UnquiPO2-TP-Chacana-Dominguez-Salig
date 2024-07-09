@@ -18,11 +18,11 @@ public class App implements MovementSensor
 
 	private SistemaEstacionamiento SEM;
 	
-	private ModoApp modoApp; // Strategy
-	private ModoDesplazamiento modoDeDesplazamiento; // State
+	private ModoApp modoApp; // Strategy manual/automatico
+	private ModoDesplazamiento modoDeDesplazamiento; // State driving/walking
 	private EstadoGPS deteccionDeDesplazamiento;
-	private ModoNotificaciones modoNotificacion; // Strategy
-	
+	private ModoNotificaciones modoNotificacion; // Strategy notificacionActivada/Desactivada
+	private EstadoEstacionamiento estadoEstacionamiento;
 	
 	private Celular celularAsociado;
 	private Point ubicacionUltimoEstacionamiento;
@@ -43,7 +43,18 @@ public class App implements MovementSensor
 	{
 		this.modoApp = modo;
 	}
-
+	
+	public EstadoEstacionamiento getEstadoEstacionamiento()
+	{
+		return this.estadoEstacionamiento;
+	}
+	
+	public void setEstadoEstacionamiento( EstadoEstacionamiento estado )
+	{
+		this.estadoEstacionamiento = estado;
+	}
+	
+	
 	public Celular getCelularAsociado() {
 		return celularAsociado;
 	}
@@ -201,6 +212,8 @@ public class App implements MovementSensor
 	        this.SEM.solicitudDeEstacionamientoApp( nuevoEstacionamiento );
 	        this.modoApp.notificacionModoApp(this, "Se ha iniciado un estacionamiento de forma automática");
 	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
+	        this.modoDeDesplazamiento.update(this);
+	        this.setEstadoEstacionamiento(new Vigente());
 	    } 
 	    catch (Exception e)
 	    {
@@ -210,11 +223,17 @@ public class App implements MovementSensor
 	
 	
 	public void verificarValidacionesParaIniciarEstacionamiento() throws Exception
-{
+	{
 		this.SEM.verificarQueNoTengaYaUnEstacionamientoVigente(this.getPatente());
 		this.verificarSaldoSuficiente();
 		this.verificarZonaEstacionamiento();
 	}
+	
+	public void verificarValidacionesParaFinalizarEstacionamiento() throws Exception
+	{
+		
+	}
+	
 	
 	
 	private double calcularPosibleMontoSegunSaldo(LocalTime horaInicioEstacionamiento,
@@ -241,6 +260,8 @@ public class App implements MovementSensor
 		this.modoApp.notificacionModoApp(this, "Se ha finalizado un estacionamiento de forma automática");
 		this.enviarDetallesFinEstacionamiento(est);
 		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
+		this.modoDeDesplazamiento.update(this);
+		this.setEstadoEstacionamiento(new NoVigente());
 	}
 
 	

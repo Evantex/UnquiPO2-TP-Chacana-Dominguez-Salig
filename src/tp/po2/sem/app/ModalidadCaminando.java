@@ -8,18 +8,23 @@ public class ModalidadCaminando implements ModoDesplazamiento {
 	@Override
 	public void conduciendo(App aplicacion) throws Exception 
 	{
-		if (aplicacion.tieneEstacionamientoVigente() && aplicacion.validarMismoPuntoGeografico())
-		{
-			aplicacion.notificarUsuario("Posible fin de estacionamiento.");
-			aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
-			this.update(aplicacion);
-		}
+		aplicacion.getEstadoEstacionamiento().posibleFinEstacionamiento(this, aplicacion);
 	}
 
 	@Override
 	public void update(App aplicacion)
 	{
 		aplicacion.setModoDeDesplazamiento(new ModalidadConduciendo());
+	}
+
+	@Override
+	public void inicioEstacionamiento(App aplicacion) throws Exception {}
+
+	@Override
+	public void finEstacionamiento(App aplicacion) throws Exception 
+	{
+		aplicacion.notificarUsuario("Posible fin de estacionamiento.");
+		aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
 	}
 
 }

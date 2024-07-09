@@ -6,13 +6,14 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	@Override
 	public void caminando(App aplicacion) throws Exception 
 	{
-		if ( !aplicacion.tieneEstacionamientoVigente() && aplicacion.estaDentroDeZonaEstacionamiento() )
-		{			
-			aplicacion.notificarUsuario("Posible inicio de estacionamiento");
-			aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion);
-			this.update(aplicacion);
-		}
-	} 
+		aplicacion.getEstadoEstacionamiento().posibleInicioEstacionamiento(this, aplicacion);
+	}
+	
+	public void inicioEstacionamiento( App aplicacion ) throws Exception
+	{
+		aplicacion.notificarUsuario("Posible inicio de estacionamiento");
+		aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion);
+	}
 
 	@Override
 	public void update(App aplicacion) 
@@ -23,5 +24,8 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	
 	@Override
 	public void conduciendo(App aplicacion) {}
+
+	@Override
+	public void finEstacionamiento(App aplicacion) {}
 
 }
