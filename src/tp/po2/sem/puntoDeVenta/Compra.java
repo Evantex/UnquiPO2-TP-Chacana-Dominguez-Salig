@@ -9,7 +9,7 @@ public abstract class Compra {
 
 	protected PuntoDeVenta puntoDeVenta;
 	protected int numeroDeControl;
-	protected LocalDateTime fechaCompra;
+	protected LocalDate fechaCompra;
 
 	// Constructor sin parámetros
 	public Compra() {
@@ -36,7 +36,7 @@ public abstract class Compra {
 		return numeroDeControl;
 	}
 
-	public LocalDateTime getFechaCompra() {
+	public LocalDate getFechaCompra() {
 		return fechaCompra;
 	}
 
@@ -48,7 +48,7 @@ public abstract class Compra {
 		Compra.proximoNumeroDeControl = proximoNumeroDeControl;
 	}
 
-	public void setFechaCompra(LocalDateTime fechaCompra) 
+	public void setFechaCompra(LocalDate fechaCompra) 
 	{
 		this.fechaCompra = fechaCompra;
 	}

@@ -157,13 +157,13 @@ public class SistemaEstacionamiento
 	}
  
 	
-	public void puedeEstacionar(String patente, LocalDateTime horaInicio, LocalDateTime horaFin) throws Exception
+	public void puedeEstacionar(String patente, LocalTime horaInicio, LocalTime horaFin) throws Exception
 	{
 		this.verificarQueNoTengaYaUnEstacionamientoVigente(patente);
 		this.verificarHorasValidasParaEstacionamiento(horaInicio, horaFin);
 	}
 
-	public void verificarHorasValidasParaEstacionamiento(LocalDateTime horaInicio, LocalDateTime horaFin) throws Exception 
+	public void verificarHorasValidasParaEstacionamiento(LocalTime horaInicio, LocalTime horaFin) throws Exception 
 	{
 		rangoHorario.validarHoras(horaInicio, horaFin);
 	}
