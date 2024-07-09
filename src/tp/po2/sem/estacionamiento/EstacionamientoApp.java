@@ -39,7 +39,8 @@ public class EstacionamientoApp extends Estacionamiento
 	
 
 	@Override
-	public double getCostoEstacionamiento() throws Exception {
+	public double getCostoEstacionamiento() throws Exception
+	{
 		verificarSiFinalizo();
 		return super.getCostoEstacionamiento();
 	}

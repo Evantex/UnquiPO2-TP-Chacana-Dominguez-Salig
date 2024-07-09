@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -24,7 +25,7 @@ import tp.po2.sem.tarifasEstacionamiento.CalculadorDeTarifa;
 
 public class SistemaEstacionamiento
 {
-	private static final int precioPorHora = 40;
+	private int precioPorHora = 40;
 	private static final LocalTime horaLaboralInicio = LocalTime.of(7, 0);
 	private static final LocalTime horaLaboralFin = LocalTime.of(20, 0);
 	private Set<Estacionamiento> estacionamientos;
@@ -59,7 +60,8 @@ public class SistemaEstacionamiento
 		return horaLaboralFin;
 	}
 
-	public static int getPrecioporhora() {
+	public int getPrecioPorHora() 
+	{
 		return precioPorHora;
 	}
 
@@ -93,6 +95,11 @@ public class SistemaEstacionamiento
 
 	public Set<Celular> getUsuarios() {
 		return usuarios;
+	}
+	
+	public int getCantidadUsuarios()
+	{
+		return this.usuarios.size();
 	}
 
 	public void setUsuarios(Set<Celular> usuarios) {
@@ -129,9 +136,9 @@ public class SistemaEstacionamiento
 		comprasPuntoDeVenta.add(compra);
 	}
 
-	public void registrarEstacionamiento(Estacionamiento estacionamiento) {
+	public void registrarEstacionamiento(Estacionamiento estacionamiento) 
+	{
 		estacionamientos.add(estacionamiento);
-
 	}
 
 	public void solicitudDeEstacionamientoApp(EstacionamientoApp unEstacionamiento)
@@ -172,23 +179,32 @@ public class SistemaEstacionamiento
 
 	// CAMBIAR RECARGAS
 
-	public void cargarCelular(String nroCelular, double saldo) {
-		Optional<Celular> usuarioEncontrado = usuarios.stream()
-				.filter(usuario -> usuario.getNroCelular().equals(nroCelular)).findFirst();
-
-		if (usuarioEncontrado.isPresent()) {
-			Celular usuario = usuarioEncontrado.get();
-			usuario.recibirRecargaDeSaldo(saldo);
-		} else {
-			Celular usuarionuevo = new Celular(nroCelular, saldo);
-			agregarUsuario(usuarionuevo); // Añadir el nuevo usuario a la lista
-			usuarionuevo.recibirRecargaDeSaldo(saldo);
+	
+	
+	public void cargarCelular(Celular cel, double saldo) 
+	{
+		this.agregarUsuario(cel);
+		cel.recibirRecargaDeSaldo(saldo);
+	}
+	
+	public void agregarUsuario(Celular cel)
+	{
+		if( !this.usuarios.contains(cel) )
+		{
+			this.usuarios.add(cel);
 		}
 	}
-
-	public void agregarUsuario(Celular c) {
-		usuarios.add(c);
+	
+	public Celular getUsuarioPorNro( String nroCelular )
+	{
+		return this.usuarios.stream()
+					.filter( celular -> celular.getNroCelular().equals(nroCelular ))
+					.findFirst()
+					.orElseThrow(() -> new NoSuchElementException("El usuario no se encuentra registrado"));
 	}
+	
+
+	
 
 	// Logica Inspector
 
@@ -279,7 +295,5 @@ public class SistemaEstacionamiento
 		sistemaAlertas
 				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, unEstacionamento));
 	}
-
-	
 
 }

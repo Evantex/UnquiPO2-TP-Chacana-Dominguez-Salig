@@ -8,7 +8,7 @@ public class NotificacionActivada implements ModoNotificaciones
 	@Override
 	public void notificar(App aplicacion, String msg)
 	{
-		aplicacion.notificarUsuario(msg);		
+		aplicacion.getCelularAsociado().recibirMensaje(msg);
 	}
 
 }

@@ -7,4 +7,9 @@ public class Manual implements ModoApp
 
 	@Override
 	public void finalizarEstacionamiento(App aplicacion){}
+
+	@Override
+	public void notificacionModoApp(App aplicacion, String msg) {}
+	
+	
 }

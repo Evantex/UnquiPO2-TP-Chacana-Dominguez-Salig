@@ -10,6 +10,8 @@ import tp.po2.sem.appGPS.EstadoGPS;
 import tp.po2.sem.appGPS.UbicacionDesactivada;
 import tp.po2.sem.appModoNotificaciones.ModoNotificaciones;
 import tp.po2.sem.estacionamiento.*;
+import tp.po2.sem.appModoNotificaciones.*;
+
 
 public class App implements MovementSensor 
 {
@@ -32,6 +34,7 @@ public class App implements MovementSensor
 		this.SEM = sistema;
 		this.patenteAsociada = patenteAsociada;
 		this.deteccionDeDesplazamiento = new UbicacionDesactivada();
+		this.modoNotificacion = new NotificacionActivada();
 	}
 	
 	//GETTERS Y SETTERS
@@ -153,7 +156,7 @@ public class App implements MovementSensor
 	// VALIDACIONES
 	public void verificarSaldoSuficiente() throws Exception
 	{
-		if (celularAsociado.getSaldo() < 40) 
+		if (celularAsociado.getSaldo() < this.SEM.getPrecioPorHora() ) 
 		{
 			throw new Exception("No tiene saldo suficiente para estacionar.");
 		}
@@ -175,21 +178,6 @@ public class App implements MovementSensor
 	}
 	
 	
-	public boolean tieneEstacionamientoVigente() 
-	{
-		return SEM.poseeEstacionamientoVigente(patenteAsociada);
-	}
-	
-	
-	public void verificarEstacionamientoVigente() throws Exception 
-	{
-		if ( !this.tieneEstacionamientoVigente() )
-		{
-			throw new Exception("Ya tienes un estacionamiento vigente");
-		}
-	}
-	
-	
 	public boolean validarMismoPuntoGeografico() 
 	{
 		return this.getUbicacionActual() == this.getUbicacionEstacionamiento();
@@ -204,14 +192,15 @@ public class App implements MovementSensor
 		
 	public void iniciarEstacionamiento()
 	{
-	    try 
+	    try
 	    {	
 	    	this.verificarValidacionesParaIniciarEstacionamiento();
 	        String celular = this.celularAsociado.getNroCelular();
 	        String patente = this.getPatente();
 	        EstacionamientoApp nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
 	        this.SEM.solicitudDeEstacionamientoApp( nuevoEstacionamiento );
-	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento ); 
+	        this.modoApp.notificacionModoApp(this, "Se ha iniciado un estacionamiento de forma automática");
+	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
 	    } 
 	    catch (Exception e)
 	    {
@@ -222,7 +211,7 @@ public class App implements MovementSensor
 	
 	public void verificarValidacionesParaIniciarEstacionamiento() throws Exception
 {
-		this.verificarEstacionamientoVigente();
+		this.SEM.verificarQueNoTengaYaUnEstacionamientoVigente(this.getPatente());
 		this.verificarSaldoSuficiente();
 		this.verificarZonaEstacionamiento();
 	}
@@ -249,6 +238,7 @@ public class App implements MovementSensor
 		Estacionamiento est = this.SEM.getEstacionamiento(Numerocelular);
 		this.SEM.finalizarEstacionamiento(Numerocelular);
 		solicitarCostoEstacionamiento(celular, est);
+		this.modoApp.notificacionModoApp(this, "Se ha finalizado un estacionamiento de forma automática");
 		this.enviarDetallesFinEstacionamiento(est);
 		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
 	}
@@ -276,7 +266,7 @@ public class App implements MovementSensor
 	public int getHorasMaximasPermitidasEstacionamiento()
 	{
 		double saldoCelular = this.celularAsociado.getSaldo();
-		int precioPorHora = SistemaEstacionamiento.getPrecioporhora();
+		int precioPorHora = SEM.getPrecioPorHora();
 		return (int) Math.floor(saldoCelular / precioPorHora); // Usamos floor para redondear hacia abajo
 	}
 	
