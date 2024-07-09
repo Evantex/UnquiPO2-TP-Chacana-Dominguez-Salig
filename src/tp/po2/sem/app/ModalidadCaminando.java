@@ -25,6 +25,7 @@ public class ModalidadCaminando implements ModoDesplazamiento {
 	{
 		aplicacion.notificarUsuario("Posible fin de estacionamiento.");
 		aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
+		this.update(aplicacion);
 	}
 
 }

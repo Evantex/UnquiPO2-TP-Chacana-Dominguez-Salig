@@ -132,67 +132,68 @@ public class ModalidadConduciendoTest
 		sem.agregarUsuario(cel);
 		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
 		assertEquals( 200.0, cel.getSaldo() );
-		// assertEquals( 1, sem.getCantidadUsuarios() );
-		// assertEquals( cel, sem.getCelular("1145241966") );
-		
-		
-		// aplicacion.verificarSaldoSuficiente(); // Efectivamente posee saldo, de lo contrario daría error
+		aplicacion.verificarSaldoSuficiente();
 	}
 	
 	
-	/*
 	@Test
 	void verificoQueValideCorrectamenteQueEsPosibleEstacionar() throws Exception
 	{
-		aplicacion.verificarEstacionamientoVigente();
-		aplicacion.verificarSaldoSuficiente();
-		aplicacion.verificarZonaEstacionamiento();
+		sem.agregarUsuario(cel);
+		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
+		aplicacion.verificarValidacionesParaIniciarEstacionamiento();
 	}
-	*/
 	
-	/*
+	
 	@Test
-	void verificoQueAppTengaEstacionamientoVigente()
+	void verificoQueSeGenereUnNuevoEstacionamiento()
 	{
-		when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
-		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
-		
+		// when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
+		// when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
+		sem.agregarUsuario(cel);
+		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
 		aplicacion.iniciarEstacionamiento();
-		assertEquals( 1,  sem.getCantidadEstacionamientos() );
-		assertTrue( aplicacion.tieneEstacionamientoVigente() );
+		assertEquals( 1, sem.getCantidadEstacionamientos() );
+		verify(modoEstacionamientoManual, times(1)).notificacionModoApp(aplicacion, "Se ha iniciado un estacionamiento de forma automática");
+		verify(aplicacion, times(0)).notificarUsuario("Se ha iniciado un estacionamiento de forma automática");
 	}
-	*/
 	
-	
-/*
 	
 	@Test
 	void verificoQueEfectivamenteSeEjecuteEstacionamientoEnModoAutomatico() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
-		modo.caminando(aplicacion);
+		sem.agregarUsuario(cel);
+		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
+		modoConduciendo.caminando(aplicacion);
 		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion);
+		
 		verify(aplicacion, times(1)).iniciarEstacionamiento();
 		verify(aplicacion, times(1)).notificarUsuario("Se ha iniciado un estacionamiento de forma automática");
 		verify(aplicacion, times(1)).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
 		verify(aplicacion, times(1)).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
+		// verify(aplicacion, times(1)).setEstadoEstacionamiento( any(Vigente.class) );
 	}
 	
-	
+    /*
 	@Test
 	void verificoQueEnModalidadManualNoSeEjecuteElUpdate() throws Exception
 	{
-		assertFalse( aplicacion.tieneEstacionamientoVigente() );
+		// assertFalse( aplicacion.tieneEstacionamientoVigente() );
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion);
+		modoConduciendo.caminando(aplicacion);
 		verify(aplicacion, never()).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
 		verify(aplicacion, never()).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
+		/*
 		Exception error = assertThrows(Exception.class, () ->
 		{
 	       aplicacion.verificarEstacionamientoVigente();
 	    });
+
 	}
+	
+	/*
 	
 	@Test
 	void verificoQueNoSeEjecuteNadaSiYaTengoEstacionamientoVigente() throws Exception

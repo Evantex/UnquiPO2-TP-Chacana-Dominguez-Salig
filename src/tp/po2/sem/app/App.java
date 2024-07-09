@@ -212,7 +212,6 @@ public class App implements MovementSensor
 	        this.SEM.solicitudDeEstacionamientoApp( nuevoEstacionamiento );
 	        this.modoApp.notificacionModoApp(this, "Se ha iniciado un estacionamiento de forma automática");
 	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
-	        this.modoDeDesplazamiento.update(this);
 	        this.setEstadoEstacionamiento(new Vigente());
 	    } 
 	    catch (Exception e)
@@ -260,7 +259,6 @@ public class App implements MovementSensor
 		this.modoApp.notificacionModoApp(this, "Se ha finalizado un estacionamiento de forma automática");
 		this.enviarDetallesFinEstacionamiento(est);
 		this.SEM.notificarSistemaAlertasFinEstacionamiento(est);
-		this.modoDeDesplazamiento.update(this);
 		this.setEstadoEstacionamiento(new NoVigente());
 	}
 

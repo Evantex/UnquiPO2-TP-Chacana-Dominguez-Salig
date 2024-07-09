@@ -13,6 +13,7 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	{
 		aplicacion.notificarUsuario("Posible inicio de estacionamiento");
 		aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion);
+        this.update(aplicacion);
 	}
 
 	@Override

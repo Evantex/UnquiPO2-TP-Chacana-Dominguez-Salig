@@ -5,6 +5,6 @@ public interface EstadoEstacionamiento
 {
 	
 	public void posibleInicioEstacionamiento( ModoDesplazamiento modo, App aplicacion ) throws Exception;
-	public void posibleFinEstacionamiento( ModoDesplazamiento modo, App aplicacion );
+	public void posibleFinEstacionamiento( ModoDesplazamiento modo, App aplicacion ) throws Exception;
 
 }

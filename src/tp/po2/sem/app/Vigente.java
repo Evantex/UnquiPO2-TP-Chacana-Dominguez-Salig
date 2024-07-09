@@ -7,7 +7,7 @@ public class Vigente implements EstadoEstacionamiento
 	public void posibleInicioEstacionamiento(ModoDesplazamiento modo, App aplicacion) throws Exception {}
 	
 	@Override
-	public void posibleFinEstacionamiento(ModoDesplazamiento modo, App aplicacion)
+	public void posibleFinEstacionamiento(ModoDesplazamiento modo, App aplicacion) throws Exception
 	{
 		if( aplicacion.validarMismoPuntoGeografico() ) 
 		{
