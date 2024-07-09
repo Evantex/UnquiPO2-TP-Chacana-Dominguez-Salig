@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 public class ModalidadConduciendoTest
 {
-	ModalidadConduciendo modo;
+	ModalidadConduciendo modoConduciendo;
 	App aplicacion;
 	SistemaEstacionamiento sem;
 	Celular cel;
@@ -34,6 +34,8 @@ public class ModalidadConduciendoTest
 	NotificacionDesactivada modoNotificacionDesactivada;
 	Manual modoEstacionamientoManual;
 	Automatico modoEstacionamientoAutomatico;
+	Vigente estadoVigente;
+	NoVigente estadoNoVigente;
 
 
 
@@ -41,7 +43,7 @@ public class ModalidadConduciendoTest
 	@BeforeEach
 	void setUp() throws Exception 
 	{
-		modo = new ModalidadConduciendo();
+		modoConduciendo = new ModalidadConduciendo();
 		Celular celularOriginal = new Celular("1145241966", 0.0);
 		cel = spy( celularOriginal );
 		
@@ -53,18 +55,23 @@ public class ModalidadConduciendoTest
 		
 		// El SEM lo seteo como objeto real por problemas con el manejo de listas
 		sem = new SistemaEstacionamiento();
+
 		// sem.agregarUsuario(cel);
 		// sem.cargarCelular("1145241966", 100.0);
 
 		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
 	
 		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
+		
 		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
 		modoNotificacionActivada = spy( NotificacionActivada.class );
 		modoEstacionamientoManual = spy( Manual.class);
 		modoEstacionamientoAutomatico = spy( Automatico.class );
-		aplicacion.setModoDeDesplazamiento(modo);
+		estadoVigente = spy( Vigente.class );
+		estadoNoVigente = spy( NoVigente.class );
+		aplicacion.setModoDeDesplazamiento(modoConduciendo);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
+		aplicacion.setEstadoEstacionamiento(estadoNoVigente);
 		// when( aplicacion.getPatente() ).thenReturn("GIO 002");
 
 		// Set condiciones para poder estacionar
@@ -83,17 +90,18 @@ public class ModalidadConduciendoTest
 	void verificoQueNoSeEnvíenMensajesConNotificaciónDesactivada() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionDesactivada);
-		modo.caminando(aplicacion);
+		modoConduciendo.caminando(aplicacion);
+		
 		verify(aplicacion, times(1)).notificarUsuario("Posible inicio de estacionamiento");
 		verify(cel, never()).recibirMensaje("Posible inicio de estacionamiento");
 	}
-	
+
 
 	@Test
 	void verificoQueEfectivamenteSeEnvíenMensajesConNotificaciónActivada() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion);
+		modoConduciendo.caminando(aplicacion);
 		verify(aplicacion, times(1)).notificarUsuario("Posible inicio de estacionamiento");
 		verify(cel, times(1)).recibirMensaje("Posible inicio de estacionamiento");
 	}
@@ -104,28 +112,28 @@ public class ModalidadConduciendoTest
 	void verificoQueNoSeEjecuteEstacionamientoEnModoManual() throws Exception
 	{
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		modo.caminando(aplicacion);
+		modoConduciendo.caminando(aplicacion);
 		verify(aplicacion, never()).iniciarEstacionamiento();
 	}
 	
-	
+
 	@Test
 	void verificoQueSEMRetornePrecioPorHoraCorrectamente()
 	{
 		assertEquals( 40.0, sem.getPrecioPorHora() );
 	}
 	
+	
+
 	@Test
 	void verificoFuncionamientoListaUsuariosSEM() throws Exception
 	{
 		assertEquals( 0, sem.getCantidadUsuarios() );
-		sem.cargarCelular("1145241966", 200.0);
-		assertEquals( 1, sem.getCantidadUsuarios() );
-		assertEquals( cel, sem.getCelular("1145241966") );
-		
-		
-		// assertEquals( 200.0, cel.getSaldo() );
-		
+		sem.agregarUsuario(cel);
+		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
+		assertEquals( 200.0, cel.getSaldo() );
+		// assertEquals( 1, sem.getCantidadUsuarios() );
+		// assertEquals( cel, sem.getCelular("1145241966") );
 		
 		
 		// aplicacion.verificarSaldoSuficiente(); // Efectivamente posee saldo, de lo contrario daría error

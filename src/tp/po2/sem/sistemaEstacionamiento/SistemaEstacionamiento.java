@@ -189,10 +189,7 @@ public class SistemaEstacionamiento
 	
 	public void agregarUsuario(Celular cel)
 	{
-		if( !this.usuarios.contains(cel) )
-		{
-			this.usuarios.add(cel);
-		}
+		this.usuarios.add(cel);
 	}
 	
 	public Celular getUsuarioPorNro( String nroCelular )
