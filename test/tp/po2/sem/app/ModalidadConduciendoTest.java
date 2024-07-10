@@ -2,6 +2,8 @@ package tp.po2.sem.app;
 import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.BeforeEach;
 import tp.po2.sem.sistemaEstacionamiento.*;
+
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 
 // import paquetes
@@ -9,6 +11,7 @@ import tp.po2.sem.appModoNotificaciones.*;
 import tp.po2.sem.estacionamiento.*;
 import tp.po2.sem.tarifasEstacionamiento.*;
 import tp.po2.sem.sistemaEstacionamiento.*;
+import tp.po2.sem.appGPS.*;
 
 
 import static org.mockito.ArgumentMatchers.any;
@@ -56,24 +59,17 @@ public class ModalidadConduciendoTest
 		Celular celularOriginal = new Celular("1145241966", 0.0);
 		cel = spy( celularOriginal );
 		
-		
-		
 		// when( cel.getNroCelular() ).thenReturn("1145241966");
 		// when( cel.getUbicacion() ).thenReturn(new Point(1,2));
 		// when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);
 		
-		
 		// El SEM lo seteo como objeto real por problemas con el manejo de listas
 		sem = new SistemaEstacionamiento();
 
-		// sem.agregarUsuario(cel);
-		// sem.cargarCelular("1145241966", 100.0);
-
-		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
-	
 		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
 		
 		when( aplicacion.getUbicacionActual() ).thenReturn(new Point(1,2));
+		aplicacion.setEstadoGps( new UbicacionActivada() );
 		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
 		modoNotificacionActivada = spy( NotificacionActivada.class );
 		modoEstacionamientoManual = spy( Manual.class);
@@ -83,7 +79,7 @@ public class ModalidadConduciendoTest
 		aplicacion.setModoDeDesplazamiento(modoConduciendo);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
 		aplicacion.setEstadoEstacionamiento(estadoNoVigente);
-		// when( aplicacion.getPatente() ).thenReturn("GIO 002");
+
 
 		// Set condiciones para poder estacionar
 		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
@@ -159,8 +155,6 @@ public class ModalidadConduciendoTest
 	@Test
 	void verificoQueSeGenereUnNuevoEstacionamiento()
 	{
-		// when( aplicacion.tieneEstacionamientoVigente() ).thenReturn(false);
-		// when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
 		sem.agregarUsuario(cel);
 		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
 		aplicacion.iniciarEstacionamiento();
@@ -232,6 +226,64 @@ public class ModalidadConduciendoTest
 	}
 	
 	
+	@Test
+	void verificoFuncionamientoFinEstacionamientoApp() throws Exception
+	{
+		
+		sem.agregarUsuario(cel);
+		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
+		aplicacion.setModoEstacionamiento( modoEstacionamientoAutomatico );
+		aplicacion.setModoNotificacion(modoNotificacionActivada);
+		
+		// Se ejecuta todo el proceso de inicio estacionamiento:
+		aplicacion.walking();
+		
+		// Se ejecuta todo el proceso de fin de estacionamiento:
+		aplicacion.driving();	 
+	}
+	
+	
+	@Test
+	void errorValidacionSaldoSuficiente()
+	{
+		sem.agregarUsuario(cel);
+		aplicacion.iniciarEstacionamiento();
+			Exception error = assertThrows(Exception.class, () ->
+			{
+				aplicacion.verificarSaldoSuficiente();
+			});
+	}
+		
+
+	@Test
+	void errorValidacionZonaEstacionamiento()
+	{
+		sem.agregarUsuario(cel);
+		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
+		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(false);
+		aplicacion.iniciarEstacionamiento();
+			Exception error = assertThrows(Exception.class, () ->
+			{
+				aplicacion.verificarZonaEstacionamiento();
+			});
+	}
+
+	
+		@Test
+	void errorValidacionEstacionamientoVigente()
+	{
+		sem.agregarUsuario(cel);
+		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
+		aplicacion.iniciarEstacionamiento(); // Inicio un estacionamiento por primera vez
+		aplicacion.iniciarEstacionamiento(); // Inicio un estacionamiento por segunda vez sin finalizar el primero
+			Exception error = assertThrows(Exception.class, () ->
+			{
+			      sem.verificarQueNoTengaYaUnEstacionamientoVigente("GIO 002");
+			 });	
+	}
+		
+
+		
 	
 	
 	

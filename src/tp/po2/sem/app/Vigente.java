@@ -14,5 +14,5 @@ public class Vigente implements EstadoEstacionamiento
 			modo.finEstacionamiento(aplicacion);
 		}
 	}
-	
+
 }

@@ -148,20 +148,22 @@ public class App implements MovementSensor
 		this.deteccionDeDesplazamiento.desactivar(this);
 	}
 
-	
-	
-	
 	@Override
 	public void driving() throws Exception
 	{
-		modoDeDesplazamiento.conduciendo(this);
+		if( this.deteccionDeDesplazamiento.seEncuentraActivada() )
+		{
+			modoDeDesplazamiento.conduciendo(this);
+		}
 	}
-	
 	
 	@Override
 	public void walking() throws Exception
 	{
-		modoDeDesplazamiento.caminando(this);
+		if( this.deteccionDeDesplazamiento.seEncuentraActivada() )
+		{
+			modoDeDesplazamiento.caminando(this);
+		}
 	}
 	
 
@@ -230,19 +232,17 @@ public class App implements MovementSensor
 		this.verificarZonaEstacionamiento();
 	}
 	
-	public void verificarValidacionesParaFinalizarEstacionamiento() throws Exception
-	{
-		
-	}
+
 	
 	
-	
+	/*
 	private double calcularPosibleMontoSegunSaldo(LocalTime horaInicioEstacionamiento,
 			LocalDateTime horaMaximaFinEstacionamiento) throws Exception 
 	{	
 		Duration duracionEnHoras = Duration.between(horaInicioEstacionamiento, horaMaximaFinEstacionamiento);	
 		return SEM.calcularCuantoCobrar(horaInicioEstacionamiento, duracionEnHoras);	
 	}
+	*/
 
 	
 	public void notificarUsuario(String msg) 
@@ -298,7 +298,6 @@ public class App implements MovementSensor
 		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(timeFormatter);
 		String fin = "Hora máxima fin del estacionamiento respecto al saldo: " + this.getHoraMaximaFinEstacionamiento().format(timeFormatter);
 		String msg = inicio + "\n" + fin;
-		System.out.println( msg );
 		this.notificarUsuario(msg);
 	}
 
