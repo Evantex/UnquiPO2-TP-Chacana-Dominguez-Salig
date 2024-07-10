@@ -13,6 +13,8 @@ import tp.po2.sem.sistemaEstacionamiento.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -55,6 +57,7 @@ public class ModalidadConduciendoTest
 		cel = spy( celularOriginal );
 		
 		
+		
 		// when( cel.getNroCelular() ).thenReturn("1145241966");
 		// when( cel.getUbicacion() ).thenReturn(new Point(1,2));
 		// when( sem.obtenerSaldoCelular(cel.getNroCelular()) ).thenReturn(100.0);
@@ -70,6 +73,7 @@ public class ModalidadConduciendoTest
 	
 		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
 		
+		when( aplicacion.getUbicacionActual() ).thenReturn(new Point(1,2));
 		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
 		modoNotificacionActivada = spy( NotificacionActivada.class );
 		modoEstacionamientoManual = spy( Manual.class);
@@ -185,10 +189,11 @@ public class ModalidadConduciendoTest
 		// Funcionamiento de clase Automatico:
 		verify(aplicacion, times(1)).iniciarEstacionamiento();
 		verify(aplicacion, times(1)).notificarUsuario("Se ha iniciado un estacionamiento de forma automática");
+		verify(aplicacion, times(1)).setUbicacionEstacionamiento();
 		
 		// Se cambia modalidad de desplazamiento y se setea ubicación de estacionamiento:
 		verify(aplicacion, times(1)).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
-		verify(aplicacion, times(1)).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
+		
 		
 		// Se envían los detalles del estacionamiento y se setea a Vigente:
 		verify(aplicacion, times(1)).enviarDetallesInicioEstacionamiento( any(Estacionamiento.class) );
@@ -197,7 +202,7 @@ public class ModalidadConduciendoTest
 	
     
 	@Test
-	void verificoQueEnModalidadManualNoSeEjecuteElUpdate() throws Exception
+	void verificoQueEnModalidadManualNoSeConfigureUbicacionEstacionamiento() throws Exception
 	{
 		// Seteo modo manual, conduciendo sin estacionamiento vigente y notificaciones activadas:
 		aplicacion.setModoDeDesplazamiento(modoConduciendo); 
@@ -208,9 +213,27 @@ public class ModalidadConduciendoTest
 
 		modoConduciendo.caminando(aplicacion);
 		
-		verify(aplicacion, never()).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
-		verify(aplicacion, never()).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
+		verify(aplicacion, times(1)).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
+		verify(aplicacion, never()).setUbicacionEstacionamiento(); 
+		assertTrue(aplicacion.getEstadoEstacionamiento() instanceof NoVigente);
+		
+		/*
+			Ya seteada la modalidad caminando, debería volver al vehículo sin un estacionamiento vigente y simplemente debería cambiar modalidad
+				de caminando a conduciendo sin emitir ninguna otra acción respecto a estacionamientos, como por ejemplo no notificar fin de estacionamiento
+					a pesar de que las notificaciones estén activadas:
+		*/
+		aplicacion.getModoDeDesplazamiento().conduciendo(aplicacion);
+		
+		// 	Primer llamamiento en BeforeEach, segundo en línea 208 y tercero en línea 225.
+		verify(aplicacion, times(3)).setModoDeDesplazamiento( any(ModalidadConduciendo.class) );
+
+		// No emite acciones referentes a estacionar
+		verify(aplicacion, never()).notificarUsuario("Posible fin de estacionamiento."); 
 	}
+	
+	
+	
+	
 	
 	/*
 	

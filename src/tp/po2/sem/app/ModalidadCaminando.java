@@ -9,6 +9,7 @@ public class ModalidadCaminando implements ModoDesplazamiento {
 	public void conduciendo(App aplicacion) throws Exception 
 	{
 		aplicacion.getEstadoEstacionamiento().posibleFinEstacionamiento(this, aplicacion);
+		this.update(aplicacion);
 	}
 
 	@Override
@@ -25,7 +26,6 @@ public class ModalidadCaminando implements ModoDesplazamiento {
 	{
 		aplicacion.notificarUsuario("Posible fin de estacionamiento.");
 		aplicacion.getModoEstacionamiento().finalizarEstacionamiento(aplicacion);
-		this.update(aplicacion);
 	}
 
 }

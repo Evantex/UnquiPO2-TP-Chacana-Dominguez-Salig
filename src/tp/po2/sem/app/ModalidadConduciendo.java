@@ -7,13 +7,13 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	public void caminando(App aplicacion) throws Exception 
 	{
 		aplicacion.getEstadoEstacionamiento().posibleInicioEstacionamiento(this, aplicacion);
+        this.update(aplicacion);
 	}
 	
 	public void inicioEstacionamiento( App aplicacion ) throws Exception
 	{
 		aplicacion.notificarUsuario("Posible inicio de estacionamiento");
 		aplicacion.getModoEstacionamiento().iniciarEstacionamiento(aplicacion);
-        this.update(aplicacion);
 	}
 
 	@Override
