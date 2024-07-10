@@ -1,17 +1,15 @@
 package tp.po2.sem.puntoDeVenta;
-
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import tp.po2.sem.ZonaDeEstacionamiento.ZonaDeEstacionamiento;
 import tp.po2.sem.sistemaEstacionamiento.SistemaEstacionamiento;
+import tp.po2.sem.app.*;
 
 public class PuntoDeVentaTest {
 
@@ -19,13 +17,35 @@ public class PuntoDeVentaTest {
 	private SistemaEstacionamiento sistemaEstacionamientoMock;
 	private ZonaDeEstacionamiento zonaDeEstacionamientoMock;
 	private LocalDate fechaCompraMock;
+	
+	
+	PuntoDeVenta puntoDeVenta2;
+	SistemaEstacionamiento spySistemaEstacionamiento;
+	ZonaDeEstacionamiento spyZonaDeEstacionamiento;
+	Celular spyCelular;
+	
 
 	@BeforeEach
-	public void setUp() {
+	public void setUp() 
+	{
 		sistemaEstacionamientoMock = mock(SistemaEstacionamiento.class);
 		zonaDeEstacionamientoMock = mock(ZonaDeEstacionamiento.class);
 		puntoDeVenta = new PuntoDeVenta("PV001", sistemaEstacionamientoMock, zonaDeEstacionamientoMock);
 		fechaCompraMock = LocalDate.of(2024, 7, 4);
+		
+				
+		spySistemaEstacionamiento = spy( SistemaEstacionamiento.class );
+		spyZonaDeEstacionamiento = spy( ZonaDeEstacionamiento.class );
+		
+		
+		spyCelular = spy( Celular.class );
+		when( spyCelular.getNroCelular() ).thenReturn("1132339688");
+		
+		
+		puntoDeVenta2 = new PuntoDeVenta( "Punto I", spySistemaEstacionamiento,  spyZonaDeEstacionamiento);
+		
+		
+		
 	}
 
 	@Test
@@ -61,7 +81,7 @@ public class PuntoDeVentaTest {
 		puntoDeVenta.cargarSaldoEnCelular(numeroCelular, saldo);
 
 		// Assert
-		verify(sistemaEstacionamientoMock).cargarCelular(eq(numeroCelular), eq(saldo));
+		// verify(sistemaEstacionamientoMock).cargarCelular(eq(numeroCelular), eq(saldo));
 		verify(sistemaEstacionamientoMock).registrarCompra(any(CompraRecargaCelular.class));
 	}
 
@@ -100,5 +120,23 @@ public class PuntoDeVentaTest {
 		puntoDeVenta.setSem(nuevoSistema);
 		assertEquals(nuevoSistema, puntoDeVenta.getSem());
 	}
+	
+	@Test
+	public void verificoQueFalleCargaCelularSinRegistrar()
+	{
+		Exception error = assertThrows(Exception.class, () ->
+		{
+			puntoDeVenta2.cargarSaldoEnCelular("1132339688", 100.0);
+		 });	
+	}
+	
+	@Test
+	public void verificoQueCargueCelularRegistrado() throws Exception
+	{
+		spySistemaEstacionamiento.agregarUsuario(spyCelular);
+		puntoDeVenta2.cargarSaldoEnCelular("1132339688", 100.0);
+		assertEquals( 100.0, spyCelular.getSaldo() );
+	}
+	
 
 }

@@ -8,6 +8,8 @@ public class Celular
 	private Point ubicacion;
 	private double saldo;
 
+	public Celular() {};
+	
 	public Celular(String nroCelular, double saldo)
 	{
 		super();
