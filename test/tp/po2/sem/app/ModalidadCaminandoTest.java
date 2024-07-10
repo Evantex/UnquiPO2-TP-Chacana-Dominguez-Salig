@@ -1,80 +1,75 @@
 package tp.po2.sem.app;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import tp.po2.sem.app.*;
 
 import static org.mockito.Mockito.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+public class ModalidadCaminandoTest {
 
-public class ModalidadCaminandoTest 
-{
+    private ModalidadCaminando modalidadCaminando;
+    private App mockApp;
+    private EstadoEstacionamiento mockEstadoEstacionamiento;
+    private ModoApp mockModoEstacionamiento;
 
-	@Mock
-	private App aplicacion; // Se crea un mock para la clase App
+    @BeforeEach
+    public void setUp() {
+        modalidadCaminando = new ModalidadCaminando();
+        mockApp = mock(App.class);
+        mockEstadoEstacionamiento = mock(EstadoEstacionamiento.class);
+        mockModoEstacionamiento = mock(ModoApp.class);
 
-	@Mock
-	private ModoApp modoEstacionamiento; // Se crea un mock para la clase ModoEstacionamiento
+        when(mockApp.getEstadoEstacionamiento()).thenReturn(mockEstadoEstacionamiento);
+        when(mockApp.getModoEstacionamiento()).thenReturn(mockModoEstacionamiento);
+    }
 
-	@InjectMocks
-	private ModalidadCaminando modalidadCaminando; // Se crea una instancia de ModalidadCaminando y se inyectan los
-													// mocks
+    @Test
+    public void testCaminando() {
+        modalidadCaminando.caminando(mockApp);
+        
+        
+        verifyNoInteractions(mockApp);
+    }
 
-	@BeforeEach
-	void setUp() {
-		// Inicializa los mocks y la instancia de ModalidadCaminando
-		MockitoAnnotations.openMocks(this);
-	}
+    @Test
+    public void testConduciendo() throws Exception {
+        modalidadCaminando.conduciendo(mockApp);
+        
+        verify(mockApp.getEstadoEstacionamiento()).posibleFinEstacionamiento(eq(modalidadCaminando), eq(mockApp));
+        verify(mockApp).setModoDeDesplazamiento(any(ModalidadConduciendo.class));
+    }
 
-	@Test
-	void testConduciendo_conEstacionamientoVigenteYEnElMismoPuntoGeografico() throws Exception {
-		// Configura el comportamiento de los mocks
-		// when(aplicacion.tieneEstacionamientoVigente()).thenReturn(true);
-		when(aplicacion.validarMismoPuntoGeografico()).thenReturn(true);
-		when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamiento);
+    @Test
+    public void testUpdate() {
+        modalidadCaminando.update(mockApp);
+        
+        verify(mockApp).setModoDeDesplazamiento(any(ModalidadConduciendo.class));
+    }
 
-		// Llama al método que se está probando
-		modalidadCaminando.conduciendo(aplicacion);
+    @Test
+    public void testInicioEstacionamiento() throws Exception {
+        modalidadCaminando.inicioEstacionamiento(mockApp);
+        
+        
+        verifyNoInteractions(mockApp);
+    }
 
-		// Verifica que los métodos correctos fueron llamados en los mocks
-		verify(aplicacion).notificarUsuario("Alerta Fin estacionamiento");
-		verify(modoEstacionamiento).finalizarEstacionamiento(aplicacion);
-		verify(aplicacion).setModoDeDesplazamiento(any(ModalidadConduciendo.class));
-	}
+    @Test
+    public void testFinEstacionamiento() throws Exception {
+        modalidadCaminando.finEstacionamiento(mockApp);
+        
+        verify(mockApp).notificarUsuario("Posible fin de estacionamiento.");
+        verify(mockApp.getModoEstacionamiento()).finalizarEstacionamiento(mockApp);
+    }
 
-	@Test
-	void testConduciendo_sinEstacionamientoVigente() throws Exception {
-		// Llama al método que se está probando
-		modalidadCaminando.conduciendo(aplicacion);
 
-		// Verifica que no se llamaron los métodos en los mocks
-		verify(aplicacion, never()).validarMismoPuntoGeografico();
-		verify(aplicacion, never()).notificarUsuario(anyString());
-		verify(modoEstacionamiento, never()).finalizarEstacionamiento(any());
-		verify(aplicacion, never()).setModoDeDesplazamiento(any(ModalidadConduciendo.class));
-	}
-
-	@Test
-	void testConduciendo_conEstacionamientoVigentePeroDiferentePuntoGeografico() throws Exception {
-		// Configura el comportamiento de los mocks
-		when(aplicacion.validarMismoPuntoGeografico()).thenReturn(false);
-
-		// Llama al método que se está probando
-		modalidadCaminando.conduciendo(aplicacion);
-
-		// Verifica que no se llamaron los métodos en los mocks
-		verify(aplicacion, never()).notificarUsuario(anyString());
-		verify(modoEstacionamiento, never()).finalizarEstacionamiento(any());
-		verify(aplicacion, never()).setModoDeDesplazamiento(any(ModalidadConduciendo.class));
-	}
-
-	@Test
+	/*@Test
 	void testUpdate() {
-		// Llama al método que se está probando
+		
 		modalidadCaminando.update(aplicacion);
 
-		// Verifica que el método correcto fue llamado en el mock
+		
 		verify(aplicacion).setModoDeDesplazamiento(any(ModalidadConduciendo.class));
 	}
 
@@ -83,5 +78,5 @@ public class ModalidadCaminandoTest
 		modalidadCaminando.caminando(aplicacion);
 		verifyNoInteractions(aplicacion);
 	}
-
+*/
 }
