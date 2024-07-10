@@ -169,41 +169,47 @@ public class ModalidadConduciendoTest
 	@Test
 	void verificoQueEfectivamenteSeEjecuteEstacionamientoEnModoAutomatico() throws Exception
 	{
-		// aplicacion.setEstadoEstacionamiento(new NoVigente());
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
 		sem.agregarUsuario(cel);
 		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
-		modoConduciendo.caminando(aplicacion);
+		
+		/*	
+		 	Simulo que se baja del auto en un estacionamiento medido con las 
+				condiciones requeridas para estacionar:
+		*/
+		modoConduciendo.caminando(aplicacion); 
+		
 		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion);
 		
-		verify(aplicacion, times(1)).iniciarEstacionamiento(); // Debería ejecutar el setEstadoEstacionamiento(new Vigente())
+		// Funcionamiento de clase Automatico:
+		verify(aplicacion, times(1)).iniciarEstacionamiento();
 		verify(aplicacion, times(1)).notificarUsuario("Se ha iniciado un estacionamiento de forma automática");
+		
+		// Se cambia modalidad de desplazamiento y se setea ubicación de estacionamiento:
 		verify(aplicacion, times(1)).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
 		verify(aplicacion, times(1)).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
-		verify(aplicacion, times(1)).enviarDetallesInicioEstacionamiento( any(Estacionamiento.class) );
-		// verify(aplicacion, times(1)).setEstadoEstacionamiento( any(Vigente.class) );
-		// verify(aplicacion, never()).setEstadoEstacionamiento( any(NoVigente.class) );
 		
-		// assertTrue(aplicacion.getEstadoEstacionamiento() instanceof Vigente);
-		// verify(aplicacion, times(1)).setEstadoEstacionamiento( any(Vigente.class) );
+		// Se envían los detalles del estacionamiento y se setea a Vigente:
+		verify(aplicacion, times(1)).enviarDetallesInicioEstacionamiento( any(Estacionamiento.class) );
+		verify(aplicacion, times(1)).setEstadoEstacionamiento( any(Vigente.class) ); // Cambia a estado vigente
 	}
 	
-    /*
+    
 	@Test
 	void verificoQueEnModalidadManualNoSeEjecuteElUpdate() throws Exception
 	{
-		// assertFalse( aplicacion.tieneEstacionamientoVigente() );
+		// Seteo modo manual, conduciendo sin estacionamiento vigente y notificaciones activadas:
+		aplicacion.setModoDeDesplazamiento(modoConduciendo); 
+		aplicacion.setModoEstacionamiento(modoEstacionamientoManual);
+		aplicacion.setEstadoEstacionamiento(estadoNoVigente);
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
+		when( aplicacion.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
+
 		modoConduciendo.caminando(aplicacion);
+		
 		verify(aplicacion, never()).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
 		verify(aplicacion, never()).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
-		/*
-		Exception error = assertThrows(Exception.class, () ->
-		{
-	       aplicacion.verificarEstacionamientoVigente();
-	    });
-
 	}
 	
 	/*

@@ -75,9 +75,9 @@ public class App implements MovementSensor
 		return this.modoApp;
 	}
 
-	public void setUbicacionEstacionamiento(Point ubicacion) 
+	public void setUbicacionEstacionamiento() 
 	{
-		this.ubicacionUltimoEstacionamiento = ubicacion;
+		this.ubicacionUltimoEstacionamiento = this.getUbicacionActual();
 	}
 
 	public Point getUbicacionEstacionamiento() 
@@ -214,6 +214,7 @@ public class App implements MovementSensor
 	        this.modoApp.notificacionModoApp(this, "Se ha iniciado un estacionamiento de forma automática");
 	        this.enviarDetallesInicioEstacionamiento( nuevoEstacionamiento );
 	        this.setEstadoEstacionamiento(new Vigente());
+	        this.setUbicacionEstacionamiento();
 	    } 
 	    catch (Exception e)
 	    {

@@ -20,7 +20,6 @@ public class ModalidadConduciendo implements ModoDesplazamiento
 	public void update(App aplicacion) 
 	{
 		aplicacion.setModoDeDesplazamiento(new ModalidadCaminando());
-		aplicacion.setUbicacionEstacionamiento(aplicacion.getUbicacionActual());
 	}
 	
 	@Override

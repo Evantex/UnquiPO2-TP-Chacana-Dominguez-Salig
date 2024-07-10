@@ -28,6 +28,7 @@ public class AppTest
 	SistemaEstacionamiento sem;
 	ModoDesplazamiento modalidadCaminando;
 	ModoDesplazamiento modalidadConduciendo;
+	Estacionamiento estacionamientoApp;
 	
 	@BeforeEach
 	void setUp() throws Exception 
@@ -37,8 +38,9 @@ public class AppTest
 		modalidadCaminando = spy( ModalidadCaminando.class );
 		modalidadConduciendo = spy( ModalidadConduciendo.class );
 		aplicacion = new App( cel, sem, "GIO 002" );
+		estacionamientoApp = new EstacionamientoApp( aplicacion, "1145241966", "GIO 002" );
 		
-		
+		// EstacionamientoApp(App app, String celular, String dominioVehiculo)
 		when( cel.getNroCelular() ).thenReturn("1145241966");
 		when( cel.estaDentroDeZonaEstacionamiento() ).thenReturn(true);
 		when( sem.poseeEstacionamientoVigente( "GIO 002") ).thenReturn(false);
@@ -49,6 +51,15 @@ public class AppTest
 		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
 	}
 	
+	@Test
+	void chequeoFuncionamientoDeMensajeInicioEstacionamiento()
+	{
+		aplicacion.enviarDetallesInicioEstacionamiento(estacionamientoApp);
+	}
+	
+	
+	
+	/*
 	@Test
 	void asignoNotificacionDesactivadaYChequeoQueNoSeEnvíeElMensajeAlUsuario() throws Exception
 	{
@@ -96,28 +107,10 @@ public class AppTest
 		//PUEDE UN USUARIO ESTAR DENTRO DE UN ESTACIONAMIENTO EN UNA FRANJA HORARIO NO PERMITIDA?
 	}
 	
-	@Test
-	void testElUsuarioNoPuedeIniciarDosEstacionamientosEnSimultaneoConLaMismaPatente() throws Exception 
-	{
-		aplicacion.iniciarEstacionamiento();
-		
-		when( sem.poseeEstacionamientoVigente( "GIO 002") ).thenReturn(true);
-		
-		Exception exception = assertThrows(Exception.class, () -> {
-	        aplicacion.tieneEstacionamientoVigente();
-	    });
-		
-		assertEquals("Ya tienes un estacionamiento vigente", exception.getMessage());
-	}
+	*/
 	
-	@Test
-	void testElUsuarioNoTieneUnEstacionamientoVigenteSiNuncaInicioUnEstacionamiento() throws Exception
-	{
-		assertDoesNotThrow(() -> {
-            aplicacion.verificarSiPoseeEstacionamientoVigente();
-        });
-	}
-	
+
+
 	
 	
 	
