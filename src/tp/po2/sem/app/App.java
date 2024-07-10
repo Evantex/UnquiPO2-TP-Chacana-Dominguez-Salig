@@ -52,6 +52,7 @@ public class App implements MovementSensor
 	public void setEstadoEstacionamiento( EstadoEstacionamiento estado )
 	{
 		this.estadoEstacionamiento = estado;
+		// System.out.println("Se ha configurado un estado de estacionamiento a " + estado.toString() );
 	}
 	
 	
@@ -292,19 +293,20 @@ public class App implements MovementSensor
 	
 	public void enviarDetallesInicioEstacionamiento( Estacionamiento estacionamiento )
 	{
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
-		String fin = "Hora máxima fin del estacionamiento respecto al saldo: " + this.getHoraMaximaFinEstacionamiento().format(formatter);
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(timeFormatter);
+		String fin = "Hora máxima fin del estacionamiento respecto al saldo: " + this.getHoraMaximaFinEstacionamiento().format(timeFormatter);
 		String msg = inicio + "\n" + fin;
+		System.out.println( msg );
 		this.notificarUsuario(msg);
 	}
 
 	
 	public void enviarDetallesFinEstacionamiento( Estacionamiento estacionamiento ) throws Exception
 	{
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(formatter);
-		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(formatter);
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String inicio = "Hora de inicio del estacionamiento: " + estacionamiento.getInicioEstacionamiento().format(timeFormatter);
+		String fin = "Hora máxima fin del estacionamiento: " + estacionamiento.getFinEstacionamiento().format(timeFormatter);
 		String duracion = "La duración en horas del estacionamiento fué de " + estacionamiento.getDuracionEnHoras();
 		String precio = "El costo del estacionamiento fué de: " + estacionamiento.getCostoEstacionamiento();
 		String msg = inicio + "\n" + fin + "\n" + duracion + "\n" + precio;

@@ -3,7 +3,14 @@ import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.BeforeEach;
 import tp.po2.sem.sistemaEstacionamiento.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+// import paquetes
 import tp.po2.sem.appModoNotificaciones.*;
+import tp.po2.sem.estacionamiento.*;
+import tp.po2.sem.tarifasEstacionamiento.*;
+import tp.po2.sem.sistemaEstacionamiento.*;
+
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
@@ -162,6 +169,7 @@ public class ModalidadConduciendoTest
 	@Test
 	void verificoQueEfectivamenteSeEjecuteEstacionamientoEnModoAutomatico() throws Exception
 	{
+		// aplicacion.setEstadoEstacionamiento(new NoVigente());
 		aplicacion.setModoNotificacion(modoNotificacionActivada);
 		aplicacion.setModoEstacionamiento(modoEstacionamientoAutomatico);
 		sem.agregarUsuario(cel);
@@ -169,10 +177,15 @@ public class ModalidadConduciendoTest
 		modoConduciendo.caminando(aplicacion);
 		verify(modoEstacionamientoAutomatico, times(1)).iniciarEstacionamiento(aplicacion);
 		
-		verify(aplicacion, times(1)).iniciarEstacionamiento();
+		verify(aplicacion, times(1)).iniciarEstacionamiento(); // Debería ejecutar el setEstadoEstacionamiento(new Vigente())
 		verify(aplicacion, times(1)).notificarUsuario("Se ha iniciado un estacionamiento de forma automática");
 		verify(aplicacion, times(1)).setModoDeDesplazamiento( any(ModalidadCaminando.class) );
 		verify(aplicacion, times(1)).setUbicacionEstacionamiento( aplicacion.getUbicacionActual() );
+		verify(aplicacion, times(1)).enviarDetallesInicioEstacionamiento( any(Estacionamiento.class) );
+		// verify(aplicacion, times(1)).setEstadoEstacionamiento( any(Vigente.class) );
+		// verify(aplicacion, never()).setEstadoEstacionamiento( any(NoVigente.class) );
+		
+		// assertTrue(aplicacion.getEstadoEstacionamiento() instanceof Vigente);
 		// verify(aplicacion, times(1)).setEstadoEstacionamiento( any(Vigente.class) );
 	}
 	
