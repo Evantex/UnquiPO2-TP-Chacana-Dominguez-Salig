@@ -186,7 +186,7 @@ public class App implements MovementSensor
 	
 	public boolean validarMismoPuntoGeografico() 
 	{
-		return this.getUbicacionActual() == this.getUbicacionEstacionamiento();
+		return this.getUbicacionActual().equals(this.getUbicacionEstacionamiento());
 	}
 		
 	public void iniciarEstacionamiento()

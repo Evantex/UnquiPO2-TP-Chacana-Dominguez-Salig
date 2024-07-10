@@ -40,4 +40,14 @@ public class VigenteTest {
         // Verifica que NO se llamó al método finEstacionamiento en modoDesplazamiento
         verify(modoDesplazamiento, times(0)).finEstacionamiento(aplicacion);
     }
+    
+    @Test
+    void testPosibleInicioEstacionamientoNoHaceNada() throws Exception {
+       
+
+        estadoVigente.posibleInicioEstacionamiento(modoDesplazamiento, aplicacion);
+
+        // Verificar que no hubo interacciones con el mock
+        verifyNoInteractions(aplicacion);
+    }
 }

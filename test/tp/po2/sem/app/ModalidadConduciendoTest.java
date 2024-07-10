@@ -25,6 +25,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import java.awt.Point;
 import java.time.LocalDate;
@@ -68,7 +69,9 @@ public class ModalidadConduciendoTest
 
 		aplicacion = spy( new App( cel, sem, "GIO 002" ) );
 		
-		when( aplicacion.getUbicacionActual() ).thenReturn(new Point(1,2));
+    	Point ubicacion = new Point(1,2);
+		when( aplicacion.getUbicacionActual() ).thenReturn(ubicacion);
+		when (aplicacion.getUbicacionEstacionamiento()).thenReturn(ubicacion);
 		aplicacion.setEstadoGps( new UbicacionActivada() );
 		modoNotificacionDesactivada = spy( NotificacionDesactivada.class );
 		modoNotificacionActivada = spy( NotificacionActivada.class );
@@ -299,4 +302,44 @@ public class ModalidadConduciendoTest
 			assertEquals( "1145241966", aplicacion.getNroCelularAsociado() );
 		}
 	
-}
+
+
+	    @Test
+	    void testConduciendoNoHaceNada() {
+	    	
+	        App mockAplicacion = mock(App.class);
+
+	        modoConduciendo.conduciendo(mockAplicacion);
+
+	        verifyNoInteractions(mockAplicacion);
+	    }
+
+	    @Test
+	    void testFinEstacionamientoNoHaceNada() {
+	    	
+	        App mockAplicacion = mock(App.class);
+
+	        modoConduciendo.finEstacionamiento(mockAplicacion);
+
+	        verifyNoInteractions(mockAplicacion);
+	    }
+	
+
+	    @Test
+	    void appEnManualNoPuedeFinalizarEstacionamiento() throws Exception {
+	        // Crear un nuevo mock de aplicacion para esta prueba
+	        App mockAplicacion = mock(App.class);
+
+	        // Llamar al método sin acción
+	        modoEstacionamientoManual.finalizarEstacionamiento(mockAplicacion);
+
+	        // Verificar que no hubo interacciones con el mock
+	        verifyNoInteractions(mockAplicacion);
+	    }
+	    
+	    @Test
+	    void verificoMismoPuntoGeografico() {
+			
+	    	assertTrue(aplicacion.validarMismoPuntoGeografico());
+	    }
+	}

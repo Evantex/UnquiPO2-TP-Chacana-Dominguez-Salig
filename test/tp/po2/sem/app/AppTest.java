@@ -13,7 +13,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+
+import java.awt.Point;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -29,6 +32,7 @@ public class AppTest
 	ModoDesplazamiento modalidadCaminando;
 	ModoDesplazamiento modalidadConduciendo;
 	Estacionamiento estacionamientoApp;
+	
 	
 	@BeforeEach
 	void setUp() throws Exception 
@@ -47,7 +51,6 @@ public class AppTest
 		
 		
 		
-		
 		// App( Celular cel, SistemaEstacionamiento sistema, String patenteAsociada )
 	}
 	
@@ -57,57 +60,8 @@ public class AppTest
 		aplicacion.enviarDetallesInicioEstacionamiento(estacionamientoApp);
 	}
 	
+
 	
-	
-	/*
-	@Test
-	void asignoNotificacionDesactivadaYChequeoQueNoSeEnvíeElMensajeAlUsuario() throws Exception
-	{
-		aplicacion.setModoNotificacion(new NotificacionDesactivada() );
-		aplicacion.setModoDeDesplazamiento(modalidadConduciendo);
-		aplicacion.setModoEstacionamiento( new Manual() );
-		aplicacion.walking();
-		verify( modalidadConduciendo ).caminando(aplicacion);
-		verify(cel, never()).recibirMensaje("Posible inicio de estacionamiento");
-	}
-	
-	@Test
-	void asignoNotificacionActivadaYChequeoQueEfectivamenteSeEnvíeElMensajeAlUsuario() throws Exception
-	{
-		aplicacion.setModoNotificacion(new NotificacionActivada() );
-		aplicacion.setModoDeDesplazamiento(modalidadConduciendo);
-		aplicacion.setModoEstacionamiento( new Manual() );
-		aplicacion.walking();
-		// verify( modalidadConduciendo ).caminando(aplicacion, aplicacion.getPatente() );
-		verify(cel, times(1)).recibirMensaje("Posible inicio de estacionamiento");	
-	}
-	
-	@Test
-	void testElUsuarioDeLaAppNoTieneSaldoSuficienteParaIniciarUnEstacionamient() throws Exception
-	{
-		when (cel.getSaldo()).thenReturn(0.0);
-		Exception exception = assertThrows(Exception.class, () -> {
-	        aplicacion.verificarSaldoSuficiente();
-	    });
-		assertEquals("No tiene saldo suficiente para estacionar.", exception.getMessage());
-	}
-	
-	@Test 
-	void testElUsuarioTieneSaldoSuficienteParaIniciarUnEstacionamiento() throws Exception 
-	{
-		when (cel.getSaldo()).thenReturn(200.0);
-		assertDoesNotThrow(() -> {
-            aplicacion.verificarSaldoSuficiente();
-        });
-	}
-	
-	@Test
-	void testElUsuarioNoSeEncuentraEnLaFranjaHorariaPermitida() throws Exception
-	{
-		//PUEDE UN USUARIO ESTAR DENTRO DE UN ESTACIONAMIENTO EN UNA FRANJA HORARIO NO PERMITIDA?
-	}
-	
-	*/
 	
 
 

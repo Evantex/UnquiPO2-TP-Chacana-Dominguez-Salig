@@ -14,21 +14,6 @@ public class EstacionamientoApp extends Estacionamiento
 	private String nroCelularApp;
 
 	
-	/*
-	public EstacionamientoApp(App app, LocalTime horaInicioEstacionamiento, LocalTime posibleHoraFinal,
-			double posiblePrecio) 
-	{
-		this.aplicacion = app;
-		this.inicioEstacionamiento = horaInicioEstacionamiento;
-		this.finEstacionamiento = posibleHoraFinal;
-		this.duracionEnHoras = Duration.between(horaInicioEstacionamiento, posibleHoraFinal);
-		this.costoEstacionamiento = posiblePrecio;
-		this.patenteVehiculo = app.getPatente();
-		this.nroCelularApp = app.getNroCelularAsociado();
-		this.vigenciaEstacionamiento = new EstacionamientoVigente();
-	}
-	*/
-	
 	public EstacionamientoApp() {};
 	
 	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
@@ -90,11 +75,6 @@ public class EstacionamientoApp extends Estacionamiento
 	public boolean esEstacionamientoApp()
 {
 		return true;
-	}
-
-	public String getNroCelular() 
-	{
-		return this.nroCelularApp;
 	}
 
 	

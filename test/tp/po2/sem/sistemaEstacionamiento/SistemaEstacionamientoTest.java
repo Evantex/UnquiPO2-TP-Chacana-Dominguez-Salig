@@ -205,127 +205,7 @@ public class SistemaEstacionamientoTest
 		sistemaEstacionamiento.agregarUsuario(celular);
 	 });	
 }
- 
- 
- /*
-  * 	public ZonaDeEstacionamiento(String identificardorDeZona, Inspector inspectorAsignado,
-			Set<PuntoDeVenta> puntosDeVenta) {
-		super();
-		this.identificardorDeZona = identificardorDeZona;
-		this.inspectorAsignado = inspectorAsignado;
-		this.puntosDeVenta = puntosDeVenta;
-	}
-  * 
-  * 
-  */
- 
- 
- /*
-  * 
-	public RangoHorario(LocalTime horaInicio, LocalTime horaFin)
-	{
-		this.horaInicioRango = horaInicio;
-		this.horaFinRango = horaFin;
-	}
-  * 
-  * 
-  */
 	
-	
-/*
-	@Test
-	public void testElSistemaAgregaUnUsuarioASuListaDeUsuarios() {
-		
-		sistemaEstacionamiento.agregarUsuario(celular);
-		Set<Celular> usuarios = sistemaEstacionamiento.getUsuarios();
-		
-		assertEquals(1, usuarios);
-		assertTrue(usuarios.contains(celular));
-	}
-	
-	@Test
-	public void testCuandoElSistemaCargaUnCelularNuevoLoAgregaASuListaDeUsuarios() 
-	{
-		String nroCelular = "1234567890";
-		double saldo = 100.0;
-		Set<Celular> usuarios = sistemaEstacionamiento.getUsuarios();
-		
-		// Cargar saldo por primera vez
-		sistemaEstacionamiento.cargarCelular(nroCelular, saldo);
-
-		// Verificar que el saldo se haya cargado correctamente
-		 assertEquals(1, sistemaEstacionamiento.getUsuarios().size());
-		 assertTrue(usuarios.contains(celular));
-	}
-
-	@Test
-	public void testCargarCelularExistente() {
-		String nroCelular = "1234567890";
-        double saldoRecarga = 20.0;
-		
-		sistemaEstacionamiento.agregarUsuario(celular);
-		
-		sistemaEstacionamiento.cargarCelular(nroCelular, saldoRecarga);
-
-		verify(celular).recibirRecargaDeSaldo(saldoRecarga);
-	}
-
-	@Test
-	public void testCargarCelularMultiplesVeces() {
-		String nroCelular = "1234567890";
-		double saldo1 = 50.0;
-		double saldo2 = 25.0;
-		double saldo3 = 75.0;
-
-		// Cargar saldo varias veces
-		sistemaEstacionamiento.cargarCelular(nroCelular, saldo1);
-		sistemaEstacionamiento.cargarCelular(nroCelular, saldo2);
-		sistemaEstacionamiento.cargarCelular(nroCelular, saldo3);
-
-		// Verificar que el saldo se haya sumado correctamente
-		double saldoEsperado = saldo1 + saldo2 + saldo3;
-		assertEquals(saldoEsperado, sistemaEstacionamiento.obtenerSaldoCelular(nroCelular), 0.01);
-	}
-	
-	 @Test
-	    public void testNotificarObservadores_IniciarEstacionamiento() {
-		 
-		 sistemaEstacionamiento.agregarObservador(callCenter);
-		 sistemaEstacionamiento.agregarObservador(otroSistema);
-
-	     appUsuario.iniciarEstacionamiento("Patente");
-
-	     EventoEstacionamiento eventoEsperado = new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, "Patente", "nroTel");
-	     verify(callCenter).actualizar(eventoEsperado);
-	     verify(otroSistema).actualizar(eventoEsperado);
-	    }
-	 
-	 @Test
-	 public void testNotificarObservadores_FinalizarEstacionamiento() {
-	     sistemaEstacionamiento.agregarObservador(callCenter);
-	     sistemaEstacionamiento.agregarObservador(otroSistema);
-
-	     appUsuario.iniciarEstacionamiento("Patente");  // Primero iniciar el estacionamiento
-
-	     sistemaEstacionamiento.finalizarEstacionamiento("Patente");  // Llamar directamente a SEM para finalizar
-
-	     EventoEstacionamiento eventoEsperado = new EventoEstacionamiento(EventoEstacionamiento.Tipo.FIN, "Patente", "nroTel");
-	     verify(callCenter).actualizar(eventoEsperado);
-	     verify(otroSistema).actualizar(eventoEsperado);
-	 }
-	 
-	 @Test
-	 public void testAgregarYEliminarObservador() {
-	     sistemaEstacionamiento.agregarObservador(callCenter);
-	     sistemaEstacionamiento.eliminarObservador(callCenter);
-
-	     appUsuario.iniciarEstacionamiento();
-
-	     EventoEstacionamiento eventoNoEsperado = new EventoEstacionamiento(EventoEstacionamiento.Tipo.INICIO, "Patente", "nroTel");
-	     verify(callCenter, never()).actualizar(eventoNoEsperado);
-	 }
-
-	 
 	 @Test
 	 public void testCalculoDeHorasInicioEstacionamientoDe5AmA10Am() throws Exception {
 	     double resultadoEsperado = 120.0;  
@@ -381,7 +261,25 @@ public class SistemaEstacionamientoTest
 		 assertEquals (resultadoEsperado, resultadoObtenido);
 		 
 	 }
-*/
 	 
+	 @Test
+	 public void testeoPoseeEstacionamientoVigente() {
+		 when(spyEstacionamientoPuntual.getPatente()).thenReturn("patente");
+		 sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamientoPuntual);
+		 when(spyEstacionamientoPuntual.estaVigente()).thenReturn(true);
+		 
+		 assertTrue(sistemaEstacionamiento.poseeEstacionamientoVigente("patente"));
+	 }
+	 
+	 @Test 
+	 public void testeoFinalizacionDeTodosLosEstacionamientos () {
+		 
+		 sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamientoPuntual);
+		 
+		 sistemaEstacionamiento.finalizarTodosLosEstacionamientos();
+		 
+		 verify(spyEstacionamientoPuntual).finalizarEstacionamiento();
+		 assertFalse(spyEstacionamientoPuntual.estaVigente());
+	 }
 	 
 }
