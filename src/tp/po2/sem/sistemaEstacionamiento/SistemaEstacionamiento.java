@@ -118,7 +118,8 @@ public class SistemaEstacionamiento
 		return rangoHorario;
 	}
 
-	public void setRangoHorario(RangoHorario rangoHorario) {
+	public void setRangoHorario(RangoHorario rangoHorario)
+	{
 		this.rangoHorario = rangoHorario;
 	}
 
@@ -168,29 +169,37 @@ public class SistemaEstacionamiento
 		rangoHorario.validarHoras(horaInicio, horaFin);
 	}
 
-	public void verificarQueNoTengaYaUnEstacionamientoVigente(String patente) throws Exception {
-
+	public void verificarQueNoTengaYaUnEstacionamientoVigente(String patente) throws Exception 
+	{
 		if (poseeEstacionamientoVigente(patente))
 		{
 			throw new Exception("Ya tiene un estacionamiento valido en curso");
 		}
-
 	}
 
+	
 	// CAMBIAR RECARGAS
-
-	
-	
 	public void cargarCelular(Celular cel, double saldo) 
 	{
-		this.agregarUsuario(cel);
+		this.usuarios.add(cel);
 		cel.recibirRecargaDeSaldo(saldo);
 	}
 	
-	public void agregarUsuario(Celular cel)
+	public void agregarUsuario(Celular cel) throws Exception
 	{
-		this.usuarios.add(cel);
+		boolean existeElNro = this.usuarios.stream()
+				.anyMatch( user -> user.getNroCelular().equals(cel.getNroCelular()) );
+		
+		if( existeElNro )
+		{
+			throw new Exception("El número de celular ya se encuentra siendo utilizado.");
+		}
+		else
+		{
+			this.usuarios.add(cel);
+		}
 	}
+	
 	
 	public Celular getUsuarioPorNro( String nroCelular )
 	{
@@ -272,19 +281,20 @@ public class SistemaEstacionamiento
 
 	// LOGICA DE OBSERVER
 
-	public Notificador getSistemaAlertas() {
+	public Notificador getSistemaAlertas() 
+	{
 		return sistemaAlertas;
 	}
 
-	public void setSistemaAlertas(Notificador sistemaAlertas) {
+	public void setSistemaAlertas(Notificador sistemaAlertas) 
+	{
 		this.sistemaAlertas = sistemaAlertas;
 	}
 
-	public void notificarSistemaAlertasFinEstacionamiento(Estacionamiento unEstacionamiento) {
-
+	public void notificarSistemaAlertasFinEstacionamiento(Estacionamiento unEstacionamiento)
+	{
 		sistemaAlertas
 				.notificarObservadores(new EventoEstacionamiento(EventoEstacionamiento.Tipo.FIN, unEstacionamiento));
-
 	}
 
 	public void notificarSistemaAlertasInicioEstacionamiento(Estacionamiento unEstacionamento)

@@ -90,7 +90,7 @@ public class ModalidadConduciendoTest
 	@Test
 	void verificoQueAppNoTengaEstacionamientosVigentes()
 	{
-		assertFalse( sem.poseeEstacionamientoVigente(aplicacion.getPatente()) );
+		assertFalse( sem.poseeEstacionamientoVigente(aplicacion.getPatenteAsociada()) );
 	}
 
 	@Test
@@ -153,7 +153,7 @@ public class ModalidadConduciendoTest
 	
 	
 	@Test
-	void verificoQueSeGenereUnNuevoEstacionamiento()
+	void verificoQueSeGenereUnNuevoEstacionamiento() throws Exception
 	{
 		sem.agregarUsuario(cel);
 		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
@@ -244,7 +244,7 @@ public class ModalidadConduciendoTest
 	
 	
 	@Test
-	void errorValidacionSaldoSuficiente()
+	void errorValidacionSaldoSuficiente() throws Exception
 	{
 		sem.agregarUsuario(cel);
 		aplicacion.iniciarEstacionamiento();
@@ -256,7 +256,7 @@ public class ModalidadConduciendoTest
 		
 
 	@Test
-	void errorValidacionZonaEstacionamiento()
+	void errorValidacionZonaEstacionamiento() throws Exception
 	{
 		sem.agregarUsuario(cel);
 		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
@@ -270,7 +270,7 @@ public class ModalidadConduciendoTest
 
 	
 		@Test
-	void errorValidacionEstacionamientoVigente()
+	void errorValidacionEstacionamientoVigente() throws Exception
 	{
 		sem.agregarUsuario(cel);
 		sem.cargarCelular(sem.getUsuarioPorNro("1145241966"), 200.0);
@@ -282,25 +282,21 @@ public class ModalidadConduciendoTest
 			 });	
 	}
 		
-
-		
-	
-	
-	
-	/*
-	
-	@Test
-	void verificoQueNoSeEjecuteNadaSiYaTengoEstacionamientoVigente() throws Exception
-	{
-		aplicacion.setModoNotificacion(modoNotificacionActivada);
-		aplicacion.iniciarEstacionamiento();
-		modo.caminando(aplicacion);
-		Exception error = assertThrows(Exception.class, () ->
+		@Test
+		void testeoGPS()
 		{
-	       aplicacion.verificarEstacionamientoVigente();
-	    });
-	}
-*/
-
+			aplicacion.activarGPS();
+			aplicacion.desactivarGPS(); // Utiliza aplicacion.setEstadoGps
+		}
+		
+		@Test
+		void testeoAlgunosGetters()
+		{
+			aplicacion.setCelularAsociado(cel);
+			assertEquals( cel, aplicacion.getCelularAsociado() );
+			assertEquals( "GIO 002", aplicacion.getPatenteAsociada() );
+			aplicacion.setPatenteAsociada("EAC 001");
+			assertEquals( "1145241966", aplicacion.getNroCelularAsociado() );
+		}
 	
 }

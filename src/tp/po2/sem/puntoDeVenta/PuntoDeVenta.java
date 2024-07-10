@@ -56,10 +56,10 @@ public class PuntoDeVenta { // responsabilidad de generar objetos compras
 
 	}
 
-	public void cargarSaldoEnCelular(String numeroCelular, double saldo) {
-
+	public void cargarSaldoEnCelular(String numeroCelular, double saldo) 
+	{
 		CompraRecargaCelular CompraRecargaCelular = new CompraRecargaCelular(this, numeroCelular, saldo);
-		sem.cargarCelular(numeroCelular, saldo);
+		sem.cargarCelular(sem.getUsuarioPorNro(numeroCelular), saldo);
 
 		sem.registrarCompra(CompraRecargaCelular);
 	}

@@ -90,19 +90,9 @@ public class App implements MovementSensor
 		return this.celularAsociado.getUbicacion();
 	}
 
-	public String getPatente()
-	{
-		return this.patenteAsociada;
-	}
-	
 	public void setEstadoGps(EstadoGPS estado)
 	{
 		this.deteccionDeDesplazamiento = estado;
-	}
-	
-	public EstadoGPS getEstadoGps()
-	{
-		return deteccionDeDesplazamiento;
 	}
 	
 	public ModoNotificaciones getModoNotificacion()
@@ -196,13 +186,6 @@ public class App implements MovementSensor
 	{
 		return this.getUbicacionActual() == this.getUbicacionEstacionamiento();
 	}
-	
-	
-	public boolean estaActivadaLaUbicacion()
-	{
-		return deteccionDeDesplazamiento.seEncuentraActivada();
-	}
-	
 		
 	public void iniciarEstacionamiento()
 	{
@@ -210,7 +193,7 @@ public class App implements MovementSensor
 	    {	
 	    	this.verificarValidacionesParaIniciarEstacionamiento();
 	        String celular = this.celularAsociado.getNroCelular();
-	        String patente = this.getPatente();
+	        String patente = this.getPatenteAsociada();
 	        EstacionamientoApp nuevoEstacionamiento = new EstacionamientoApp(this, celular, patente);
 	        this.SEM.solicitudDeEstacionamientoApp( nuevoEstacionamiento );
 	        this.modoApp.notificacionModoApp(this, "Se ha iniciado un estacionamiento de forma automática");
@@ -227,7 +210,7 @@ public class App implements MovementSensor
 	
 	public void verificarValidacionesParaIniciarEstacionamiento() throws Exception
 	{
-		this.SEM.verificarQueNoTengaYaUnEstacionamientoVigente(this.getPatente());
+		this.SEM.verificarQueNoTengaYaUnEstacionamientoVigente(this.getPatenteAsociada());
 		this.verificarSaldoSuficiente();
 		this.verificarZonaEstacionamiento();
 	}

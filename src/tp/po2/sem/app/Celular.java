@@ -34,7 +34,8 @@ public class Celular
 	public void recibirMensaje(String msg) {
 	};
 
-	public boolean estaDentroDeZonaEstacionamiento() {
+	public boolean estaDentroDeZonaEstacionamiento() 
+	{
 		return true;
 	}
 
