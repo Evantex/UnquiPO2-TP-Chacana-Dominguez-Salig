@@ -52,7 +52,8 @@ public class SistemaEstacionamiento
 
 	// getters and setters
 
-	public static LocalTime getHoraLaboralInicio() {
+	public static LocalTime getHoraLaboralInicio() 
+	{
 		return horaLaboralInicio;
 	}
 

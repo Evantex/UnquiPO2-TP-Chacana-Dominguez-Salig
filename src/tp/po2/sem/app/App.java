@@ -28,6 +28,8 @@ public class App implements MovementSensor
 	private Point ubicacionUltimoEstacionamiento;
 	private String patenteAsociada;
 
+	App(){};
+	
 	App(Celular cel, SistemaEstacionamiento sistema, String patenteAsociada) 
 	{
 		this.celularAsociado = cel;

@@ -12,6 +12,8 @@ public class EstacionamientoCompraPuntual extends Estacionamiento
     private CompraPuntual compraAsociada;
  
 
+    public EstacionamientoCompraPuntual() {}
+    
     // Constructor que inicializa el estacionamiento con la duración comprada
     public EstacionamientoCompraPuntual(String patenteVehiculo, CompraPuntual compraAsociada) 
     {

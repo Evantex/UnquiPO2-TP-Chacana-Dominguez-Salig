@@ -8,7 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class ModalidadCaminandoTest {
+public class ModalidadCaminandoTest 
+{
 
 	@Mock
 	private App aplicacion; // Se crea un mock para la clase App
@@ -29,7 +30,7 @@ public class ModalidadCaminandoTest {
 	@Test
 	void testConduciendo_conEstacionamientoVigenteYEnElMismoPuntoGeografico() throws Exception {
 		// Configura el comportamiento de los mocks
-		when(aplicacion.tieneEstacionamientoVigente()).thenReturn(true);
+		// when(aplicacion.tieneEstacionamientoVigente()).thenReturn(true);
 		when(aplicacion.validarMismoPuntoGeografico()).thenReturn(true);
 		when(aplicacion.getModoEstacionamiento()).thenReturn(modoEstacionamiento);
 
@@ -44,9 +45,6 @@ public class ModalidadCaminandoTest {
 
 	@Test
 	void testConduciendo_sinEstacionamientoVigente() throws Exception {
-		// Configura el comportamiento de los mocks
-		when(aplicacion.tieneEstacionamientoVigente()).thenReturn(false);
-
 		// Llama al método que se está probando
 		modalidadCaminando.conduciendo(aplicacion);
 
@@ -60,7 +58,6 @@ public class ModalidadCaminandoTest {
 	@Test
 	void testConduciendo_conEstacionamientoVigentePeroDiferentePuntoGeografico() throws Exception {
 		// Configura el comportamiento de los mocks
-		when(aplicacion.tieneEstacionamientoVigente()).thenReturn(true);
 		when(aplicacion.validarMismoPuntoGeografico()).thenReturn(false);
 
 		// Llama al método que se está probando

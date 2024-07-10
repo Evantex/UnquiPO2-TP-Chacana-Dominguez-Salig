@@ -11,6 +11,8 @@ public class ZonaDeEstacionamiento {
 	private Inspector inspectorAsignado;
 	private Set<PuntoDeVenta> puntosDeVenta;
 
+	public ZonaDeEstacionamiento() {};
+	
 	public ZonaDeEstacionamiento(String identificardorDeZona, Inspector inspectorAsignado,
 			Set<PuntoDeVenta> puntosDeVenta) {
 		super();

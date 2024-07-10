@@ -29,6 +29,8 @@ public class EstacionamientoApp extends Estacionamiento
 	}
 	*/
 	
+	public EstacionamientoApp() {};
+	
 	public EstacionamientoApp(App app, String celular, String dominioVehiculo)
 	{
 		super();

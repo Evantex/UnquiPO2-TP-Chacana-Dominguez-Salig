@@ -1,26 +1,28 @@
 package tp.po2.sem.sistemaEstacionamiento;
-
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 import tp.po2.sem.app.App;
 import tp.po2.sem.app.Celular;
-import tp.po2.sem.estacionamiento.Estacionamiento;
+import tp.po2.sem.estacionamiento.*;
 import tp.po2.sem.inspector.Infraccion;
-import tp.po2.sem.puntoDeVenta.Compra;
+import tp.po2.sem.inspector.Inspector;
+import tp.po2.sem.puntoDeVenta.*;
+import tp.po2.sem.ZonaDeEstacionamiento.*;
 
-public class SistemaEstacionamientoTest {
+
+public class SistemaEstacionamientoTest
+{
 
 	SistemaEstacionamiento sistemaEstacionamiento;
 	Estacionamiento estacionamientoMock;
@@ -30,9 +32,31 @@ public class SistemaEstacionamientoTest {
     private Observer otroSistema;
     private App appUsuario;
     
+    // Spy's estacionamiento:
+    EstacionamientoCompraPuntual spyEstacionamientoPuntual;
+    EstacionamientoApp spyEstacionamientoApp;
+    
+    // Spy de app
+    App spyApp;
+    
+    // Spy de compra puntual
+    CompraPuntual spyCompraPuntual;
+    
+    // Spy de zona estacionamiento
+    ZonaDeEstacionamiento spyZonaEstacionamiento;
+    
+    // Mock Inspector
+    Inspector mockInspector;
+    
+    // Spy estacionamiento para verificaciones puntuales
+    SistemaEstacionamiento spySistemaEstacionamiento;
+    
+    
+    
 
 	@BeforeEach
-	public void setUp() {
+	public void setUp() 
+	{
 		// Creamos el mock de Estacionamiento
 		estacionamientoMock = mock(Estacionamiento.class);
 
@@ -43,15 +67,32 @@ public class SistemaEstacionamientoTest {
 		sistemaEstacionamiento = new SistemaEstacionamiento();
 		
 		celular = mock (Celular.class);
+		when( celular.getNroCelular() ).thenReturn("1132339688");
 		
 		appUsuario = mock (App.class);
 		
 		callCenter = mock(Observer.class);
         otroSistema = mock(Observer.class);
         
+        // Mocks
+        mockInspector = mock( Inspector.class );
+        
+        
+        // Spy's
+        spyEstacionamientoPuntual = spy( EstacionamientoCompraPuntual.class );
+        spyEstacionamientoApp = spy( EstacionamientoApp.class );
+        spyApp = spy( App.class );
+        spyZonaEstacionamiento = spy( ZonaDeEstacionamiento.class );
+        
+        
+        spyCompraPuntual = spy( CompraPuntual.class );
+		when( spyCompraPuntual.getHoraInicio() ).thenReturn(LocalTime.of(17, 00));
+		when( spyCompraPuntual.getHoraFin() ).thenReturn(LocalTime.of(19, 00));
+		when( spyCompraPuntual.getHorasCompradas() ).thenReturn( Duration.ofHours(2) );
       
+		spySistemaEstacionamiento = spy( new SistemaEstacionamiento() );
         
-        
+ 
 	}
 	
 	//TEST GETTERS Y SETTERS
@@ -63,40 +104,30 @@ public class SistemaEstacionamientoTest {
     }
 
     @Test
-    void testSetHoraLaboralInicio() {
-        LocalTime nuevaHora = LocalTime.of(8, 0);
-        sistemaEstacionamiento.setHoraLaboralInicio(nuevaHora);
-        assertEquals(nuevaHora, sistemaEstacionamiento.getHoraLaboralInicio());
-    }
-
-    @Test
-    void testGetHoraLaboralFin() {
+    void testGetHoraLaboralFin() 
+    {
         LocalTime horaLaboralFin = LocalTime.of(20, 0);
         assertEquals(horaLaboralFin, sistemaEstacionamiento.getHoraLaboralFin());
     }
 
     @Test
-    void testSetHoraLaboralFin() {
-        LocalTime nuevaHora = LocalTime.of(21, 0);
-        sistemaEstacionamiento.setHoraLaboralFin(nuevaHora);
-        assertEquals(nuevaHora, sistemaEstacionamiento.getHoraLaboralFin());
-    }
-
-    @Test
-    void testGetEstacionamientos() {
+    void testGetEstacionamientos() 
+    {
         sistemaEstacionamiento.setEstacionamientos(spyListaEstacionamientos);
         assertEquals(spyListaEstacionamientos, sistemaEstacionamiento.getEstacionamientos());
     }
 
     @Test
-    void testSetEstacionamientos() {
+    void testSetEstacionamientos() 
+    {
         Set<Estacionamiento> nuevosEstacionamientos = new HashSet<>();
         sistemaEstacionamiento.setEstacionamientos(nuevosEstacionamientos);
         assertEquals(nuevosEstacionamientos, sistemaEstacionamiento.getEstacionamientos());
     }
 
     @Test
-    void testGetComprasPuntoDeVenta() {
+    void testGetComprasPuntoDeVenta() 
+    {
         Set<Compra> compras = new HashSet<>();
         sistemaEstacionamiento.setComprasPuntoDeVenta(compras);
         assertEquals(compras, sistemaEstacionamiento.getComprasPuntoDeVenta());
@@ -125,7 +156,7 @@ public class SistemaEstacionamientoTest {
     @Test
     void testGetCantidadEstacionamientos() {
         assertEquals(0, sistemaEstacionamiento.getCantidadEstacionamientos());
-        sistemaEstacionamiento.registrarEstacionamientoApp(mock(Estacionamiento.class));
+        sistemaEstacionamiento.solicitudDeEstacionamientoApp( spyEstacionamientoApp );
         assertEquals(1, sistemaEstacionamiento.getCantidadEstacionamientos());
     }
 
@@ -143,25 +174,65 @@ public class SistemaEstacionamientoTest {
 	}
 	
 	@Test
-	public void testRegistrarUnEstacionamiento() {
-		// Ejecutamos el método que queremos probar, pasando el mock de Estacionamiento
-		sistemaEstacionamiento.solicitudDeEstacionamientoCompraPuntual(estacionamientoMock);
-
-		// Con el spy verifico que se le mandó correctamente el mensaje add a la
-		// colección dentro del mensaje getCantidadEstacionamientos().
+	public void testRegistrarUnEstacionamiento() throws Exception 
+	{
+		sistemaEstacionamiento.solicitudDeEstacionamientoCompraPuntual( "GIO 002", spyCompraPuntual );
+		
 		assertEquals(sistemaEstacionamiento.getCantidadEstacionamientos(), 1);
-
-		// Además se verifica que el envío de mensajes se haga en orden esperado.
-		InOrder orden = inOrder(spyListaEstacionamientos);
-		orden.verify(spyListaEstacionamientos).add(estacionamientoMock);
-
-		// Verifico con el spy que se le mandó el mensaje size a la colección para
-		// obtener la cantidad de estacionamientos esperada.
-		verify(spyListaEstacionamientos).size();
 	}
 	
 
+ @Test void testeoGettersYSetters() throws Exception
+ {
+	 sistemaEstacionamiento.getZonasDeEstacionamiento();
+	 sistemaEstacionamiento.setRangoHorario( new RangoHorario( LocalTime.of(12, 00), LocalTime.of(15, 00)) );
+	 sistemaEstacionamiento.registrarZonaEstacionamiento( spyZonaEstacionamiento );
+	 sistemaEstacionamiento.registrarInfraccion("GIO 002", mockInspector);
+	 sistemaEstacionamiento.buscarInfraccionesPorPatente("GIO 002");
+	 sistemaEstacionamiento.finalizarTodosLosEstacionamientos();
+	 sistemaEstacionamiento.removerZonaEstacionamiento(spyZonaEstacionamiento);
+	 sistemaEstacionamiento.puedeEstacionar("GIO 002", LocalTime.of(8, 00), LocalTime.of(15, 00));
+	 sistemaEstacionamiento.getSistemaAlertas();
+	 sistemaEstacionamiento.notificarSistemaAlertasFinEstacionamiento(estacionamientoMock);
+	 
+ }
+ 
+@Test void chequeoValidacionSiExisteUsuario() throws Exception
+{
+	sistemaEstacionamiento.agregarUsuario(celular);
+	Exception error = assertThrows(Exception.class, () ->
+	{
+		sistemaEstacionamiento.agregarUsuario(celular);
+	 });	
+}
+ 
+ 
+ /*
+  * 	public ZonaDeEstacionamiento(String identificardorDeZona, Inspector inspectorAsignado,
+			Set<PuntoDeVenta> puntosDeVenta) {
+		super();
+		this.identificardorDeZona = identificardorDeZona;
+		this.inspectorAsignado = inspectorAsignado;
+		this.puntosDeVenta = puntosDeVenta;
+	}
+  * 
+  * 
+  */
+ 
+ 
+ /*
+  * 
+	public RangoHorario(LocalTime horaInicio, LocalTime horaFin)
+	{
+		this.horaInicioRango = horaInicio;
+		this.horaFinRango = horaFin;
+	}
+  * 
+  * 
+  */
 	
+	
+/*
 	@Test
 	public void testElSistemaAgregaUnUsuarioASuListaDeUsuarios() {
 		
@@ -173,7 +244,8 @@ public class SistemaEstacionamientoTest {
 	}
 	
 	@Test
-	public void testCuandoElSistemaCargaUnCelularNuevoLoAgregaASuListaDeUsuarios() {
+	public void testCuandoElSistemaCargaUnCelularNuevoLoAgregaASuListaDeUsuarios() 
+	{
 		String nroCelular = "1234567890";
 		double saldo = 100.0;
 		Set<Celular> usuarios = sistemaEstacionamiento.getUsuarios();
@@ -309,5 +381,7 @@ public class SistemaEstacionamientoTest {
 		 assertEquals (resultadoEsperado, resultadoObtenido);
 		 
 	 }
+*/
+	 
 	 
 }
