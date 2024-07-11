@@ -217,18 +217,6 @@ public class App implements MovementSensor
 		this.verificarZonaEstacionamiento();
 	}
 	
-
-	
-	
-	/*
-	private double calcularPosibleMontoSegunSaldo(LocalTime horaInicioEstacionamiento,
-			LocalDateTime horaMaximaFinEstacionamiento) throws Exception 
-	{	
-		Duration duracionEnHoras = Duration.between(horaInicioEstacionamiento, horaMaximaFinEstacionamiento);	
-		return SEM.calcularCuantoCobrar(horaInicioEstacionamiento, duracionEnHoras);	
-	}
-	*/
-
 	
 	public void notificarUsuario(String msg) 
 	{

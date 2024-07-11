@@ -29,6 +29,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import java.awt.Point;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
@@ -289,7 +290,9 @@ public class ModalidadConduciendoTest
 		void testeoGPS()
 		{
 			aplicacion.activarGPS();
-			aplicacion.desactivarGPS(); // Utiliza aplicacion.setEstadoGps
+			verify(aplicacion, times(1)).setEstadoGps( any(UbicacionActivada.class) );
+			aplicacion.desactivarGPS(); 
+			verify(aplicacion, times(1)).setEstadoGps( any(UbicacionDesactivada.class) );
 		}
 		
 		@Test
@@ -305,7 +308,7 @@ public class ModalidadConduciendoTest
 
 
 	    @Test
-	    void testConduciendoNoHaceNada() {
+	    void testConduciendoCuandoEstaConduciendoNoHaceNada() {
 	    	
 	        App mockAplicacion = mock(App.class);
 
@@ -327,13 +330,13 @@ public class ModalidadConduciendoTest
 
 	    @Test
 	    void appEnManualNoPuedeFinalizarEstacionamiento() throws Exception {
-	        // Crear un nuevo mock de aplicacion para esta prueba
+	       
 	        App mockAplicacion = mock(App.class);
 
-	        // Llamar al método sin acción
+	        
 	        modoEstacionamientoManual.finalizarEstacionamiento(mockAplicacion);
 
-	        // Verificar que no hubo interacciones con el mock
+	       
 	        verifyNoInteractions(mockAplicacion);
 	    }
 	    
@@ -342,4 +345,21 @@ public class ModalidadConduciendoTest
 			
 	    	assertTrue(aplicacion.validarMismoPuntoGeografico());
 	    }
-	}
+	    
+	    
+	    @Test
+	    void sinElGpsActivadoNoSeUtilizanLasFuncionesDeFormaDeDesplazamiento() throws Exception {
+	    	aplicacion.setEstadoGps( new UbicacionDesactivada() );
+	    	
+	    	aplicacion.driving();
+	    	aplicacion.walking();
+	    	
+	    	verify(aplicacion, never()).iniciarEstacionamiento();
+	    	verify(aplicacion, never()).finalizarEstacionamiento();
+	    	
+	    }
+	    
+
+}
+	    
+	
