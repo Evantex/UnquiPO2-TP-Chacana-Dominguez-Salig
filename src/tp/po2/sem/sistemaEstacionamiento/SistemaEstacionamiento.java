@@ -270,14 +270,11 @@ public class SistemaEstacionamiento
 
 	// LOGICA DE "FIN DE FRANJA HORARIA, FINALIZAR TODOS LOS ESTACIONAMIENTOS
 	// VIGENTES"
-	public void finalizarTodosLosEstacionamientos()
-	{
-		LocalTime horaActual = LocalTime.now();
-		if (horaActual == horaLaboralFin) 
-		{
-			this.estacionamientos.stream().filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
-					.forEach(e -> e.finalizarEstacionamiento()); // Finalizar solo los vigentes
-		}
+	public void finalizarTodosLosEstacionamientos() {
+
+		this.estacionamientos.stream().filter(e -> e.estaVigente()) // Filtrar solo los que están vigentes
+				.forEach(e -> e.finalizarEstacionamiento()); // Finalizar solo los vigentes
+
 	}
 
 	// LOGICA DE OBSERVER
