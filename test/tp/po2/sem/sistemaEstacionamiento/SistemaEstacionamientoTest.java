@@ -28,9 +28,8 @@ public class SistemaEstacionamientoTest
 	Estacionamiento estacionamientoMock;
 	Set<Estacionamiento> spyListaEstacionamientos;
 	private Celular celular;
-	private Observer callCenter;
-    private Observer otroSistema;
     private App appUsuario;
+    
     
     // Spy's estacionamiento:
     EstacionamientoCompraPuntual spyEstacionamientoPuntual;
@@ -70,9 +69,6 @@ public class SistemaEstacionamientoTest
 		when( celular.getNroCelular() ).thenReturn("1132339688");
 		
 		appUsuario = mock (App.class);
-		
-		callCenter = mock(Observer.class);
-        otroSistema = mock(Observer.class);
         
         // Mocks
         mockInspector = mock( Inspector.class );
@@ -92,7 +88,6 @@ public class SistemaEstacionamientoTest
       
 		spySistemaEstacionamiento = spy( new SistemaEstacionamiento() );
         
- 
 	}
 	
 	//TEST GETTERS Y SETTERS
@@ -262,14 +257,47 @@ public class SistemaEstacionamientoTest
 		 
 	 }
 	 
-	 @Test
-	 public void testeoPoseeEstacionamientoVigente() {
-		 when(spyEstacionamientoPuntual.getPatente()).thenReturn("patente");
-		 sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamientoPuntual);
-		 when(spyEstacionamientoPuntual.estaVigente()).thenReturn(true);
-		 
-		 assertTrue(sistemaEstacionamiento.poseeEstacionamientoVigente("patente"));
-	 }
+	    @Test
+	    public void testeoPoseeEstacionamientoVigente_EstacionamientoVigente() {
+	        
+	        when(spyEstacionamientoPuntual.getPatente()).thenReturn("patente");
+	        when(spyEstacionamientoPuntual.estaVigente()).thenReturn(true);
+
+	        sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamientoPuntual);
+
+	        assertTrue(sistemaEstacionamiento.poseeEstacionamientoVigente("patente"));
+	    }
+
+	    @Test
+	    public void testeoPoseeEstacionamientoVigente_NoEstacionamientoVigente() {
+
+	        when(spyEstacionamientoPuntual.getPatente()).thenReturn("patente");
+	        when(spyEstacionamientoPuntual.estaVigente()).thenReturn(false);
+
+	        sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamientoPuntual);
+
+	        assertFalse(sistemaEstacionamiento.poseeEstacionamientoVigente("patente"));
+	    }
+
+	    @Test
+	    public void testeoPoseeEstacionamientoVigente_VariosEstacionamientosSinVigenciaParaPatente() {
+	        // Configurar varios estacionamientos donde ninguno esté vigente para la patente deseada
+	        EstacionamientoCompraPuntual spyEstacionamiento1 = spy(new EstacionamientoCompraPuntual());
+	        EstacionamientoCompraPuntual spyEstacionamiento2 = spy(new EstacionamientoCompraPuntual());
+
+	        when(spyEstacionamiento1.getPatente()).thenReturn("patente");
+	        when(spyEstacionamiento1.estaVigente()).thenReturn(false);
+
+	        when(spyEstacionamiento2.getPatente()).thenReturn("patente");
+	        when(spyEstacionamiento2.estaVigente()).thenReturn(false);
+
+	        // Registrar los estacionamientos
+	        sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamiento1);
+	        sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamiento2);
+
+	        // Verificar que no posee estacionamientos vigentes para la patente "patente"
+	        assertFalse(sistemaEstacionamiento.poseeEstacionamientoVigente("patente"));
+	    }
 	 
 	 @Test 
 	 public void testeoFinalizacionDeTodosLosEstacionamientos () {
@@ -282,4 +310,85 @@ public class SistemaEstacionamientoTest
 		 assertFalse(spyEstacionamientoPuntual.estaVigente());
 	 }
 	 
+	   @Test
+	    public void testGetEstacionamiento_ExisteYVigente() throws Exception {
+		   
+	        Estacionamiento mockEstacionamiento1 = mock(Estacionamiento.class);
+
+	        when(mockEstacionamiento1.getIdentificadorEstacionamiento()).thenReturn("123");
+	        when(mockEstacionamiento1.estaVigente()).thenReturn(true);
+
+	        sistemaEstacionamiento.registrarEstacionamiento(mockEstacionamiento1);
+
+	        Estacionamiento estacionamiento = sistemaEstacionamiento.getEstacionamiento("123");
+	        assertNotNull(estacionamiento);
+	        assertEquals("123", estacionamiento.getIdentificadorEstacionamiento());
+	    }
+
+	    @Test
+	    public void testGetEstacionamiento_NoExiste() {
+	        Exception exception = assertThrows(Exception.class, () -> {
+	            sistemaEstacionamiento.getEstacionamiento("789");
+	        });
+
+	        String expectedMessage = "El estacionamiento no existe o no está vigente";
+	        String actualMessage = exception.getMessage();
+
+	        assertTrue(actualMessage.contains(expectedMessage));
+	    }
+
+	    @Test
+	    public void testGetEstacionamiento_ExistePeroNoVigente() {
+	    	
+	        Estacionamiento mockEstacionamiento1 = mock(Estacionamiento.class);
+
+	        when(mockEstacionamiento1.getIdentificadorEstacionamiento()).thenReturn("123");
+	        when(mockEstacionamiento1.estaVigente()).thenReturn(false);
+
+	        sistemaEstacionamiento.registrarEstacionamiento(mockEstacionamiento1);
+	    	
+	        Exception exception = assertThrows(Exception.class, () -> {
+	            sistemaEstacionamiento.getEstacionamiento("123");
+	        });
+
+	        String expectedMessage = "El estacionamiento no existe o no está vigente";
+	        String actualMessage = exception.getMessage();
+
+	        assertTrue(actualMessage.contains(expectedMessage));
+	    }
+	    
+	    @Test
+	    public void testFinalizarEstacionamiento_EstacionamientoVigente() {
+	        
+	        when(spyEstacionamientoPuntual.getIdentificadorEstacionamiento()).thenReturn("123");
+	        when(spyEstacionamientoPuntual.estaVigente()).thenReturn(true);
+
+	        sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamientoPuntual);
+
+	        sistemaEstacionamiento.finalizarEstacionamiento("123");
+
+	        verify(spyEstacionamientoPuntual, times(1)).finalizarEstacionamiento();
+	    }
+
+	    @Test
+	    public void testFinalizarEstacionamiento_NoExisteEstacionamiento() {
+
+	        sistemaEstacionamiento.finalizarEstacionamiento("456");
+
+	        verifyNoInteractions(spyEstacionamientoPuntual);
+	    }
+
+	    @Test
+	    public void testFinalizarEstacionamiento_ExistePeroNoVigente() {
+
+	        when(spyEstacionamientoPuntual.getIdentificadorEstacionamiento()).thenReturn("123");
+	        when(spyEstacionamientoPuntual.estaVigente()).thenReturn(false);
+
+	        sistemaEstacionamiento.registrarEstacionamiento(spyEstacionamientoPuntual);
+
+	        sistemaEstacionamiento.finalizarEstacionamiento("123");
+
+	        verify(spyEstacionamientoPuntual, never()).finalizarEstacionamiento();
+	    }
 }
+
